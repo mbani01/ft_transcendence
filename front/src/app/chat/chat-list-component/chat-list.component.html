@@ -1,0 +1,10 @@
+<ul *ngIf="chatSize > 0; else noChat" class="list-group p-0">
+  <li class="list-group-item p-0" *ngFor="let chat of chats | keyvalue">
+    <chat-list-item [chat]="chat.value" (click)="openChat(chat.key)"></chat-list-item>
+  </li>
+</ul>
+<ng-template #noChat>
+  <div class="d-flex h-25">
+  <p class="m-auto">You have Messages</p>
+  </div>
+</ng-template>

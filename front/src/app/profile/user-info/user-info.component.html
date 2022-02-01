@@ -1,0 +1,33 @@
+<div class="row">
+  <div class="col-auto d-flex">
+    <img width="128" height="128" class="rounded-circle align-self-center" alt="Cinque Terre" src="{{user.img}}">
+<!--    <img width="64" height="64" class="rounded-circle align-self-center" alt="Cinque Terre" src="/assets/img.webp">-->
+  </div>
+  <div class="col-4">
+    <div class="row h-50 d-flex">
+      <span id="nickname" class="">{{user.name}}</span>
+    </div>
+    <div class="row h-50">
+      <span class="dot"></span>
+      <span class="status">Online</span>
+    </div>
+  </div>
+  <div class="col">
+    <div class="row h-50">
+      <div class="col d-flex">
+        <span class="my-auto text-dark"><b>Matches</b>: {{userInfo.wins}} of {{userInfo.games}}</span>
+      </div>
+      <div class="col d-flex">
+        <span class="my-auto"><b>Rank</b>: {{userInfo.rankPoints | rank}} ({{userInfo.rankPoints}} RP)</span>
+      </div>
+    </div>
+    <div class="row h-50">
+      <div class="col d-flex">
+        <span class="my-auto"><b>Win Rate</b>: {{userInfo.wins / userInfo.games | percent}}</span>
+      </div>
+      <div class="col d-flex">
+        <span class="my-auto"><b>Total Score</b>: {{userInfo.totalScore}}</span>
+      </div>
+    </div>
+  </div>
+</div>

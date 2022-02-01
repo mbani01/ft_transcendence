@@ -1,0 +1,5 @@
+<div class="container-lg my-3">
+  <app-user-info *ngIf="userInfo && user" [user]="user" [userInfo]="userInfo"></app-user-info>
+  <hr class="my-5">
+  <app-match-history *ngFor="let history of matchHistory" [matchHistory]="history "></app-match-history>
+</div>

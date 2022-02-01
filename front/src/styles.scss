@@ -1,0 +1,17 @@
+
+
+
+$primary: #ff4545;
+$dark: #282c34;
+//$secondary: #e6e6e6;
+//@import "../node_modules/bootstrap/scss/bootstrap";
+$body-bg: #e6e6e6;
+//$white: #e6e6e6;
+
+.smoked {
+  background-color: $primary;
+  border: solid black;
+  width: 100px;
+  height: 100px;
+}
+@import "../node_modules/bootstrap/scss/bootstrap";
