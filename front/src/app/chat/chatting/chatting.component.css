@@ -1,0 +1,44 @@
+.chat-container {
+  display: flex;
+  height: 500px;
+  flex-direction: column;
+}
+
+#header {
+  height: 10%;
+}
+
+#content {
+  flex: 2;
+  max-height: 80%;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+#prompt {
+  background-color: var(--body-bg);
+  height: 10%;
+}
+
+.form-rounded {
+  border-radius: 1rem;
+}
+
+#chat-back {
+  transition-duration: 200ms;
+}
+
+#chat-back:hover {
+  background-color: var(--primary);
+  color: white;
+}
+
+#chat-settings {
+  transition-duration: 200ms;
+}
+
+#chat-settings:hover {
+  color: var(--primary);
+}
+
+/*# sourceMappingURL=chatting.component.css.map */

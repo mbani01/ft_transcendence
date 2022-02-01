@@ -1,0 +1,100 @@
+<div class="container" [ngStyle]="{'background-color': isVictory() ? '#00D04E55' : '#F2585855'}">
+
+  <div class="row px-3 pb-3">
+
+    <!-- First Column-->
+
+    <div class="col">
+
+      <div class="row my-1">
+        <span class="my-auto">{{ matchHistory.timestamp | dateAgo}}</span>
+      </div>
+
+      <div class="row">
+        <img width="64" height="64" class="rounded-circle" alt="Cinque Terre" src="/assets/img.webp">
+        <span class="ml-4 my-auto player-name">{{matchHistory.player1}}</span>
+
+      </div>
+
+<!--      <div class="row h-25"></div>-->
+    </div>
+
+    <!-- Second Column-->
+
+    <div class="col">
+
+      <div class="row d-flex">
+        <span class="m-auto" [ngClass]="isVictory() ? 'victory' : 'defeat'">{{isVictory() ? 'Victory' : 'Defeat'}}</span>
+      </div>
+
+      <div class="row h-50 score">
+        <span class="m-auto">
+          <span class="scores" [ngClass]="isVictory() ? 'victory' : ''">{{matchHistory.score1}}</span>
+          vs
+          <span class="scores" [ngClass]="!isVictory() ? 'defeat' : ''">{{matchHistory.score2}}</span>
+        </span>
+      </div>
+
+      <div class="row h-25">
+        <span class="m-auto" style="color:#555">{{matchHistory.gameType}}</span>
+      </div>
+
+    </div>
+
+    <!-- Third Column-->
+
+    <div class="col">
+
+      <div class="row my-1">
+        <span class="ml-auto">{{matchHistory.gameLength | gameLength}}</span>
+      </div>
+
+      <div class="row d-flex">
+        <span class="my-auto ml-auto mr-4 player-name">{{matchHistory.player2}}</span>
+        <img width="64" height="64" class="rounded-circle" alt="Cinque Terre" src="/assets/img.webp">
+      </div>
+
+    </div>
+  </div>
+
+
+<!--  <div class="row">-->
+<!--    <div class="col-2 d-flex">-->
+<!--      <span class="my-auto">{{ matchHistory.timestamp | dateAgo}}</span>-->
+<!--    </div>-->
+<!--    <div class="col text-center">-->
+<!--      <span [ngClass]="isVictory() ? 'victory' : 'defeat'">{{isVictory() ? 'Victory' : 'Defeat'}}</span>-->
+<!--    </div>-->
+<!--    <div class="col-2"></div>-->
+<!--  </div>-->
+<!--  <div class="row">-->
+<!--    <div class="col-auto d-flex">-->
+<!--      <img width="64" height="64" class="rounded-circle align-self-center" alt="Cinque Terre" src="/assets/img.webp">-->
+<!--    </div>-->
+<!--    <div class="col d-flex">-->
+<!--      <span class="my-auto player-name">{{matchHistory.player1}}</span>-->
+<!--    </div>-->
+<!--    <div class="col">-->
+<!--      <div class="row h-25">-->
+<!--        <span class="m-auto">{{matchHistory.gameLength | gameLength}}</span>-->
+<!--      </div>-->
+<!--      <div class="row h-50">-->
+<!--        <span class="m-auto score"><span [ngClass]="isVictory() ? 'victory' : 'defeat'">{{matchHistory.score1}}</span>-->
+<!--          vs-->
+<!--        <span [ngClass]="!isVictory() ? 'victory' : 'defeat'">{{matchHistory.score2}}</span></span>-->
+<!--      </div>-->
+<!--      <div class="row h-25">-->
+<!--        <span class="m-auto" style="color:#555">{{matchHistory.gameType}}</span>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="col d-flex">-->
+<!--      <span class="my-auto ml-auto player-name">{{matchHistory.player2}}</span>-->
+<!--    </div>-->
+<!--    <div class="col-auto d-flex">-->
+<!--      <img width="64" height="64" class="rounded-circle align-self-center" alt="Cinque Terre" src="/assets/img.webp">-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  <div class="row">-->
+
+<!--  </div>-->
+</div>

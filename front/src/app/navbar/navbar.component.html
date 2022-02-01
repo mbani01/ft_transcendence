@@ -1,0 +1,39 @@
+<nav class="navbar navbar-expand py-0">
+  <a class="navbar-brand font-weight-bolder" role="button">PONG</a>
+  <div class="navbar-collapse collapse ml-5">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item" routerLinkActive="active">
+        <a routerLink="home" class="nav-link px-4 m-1">Home</a>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
+        <a routerLink="play" class="nav-link px-4 m-1">Play</a>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
+        <a routerLink="leaderboard" class="nav-link px-4 m-1">Leaderboard</a>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
+        <a routerLink="chat-rooms" class="nav-link px-4 m-1">Chat Rooms</a>
+      </li>
+    </ul>
+    <div class="dropdown mr-3 p-0 col-4">
+      <input type="text" class="form-control" placeholder="Search" data-toggle="dropdown" id="searchDropdownButton">
+      <div class="dropdown-menu w-100" aria-labelledby="searchDropdownButton">
+        <a class="dropdown-item" [routerLink]="['profile', 'ojoubout']">
+          <img width="30" height="30" class="rounded-circle mr-3" alt="Cinque Terre" src="/assets/img.webp">
+          ojoubout
+        </a>
+      </div>
+    </div>
+
+    <div class="dropdown">
+      <a data-toggle="dropdown" id="dropdownMenuButton">
+        <img width="30" height="30" class="rounded-circle" alt="Cinque Terre" src="/assets/img.webp">
+      </a>
+      <div class="dropdown-menu dropdown-menu-right mt-2" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" [routerLink]="['profile', 'ojoubout']"><i class="bi bi-person-lines-fill pr-2"></i> Profile</a>
+        <a class="dropdown-item" routerLink="settings"><i class="bi bi-gear pr-2"></i> Account Settings</a>
+        <a class="dropdown-item" (click)="logout()"><i class="bi bi-box-arrow-left pr-2"></i> Logout</a>
+      </div>
+    </div>
+  </div>
+</nav>
