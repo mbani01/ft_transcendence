@@ -1,0 +1,221 @@
+{
+  "uuid": "5817eff2-1d99-4dab-976b-c9fe8e1a12d1",
+  "lastMigration": 19,
+  "name": "Ft transcendence",
+  "endpointPrefix": "api/v1",
+  "latency": 0,
+  "port": 3000,
+  "hostname": "0.0.0.0",
+  "routes": [
+    {
+      "uuid": "cb15c6c0-4fb4-401a-b37a-fe682f5a0f4d",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "chat/messages/1",
+      "responses": [
+        {
+          "uuid": "19395d6b-3e09-48d1-9335-05d872e4e09f",
+          "body": "[\n  {\n    \"roomID\": \"\",\n    \"message\": \"Hello Hello Hello Hello\",\n    \"sender\": \"ojoubout\",\n    \"timestamp\": 1642870651\n  },\n  {\n    \"roomID\": \"\",\n    \"message\": \"Hello Hello Hello Hello\",\n    \"sender\": \"ojoubout\",\n    \"timestamp\": 1642870651\n  },\n  {\n    \"roomID\": \"\",\n    \"message\": \"Hello Hello Hello Hello\",\n    \"sender\": \"ojouboutss\",\n    \"timestamp\": 1642870651\n  }\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "e9b1c9a2-04fe-4538-957b-7488f076c0ab",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "oauth_page",
+      "responses": [
+        {
+          "uuid": "804e54fd-6acf-4a5e-8a61-00a567606cff",
+          "body": "{\n  \"page\": \"http://localhost:4200/login/callback\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "6257927d-a9cf-40d6-b6ab-084875eaf995",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "access_token",
+      "responses": [
+        {
+          "uuid": "33489243-69f0-4bb9-8eea-3727bd1b4589",
+          "body": "{\n  \"access_token\": \"dasdsdsada\",\n  \"user\": {\n    \"uid\": \"1337\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\"\n\n  }\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "79aaa7b2-5173-4c1f-b22f-7d4b0fb97c98",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "users/me",
+      "responses": [
+        {
+          "uuid": "6a4fcba0-7c54-4210-8540-f2664a2f1d96",
+          "body": "{\n  \"uid\": \"1337\",\n  \"name\": \"ojoubout\",\n  \"img\": \"/assets/img.webp\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "9d18c7b2-c4d5-485f-b458-a337b9eb77da",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "users/ojoubout",
+      "responses": [
+        {
+          "uuid": "fe9c7f0d-574f-4098-9857-0443df20711d",
+          "body": "{\n  \"uid\": \"1337\",\n  \"name\": \"MoJriM\",\n  \"img\": \"/assets/img.webp\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "a4bc309f-05d6-4fef-afc0-77cf6ee00e67",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "userInfo/ojoubout",
+      "responses": [
+        {
+          "uuid": "6d3a64c2-7a9c-428b-a63a-d90ad14bc7e9",
+          "body": "{\r\n  \"wins\": 331,\r\n  \"games\": 562,\r\n  \"rankPoints\": 752,\r\n  \"totalScore\": 4249\r\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "fbe803af-fe69-4136-a7b0-84181fe8d8e1",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "matchHistory/ojoubout",
+      "responses": [
+        {
+          "uuid": "530b4d23-ece4-4fc8-b4e3-97a1a1135de6",
+          "body": "[\r\n  {\r\n    \"player1\": \"MoJriM\",\r\n    \"player2\": \"ojoubout\",\r\n    \"score1\": 5,\r\n    \"score2\": 1,\r\n    \"timestamp\": 1643384379000,\r\n    \"gameLength\": 368000,\r\n    \"gameType\": \"Ranked\"\r\n  },\r\n    {\r\n    \"player1\": \"MoJriM\",\r\n    \"player2\": \"ojoubout\",\r\n    \"score1\": 5,\r\n    \"score2\": 1,\r\n    \"timestamp\": 1643384379000,\r\n    \"gameLength\": 368000,\r\n    \"gameType\": \"Ranked\"\r\n  },\r\n    {\r\n    \"player1\": \"MoJriM\",\r\n    \"player2\": \"ojoubout\",\r\n    \"score1\": 5,\r\n    \"score2\": 1,\r\n    \"timestamp\": 1643384379000,\r\n    \"gameLength\": 368000,\r\n    \"gameType\": \"Ranked\"\r\n  },\r\n    {\r\n    \"player1\": \"MoJriM\",\r\n    \"player2\": \"ojoubout\",\r\n    \"score1\": 5,\r\n    \"score2\": 1,\r\n    \"timestamp\": 1643384379000,\r\n    \"gameLength\": 368000,\r\n    \"gameType\": \"Ranked\"\r\n  },\r\n    {\r\n    \"player1\": \"MoJriM\",\r\n    \"player2\": \"ojoubout\",\r\n    \"score1\": 5,\r\n    \"score2\": 10,\r\n    \"timestamp\": 1643374379000,\r\n    \"gameLength\": 368000,\r\n    \"gameType\": \"Ranked\"\r\n  },\r\n    {\r\n    \"player1\": \"MoJriM\",\r\n    \"player2\": \"ojoubout\",\r\n    \"score1\": 5,\r\n    \"score2\": 1,\r\n    \"timestamp\": 1643384379000,\r\n    \"gameLength\": 368000,\r\n    \"gameType\": \"Ranked\"\r\n  }\r\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    },
+    {
+      "key": "Access-Control-Allow-Origin",
+      "value": "*"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ]
+}
