@@ -1,20 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   database.module.ts                                 :+:      :+:    :+:   */
+/*   constants.ts                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/01 10:06:20 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/01 14:32:31 by mbani            ###   ########.fr       */
+/*   Created: 2022/02/01 14:27:06 by mbani             #+#    #+#             */
+/*   Updated: 2022/02/01 14:28:17 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { Module } from '@nestjs/common';
-import { databaseProviders } from './database.providers';
-
-@Module({
-	providers: databaseProviders,
-	exports: databaseProviders,
-})
-export class DatabaseModule {}
+export const SEQUELIZE :string = "SEQUELIZE";
+export const DEVELOPMENT :string = 'development';
+export const TEST :string = 'test';
+export const PRODUCTION :string = 'production';
