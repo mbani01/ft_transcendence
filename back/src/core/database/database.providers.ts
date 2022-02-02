@@ -6,16 +6,16 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 14:25:31 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/01 14:40:25 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/02 16:14:17 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { Sequelize } from 'sequelize-typescript';
-import { SEQUELIZE, DEVELOPMENT, TEST, PRODUCTION } from '../constants';
+import { TYPEORM, DEVELOPMENT, TEST, PRODUCTION } from '../constants';
 import { databaseConfig } from './database.config';
+import { createConnection } from 'typeorm';
 
 export const databaseProviders = [{
-    provide: SEQUELIZE,
+   provide: TYPEORM,
     useFactory: async () => {
         let config;
         switch (process.env.NODE_ENV) {
@@ -31,9 +31,6 @@ export const databaseProviders = [{
         default:
            config = databaseConfig.development;
         }
-        const sequelize = new Sequelize(config);
-        sequelize.addModels([]);
-        await sequelize.sync();
-        return sequelize;
-    },
+      await createConnection(config);
+      }
 }];
