@@ -1,0 +1,30 @@
+.navbar {
+  box-shadow: 0px -5px 8px;
+}
+
+.nav-item {
+  margin-bottom: 3px;
+  transition-duration: 300ms;
+}
+
+.nav-link {
+  color: var(--dark);
+  font-weight: 500;
+  margin-bottom: 5px;
+  transition-duration: 300ms;
+}
+
+.nav-item:hover:not(.active) {
+  background-color: rgba(255, 69, 69, 0.1);
+}
+
+.nav-item.active .nav-link {
+  color: var(--primary);
+}
+
+.nav-item.active {
+  margin-bottom: 0;
+  border-bottom: 3px solid var(--primary);
+}
+
+/*# sourceMappingURL=navbar.component.css.map */

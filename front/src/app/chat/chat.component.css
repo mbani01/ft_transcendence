@@ -1,0 +1,16 @@
+#chat-toggler {
+  background-color: #33393a;
+  position: absolute;
+  color: white;
+  bottom: 0;
+  right: 0;
+  text-decoration: none;
+  border-top-left-radius: 10px;
+  width: 420px;
+}
+
+.dropdown-menu {
+  background-color: var(--body-bg);
+}
+
+/*# sourceMappingURL=chat.component.css.map */
