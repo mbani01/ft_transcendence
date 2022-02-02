@@ -1,0 +1,20 @@
+#chat-toggler {
+  background-color: #33393a;
+  position: fixed;
+  color: white;
+  bottom: 0;
+  right: 0;
+  text-decoration: none;
+  border-top-left-radius: 10px;
+  width: 420px;
+}
+
+.chat {
+  background-color: #e6e6e6!important;
+}
+
+.dropdown-menu {
+//  height:500px;
+//  max-height:500px;
+  background-color: var(--body-bg);
+}
