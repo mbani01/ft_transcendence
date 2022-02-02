@@ -83,6 +83,31 @@
       "sequentialResponse": false
     },
     {
+      "uuid": "40416f8f-de0e-4b49-b79e-e5d045127df1",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "users",
+      "responses": [
+        {
+          "uuid": "f7594b6e-3b5d-480c-9a53-b3f7f1bf38f3",
+          "body": "[\n  {\n    \"uid\": \"1337\",\n    \"name\": \"MoJriM\",\n    \"img\": \"/assets/img.webp\"\n  },\n  {\n    \"uid\": \"1337\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\"\n  },\n  {\n    \"uid\": \"1337\",\n    \"name\": \"hamid\",\n    \"img\": \"/assets/img.webp\"\n  },\n  {\n    \"uid\": \"1337\",\n    \"name\": \"pimi\",\n    \"img\": \"/assets/img.webp\"\n  }\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
       "uuid": "79aaa7b2-5173-4c1f-b22f-7d4b0fb97c98",
       "documentation": "",
       "method": "get",
@@ -166,6 +191,31 @@
         {
           "uuid": "530b4d23-ece4-4fc8-b4e3-97a1a1135de6",
           "body": "[\r\n  {\r\n    \"player1\": \"MoJriM\",\r\n    \"player2\": \"ojoubout\",\r\n    \"score1\": 5,\r\n    \"score2\": 1,\r\n    \"timestamp\": 1643384379000,\r\n    \"gameLength\": 368000,\r\n    \"gameType\": \"Ranked\"\r\n  },\r\n    {\r\n    \"player1\": \"MoJriM\",\r\n    \"player2\": \"ojoubout\",\r\n    \"score1\": 5,\r\n    \"score2\": 1,\r\n    \"timestamp\": 1643384379000,\r\n    \"gameLength\": 368000,\r\n    \"gameType\": \"Ranked\"\r\n  },\r\n    {\r\n    \"player1\": \"MoJriM\",\r\n    \"player2\": \"ojoubout\",\r\n    \"score1\": 5,\r\n    \"score2\": 1,\r\n    \"timestamp\": 1643384379000,\r\n    \"gameLength\": 368000,\r\n    \"gameType\": \"Ranked\"\r\n  },\r\n    {\r\n    \"player1\": \"MoJriM\",\r\n    \"player2\": \"ojoubout\",\r\n    \"score1\": 5,\r\n    \"score2\": 1,\r\n    \"timestamp\": 1643384379000,\r\n    \"gameLength\": 368000,\r\n    \"gameType\": \"Ranked\"\r\n  },\r\n    {\r\n    \"player1\": \"MoJriM\",\r\n    \"player2\": \"ojoubout\",\r\n    \"score1\": 5,\r\n    \"score2\": 10,\r\n    \"timestamp\": 1643374379000,\r\n    \"gameLength\": 368000,\r\n    \"gameType\": \"Ranked\"\r\n  },\r\n    {\r\n    \"player1\": \"MoJriM\",\r\n    \"player2\": \"ojoubout\",\r\n    \"score1\": 5,\r\n    \"score2\": 1,\r\n    \"timestamp\": 1643384379000,\r\n    \"gameLength\": 368000,\r\n    \"gameType\": \"Ranked\"\r\n  }\r\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "6dcc8ed3-28f8-4ac1-9176-19b786f53502",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "chat/room",
+      "responses": [
+        {
+          "uuid": "eefac46c-c51a-48e0-809a-252881cb3f7d",
+          "body": "[\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"what\"\n    },\n    \"messages\": [],\n    \"unread\": 1\n  }\n]",
           "latency": 0,
           "statusCode": 200,
           "label": "",

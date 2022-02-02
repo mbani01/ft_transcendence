@@ -20,12 +20,19 @@ export class ChatService {
 
   private webSocket: WebSocket;
   constructor(private oauthService: OAuthService, private http: HttpClient) {
-    console.log('Chat Service');
-    this.webSocket = new WebSocket(environment.chatWebSocketUri);
-    this.webSocket.addEventListener('open', (event) => {
-      console.log(event);
-      this.webSocket.send('Hello this is ft_transcendence');
-      this.webSocket.addEventListener('message', this.receiveMessage);
+    this.oauthService.user$.subscribe({
+      next: value => {
+        if (value) {
+          console.log('Chat Service');
+          this.webSocket = new WebSocket(environment.chatWebSocketUri);
+          this.fetchRooms();
+          this.webSocket.addEventListener('open', (event) => {
+            console.log(event);
+            this.webSocket.send('Hello this is ft_transcendence');
+            this.webSocket.addEventListener('message', this.receiveMessage);
+          })
+        }
+      }
     })
   }
 
@@ -134,5 +141,21 @@ export class ChatService {
 
   closeChat() {
     this.currChat = undefined;
+  }
+
+  fetchRooms() {
+    console.log(this.oauthService.user);
+    this.http.get<Chat[]>(`${environment.apiBaseUrl}chat/room`,
+      {
+        params: {
+          user: this.oauthService.user.uid
+        }
+      }).subscribe({
+      next: chats => {
+        chats.forEach(value => {
+          this.chats.set(value.roomID, value);
+        })
+      }
+    });
   }
 }

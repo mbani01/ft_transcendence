@@ -13,6 +13,6 @@ export class AppComponent {
   }
 
   ngOnInit() {
-    console.log(this.oauthService.isAuthenticated());
+    console.log('isAuthenticated: ' + this.oauthService.isAuthenticated());
   }
 }

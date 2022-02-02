@@ -15,15 +15,6 @@ export class ChatComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.chatService.chats.set('1', {
-      roomID: '1',
-      name: 'ojoubout',
-      isChannel: false,
-      users: {uid: 'dsa', name: 'ojoubout', img: 'what'},
-      messages: [],
-      unread: 1
-    });
-
   }
 
   ngAfterViewInit() {

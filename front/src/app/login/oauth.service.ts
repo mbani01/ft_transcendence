@@ -14,7 +14,7 @@ export class OAuthService {
   private access_token: string = '';
 
   // @ts-ignore
-  private _user: BehaviorSubject<User> = new BehaviorSubject<User>(null);
+  public user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
   constructor(private http: HttpClient, private cookieService: CookieService, private router: Router) {
     console.log('OAuth Service');
@@ -35,7 +35,7 @@ export class OAuthService {
         this.access_token = token.access_token;
         this.cookieService.set('access_token', this.access_token, undefined, '/');
         console.log(this.token);
-        this._user.next(token.user);
+        this.user$.next(token.user);
       },
       error: (error => console.log(error)),
       complete: () => this.router.navigate([''])
@@ -51,15 +51,13 @@ export class OAuthService {
   }
 
   get user() {
-    return this._user.value;
+    return this.user$.value;
   }
 
   fetchUser() {
-    console.log('fetchUser');
     this.http.get<User>(`${environment.apiBaseUrl}users/me`).subscribe({
       next: value => {
-        console.log(value);
-        this._user.next(value);
+        this.user$.next(value);
       },
       error: err => {
         console.log(err);

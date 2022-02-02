@@ -16,11 +16,17 @@
       </li>
     </ul>
     <div class="dropdown mr-3 p-0 col-4">
-      <input type="text" class="form-control" placeholder="Search" data-toggle="dropdown" id="searchDropdownButton">
-      <div class="dropdown-menu w-100" aria-labelledby="searchDropdownButton">
-        <a class="dropdown-item" [routerLink]="['profile', 'ojoubout']">
-          <img width="30" height="30" class="rounded-circle mr-3" alt="Cinque Terre" src="/assets/img.webp">
-          ojoubout
+      <input type="text" class="form-control form-rounded" placeholder="Search" data-toggle="dropdown" (click)="search($event)" (input)="search($event)">
+      <div class="dropdown-menu w-100" >
+        <div class="spinner-border d-flex mx-auto" role="status" *ngIf="loading">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <a *ngFor="let user of users | async" class="dropdown-item" [routerLink]="['profile', user.name]">
+<!--        <a *ngFor="let user of users | async" class="dropdown-item" [routerLink]="['profile', 'ojoubout']">-->
+
+          <div *ngIf="!user">Loading...</div>
+          <img width="30" height="30" class="rounded-circle mr-3" alt="Cinque Terre" [src]="user.img">
+          {{user.name}}
         </a>
       </div>
     </div>
