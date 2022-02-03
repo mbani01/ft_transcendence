@@ -7,6 +7,9 @@ import {ChattingComponent} from "./chatting/chatting.component";
 import {MessageComponent} from "./chatting/message/message.component";
 import {NgbDropdownModule, NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import { DateComponent } from './chatting/date/date.component';
+import {ChatRoomsComponent} from "./chat-rooms/chat-rooms.component";
+import {JoinModalComponent} from "./chat-rooms/join-modal/join-modal.component";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -15,14 +18,16 @@ import { DateComponent } from './chatting/date/date.component';
     ChatComponent,
     ChattingComponent,
     MessageComponent,
-    DateComponent
+    DateComponent,
+    ChatRoomsComponent,
+    JoinModalComponent
   ],
-  imports: [
-    CommonModule,
-    NgbModule,
-    NgbDropdownModule
-
-  ],
+    imports: [
+        CommonModule,
+        NgbModule,
+        NgbDropdownModule,
+        FormsModule
+    ],
   exports: [
     ChatComponent
   ]

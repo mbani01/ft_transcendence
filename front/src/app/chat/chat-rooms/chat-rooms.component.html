@@ -1,0 +1,22 @@
+
+<ng-template #content let-modal>
+  <join-modal [modal]="modal" (joinModal)="joinModalEvent($event)"></join-modal>
+</ng-template>
+<div class="container mt-5">
+  <ul class="list-group">
+    <li class="list-group-item d-flex" *ngFor="let chat of chats">
+      <div class="mr-5">
+        <h3 class="mb-0">{{chat.name}}</h3>
+        <em><small class="font-weight-lighter">Created By: {{chat.owner?.name}}</small></em>
+      </div>
+      <div class="my-auto text-secondary" ngbTooltip="members" [openDelay]="500">
+        <i class="bi bi-people"></i> 125
+      </div>
+      <div class="ml-auto h-100 my-auto">
+        <i *ngIf="chat.type == chatType.PROTECTED" class="bi bi-lock-fill mr-3"
+           ngbTooltip="Password" [openDelay]="500"></i>
+        <button class="btn btn-primary" (click)="open(content, chat)">Join</button>
+      </div>
+    </li>
+  </ul>
+</div>

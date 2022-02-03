@@ -3,8 +3,13 @@
 <!-- Header -->
 
   <div id="header" class="row m-0">
-    <h3 id="chat-back" class="bi bi-arrow-left-short mx-1 my-auto rounded-circle"
-    (click)="back()"></h3>
+    <div class="back-div d-flex">
+<!--      <svg id="chat-back" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 24 24">-->
+<!--        <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>-->
+<!--      </svg>-->
+      <h3 id="chat-back" class="bi bi-arrow-left-short rounded-circle"
+          (click)="back()"></h3>
+    </div>
     <img width="32" height="32" class="rounded-circle mr-2 my-auto" alt="Cinque Terre" src="/assets/img.webp">
     <b class="my-auto">{{ chat?.name }}</b>
     <h5 id="chat-settings" class="bi bi-gear-fill my-auto ml-auto mr-2"></h5>

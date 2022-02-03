@@ -1,0 +1,30 @@
+<div class="container mt-3">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Ranking</th>
+        <th>Player</th>
+        <th>Rank</th>
+        <th>Points</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of topPlayers | async; index as i">
+        <td class="col-1 text-center">{{i}}</td>
+        <td>
+          <img [src]="user.img" class="rounded-circle" width="64" height="64" alt="">
+          {{user.name}}
+        </td>
+        <td>
+          Diamond
+        </td>
+        <td>{{user.wins}}</td>
+      </tr>
+    </tbody>
+<!--    <li class="list-group-item d-flex" *ngFor="let user of topPlayers | async">-->
+<!--      <img [src]="user.img" class="rounded-circle" width="64" height="64">-->
+<!--      <h2>{{user.name}}</h2>-->
+
+<!--    </li>-->
+  </table>
+</div>

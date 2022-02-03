@@ -2,6 +2,7 @@
   display: flex;
   height: 500px;
   flex-direction: column;
+  color: var(--dark);
 }
 
 #header {
@@ -26,6 +27,11 @@
 
 #chat-back {
   transition-duration: 200ms;
+  width: 32px;
+  height: 32px;
+  margin: 8px 4px 8px 4px;
+  padding-left: 1px;
+  padding-bottom: 1px;
 }
 
 #chat-back:hover {

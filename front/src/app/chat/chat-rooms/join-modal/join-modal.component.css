@@ -1,0 +1,18 @@
+#modal-container {
+  background-color: #181a1b;
+  color: #a2a09b;
+}
+
+#modal-header button {
+  color: #a2a09b;
+}
+
+#modal-header button:hover {
+  color: #5e5858;
+}
+
+.modal-header, .modal-body, .modal-footer {
+  border-color: #5e5858;
+}
+
+/*# sourceMappingURL=join-modal.component.css.map */

@@ -1,11 +1,20 @@
 
 
 
-$primary: #ff4545;
-$dark: #282c34;
+$primary: #ff2828;
+$secondary: #daae51;
+$dark: #141517;
+$light: #dce0e3;
 //$secondary: #e6e6e6;
 //@import "../node_modules/bootstrap/scss/bootstrap";
 $body-bg: #e6e6e6;
+$body-color: $light;
+
+body {
+  //background: red;
+  background: linear-gradient(90deg, #d53369 0%, #daae51 100%);
+}
+//$body-bg: #e6e6e6;
 //$white: #e6e6e6;
 
 .smoked {

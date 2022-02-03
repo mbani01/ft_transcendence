@@ -1,8 +1,14 @@
 import {User} from "../../shared/user";
-import {Message} from "./message.model";
 
-export class ChatRoom {
-  private users: User[] = [];
-  private messages: Message[] = [];
-  private unread: number = 0;
+export enum ChatType {
+  PRIVATE,
+  PUBLIC,
+  PROTECTED
+}
+export interface ChatRoom {
+  roomID?: string,
+  name?: string
+  isChannel?: boolean,
+  type?: ChatType,
+  owner?: User
 }

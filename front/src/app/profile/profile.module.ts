@@ -24,4 +24,8 @@ import {GameLengthPipe} from "./pipes/game-length.pipe";
     RoutingModule
   ]
 })
-export class ProfileModule { }
+export class ProfileModule {
+  constructor() {
+    console.log('Hello Profile');
+  }
+}

@@ -3,13 +3,6 @@
   border: 1px solid #55555555;
   margin: 5px 0;
 }
-//.row {
-//  border: 1px solid;
-//}
-//
-//.col {
-//  border: 1px solid;
-//}
 
 .scores {
   font-weight: bold;
@@ -19,6 +12,7 @@
 .victory {
   color: #118537;
 }
+
 .defeat {
   color: #c91717;
 }
@@ -32,3 +26,5 @@
   font-weight: bold;
   font-size: 20px;
 }
+
+/*# sourceMappingURL=match-history.component.css.map */

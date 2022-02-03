@@ -2,9 +2,14 @@
 //@import "../../../node_modules/bootstrap/scss/functions";
 //@import "../../../node_modules/bootstrap/scss/variables";
 
+#logo {
+  color: #daae51;
+}
+
 .navbar {
   //border-bottom: 1px solid black;
-  background-color: #e6e6e6;
+  //background-color: #e6e6e6;
+  background: linear-gradient(90deg, #d53369 0%, #daae51 100%);
   box-shadow: 0px -5px 8px;
   position: fixed;
   top: 0;
@@ -18,7 +23,8 @@
 }
 
 .nav-link {
-  color: var(--dark);
+  color: var(--light);
+  //text-shadow: 1px 1px #ffffff22;
   font-weight: 500;
   margin-bottom: 5px;
   transition-duration: 300ms;
@@ -38,10 +44,10 @@
 }
 
 .nav-item.active .nav-link {
-  color: var(--primary);
+  color: var(--secondary);
 }
 
 .nav-item.active {
   margin-bottom: 0;
-  border-bottom: 3px solid var(--primary);
+  border-bottom: 3px solid var(--secondary);
 }
