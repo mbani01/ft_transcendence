@@ -11,5 +11,8 @@
 	  "synchronize": false,
 	  "migrations": ["dist/migrations/*.js"],
 	  "migrationsTableName": "migrations_typeorm",
-	  "migrationsRun": true
+	  "migrationsRun": true,
+	  "extra": {
+		"ssl": "true"
+	  }
 }
