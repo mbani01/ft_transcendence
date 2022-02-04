@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/04 09:50:56 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/04 11:14:10 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/04 17:58:07 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ export class WsAdapter extends IoAdapter {
 			// 	next();
 			// else
 			// 	next (new Error("Unauthorized !"));
+			console.log("Callled");
 			next();
 		});
 		return server;
