@@ -2,6 +2,7 @@
 	  "name": "default",
 	  "type": "postgres",
 	  "host": "localhost",
+	  "url": "postgres://xtnyatqxhpgcbt:cdd7c9555c94ffc7c21bedda4d6af134e1d2234a8686b1a29d6953bd692570e3@ec2-34-253-29-48.eu-west-1.compute.amazonaws.com:5432/db8senkb5v627m",
 	  "port": 5432,
 	  "username": "leet_admin",
 	  "password": "leetask",

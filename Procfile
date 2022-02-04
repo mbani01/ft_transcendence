@@ -1,1 +1,1 @@
-npm run start
+npm build && npm start
