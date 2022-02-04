@@ -12,7 +12,11 @@
 	  "migrations": ["dist/migrations/*.js"],
 	  "migrationsTableName": "migrations_typeorm",
 	  "migrationsRun": true,
+	  "logging": true,
+	  "ssl": true,
 	  "extra": {
-		"ssl": "true"
+		"ssl": {
+		  "rejectUnauthorized": false
+		}
 	  }
 }
