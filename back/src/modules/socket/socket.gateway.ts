@@ -1,18 +1,26 @@
-import { Injectable } from "@nestjs/common";
-import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   socket.gateway.ts                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/04 09:51:02 by mbani             #+#    #+#             */
+/*   Updated: 2022/02/04 11:17:41 by mbani            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-@Injectable()
+import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { CustomSocket } from "src/adapters/socket.adapter";
+
 @WebSocketGateway(80)
 export class socketGateway {
-//   @WebSocketServer()
-//   server;
-
-//   @SubscribeMessage('message')
-//   handleMessage(@MessageBody() message: string): void {
-//     this.server.emit('message', message);
-//   }
+  @SubscribeMessage('message')
+  handleMessage(client: CustomSocket, message: any): void {
+    // console.log(message);
+  }
 @SubscribeMessage('connection')
-handleConnection(client, data){
-	console.log(client.handshake);
+handleConnection(client: CustomSocket, data){
+	// console.log(client.handshake.headers.token);
 }
 }
