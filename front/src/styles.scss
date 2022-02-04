@@ -23,4 +23,13 @@ body {
   width: 100px;
   height: 100px;
 }
+
+.popover-dark {
+  background: aliceblue !important;
+  font-size: 125% !important;
+  background: var(--dark) !important;
+  //max-width: 360px !important;
+}
+
+
 @import "../node_modules/bootstrap/scss/bootstrap";

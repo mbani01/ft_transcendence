@@ -1,6 +1,10 @@
 <div class="row">
-  <div class="img-frame mt-auto m-1">
-    <img *ngIf="!isMine() && showAvatar()" class="rounded-circle my-auto" alt="Cinque Terre" src="/assets/img.webp">
+  <ng-template #chatterPopup>
+    <chatter-popup [user]="message.sender"></chatter-popup>
+  </ng-template>
+
+  <div class="img-frame mt-auto m-1" [ngbPopover]="chatterPopup" popoverClass="popover-dark" [autoClose]="false">
+    <img *ngIf="!isMine() && showAvatar()" class="rounded-circle my-auto" alt="Cinque Terre" [src]="message.sender.img">
   </div>
 
   <div class="chat-message" [ngClass]="[isMine(), marginBottom()]" [ngStyle]="borderRadius()"

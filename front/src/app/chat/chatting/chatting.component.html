@@ -39,8 +39,8 @@
 <!-- Prompt -->
 
   <div id="prompt" class="w-100">
-    <form class="row m-auto">
-      <input type="text" class="form-control form-rounded col m-1" placeholder="Message">
+    <form class="row m-auto" #messageForm="ngForm" (ngSubmit)="sendMessage(messageForm)">
+      <input type="text" class="form-control form-rounded col m-1" placeholder="Message" name="message" ngModel>
 <!--      <input type="submit" class="btn rounded-circle col-2">-->
       <button class="btn btn-primary rounded-circle m-1">
         <i class="bi bi-send"></i>

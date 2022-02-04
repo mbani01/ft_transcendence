@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="row">
+    <img width="48" height="48" class="rounded-circle mr-2" alt="Cinque Terre" [src]="user.img">
+    <span class="font-weight-bold">{{user.name}}</span>
+  </div>
+  <div class="row justify-content-around">
+      <button class="btn btn-info">View Profile</button>
+      <button class="btn btn-primary">Invite Play</button>
+  </div>
+  <hr class="bg-light mb-0">
+  <div class="row justify-content-around m-0">
+    <div class="row">
+      <button class="btn btn-warning my-auto ">Mute</button>
+      <ngb-timepicker class="" [(ngModel)]="muteTime"></ngb-timepicker>
+    </div>
+    <div class="row">
+      <button class="btn btn-danger">Ban</button>
+      <button class="btn btn-danger">Admin</button>
+    </div>
+  </div>
+</div>

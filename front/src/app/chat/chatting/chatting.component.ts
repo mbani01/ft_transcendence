@@ -3,6 +3,8 @@ import {ChatService} from "../chat.service";
 import {Chat} from "../shared/chat.model";
 import {Message} from "../shared/message.model";
 import {NgIfContext} from "@angular/common";
+import {NgForm} from "@angular/forms";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-chatting',
@@ -48,13 +50,25 @@ export class ChattingComponent {
     return this.chatService.currChat;
   }
   get messages() {
-    if (!this.chatService.currChat) {
-      return [];
+    // console.log("Yo!")
+    let msg: Message[] = [];
+    if (this.chatService.currChat) {
+      msg = this.chatService.currChat.messages;
     }
-    return this.chatService.currChat.messages;
+    return msg;
   }
 
   back() {
     this.chatService.closeChat();
+  }
+
+  sendMessage(form: NgForm) {
+    // console.log(form.value);
+    if (form.value.message) {
+      this.chatService.sendMessage(form.value.message);
+      console.log("Help");
+      form.reset();
+      setTimeout(() => this.scrollDown(), 100);
+    }
   }
 }

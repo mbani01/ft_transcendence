@@ -125,10 +125,12 @@ export class ChatService {
     if (this.currChat) {
       let m: Message = {
         roomID: this.currChat.roomID,
-        sender: 'ojoubout',
+        sender: this.oauthService.user,
         message: message,
         timestamp: new Date()
       };
+      console.log(m);
+      this.currChat.messages.push(m);
       this.webSocket.send(JSON.stringify(m));
     } else {
       console.log('sendMessage(): there is no chat opened');

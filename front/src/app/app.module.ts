@@ -11,6 +11,7 @@ import {LoginModule} from "./login/login.module";
 import {AuthInterceptor} from "./login/auth.interceptor";
 import {ChatModule} from "./chat/chat.module";
 import {LeaderboardComponent} from "./leaderboard/leaderboard.component";
+import {NgbPopoverModule} from "@ng-bootstrap/ng-bootstrap";
 
 @NgModule({
   declarations: [
@@ -20,12 +21,13 @@ import {LeaderboardComponent} from "./leaderboard/leaderboard.component";
     NotFoundComponent,
     LeaderboardComponent
   ],
-  imports: [
-    BrowserModule,
-    LoginModule,
-    ChatModule,
-    AppRoutingModule
-  ],
+    imports: [
+        BrowserModule,
+        LoginModule,
+        ChatModule,
+        AppRoutingModule,
+        NgbPopoverModule
+    ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
