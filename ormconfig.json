@@ -1,0 +1,14 @@
+{
+	  "name": "default",
+	  "type": "postgres",
+	  "host": "localhost",
+	  "port": 5432,
+	  "username": "leet_admin",
+	  "password": "leetask",
+	  "database": "ft_tran",
+	  "entities": ["dist/**/*.entity.js"],
+	  "synchronize": false,
+	  "migrations": ["dist/migrations/*.js"],
+	  "migrationsTableName": "migrations_typeorm",
+	  "migrationsRun": true
+}
