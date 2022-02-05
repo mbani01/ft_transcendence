@@ -1,16 +1,10 @@
-//.row {
-//  border: 1px dashed;
-//}
-//.col {
-//  border: 1px dashed;
-//}
-
 #nickname {
   align-self: end;
   margin: 0 4px;
   font-weight: bold;
   font-size: 24px;
 }
+
 .dot {
   height: 12px;
   width: 12px;
@@ -21,7 +15,6 @@
 }
 
 .status {
-
   color: #00D04E;
   padding: 0;
   margin: 0;
@@ -30,3 +23,4 @@
   font-size: 14px;
 }
 
+/*# sourceMappingURL=user-info.component.css.map */

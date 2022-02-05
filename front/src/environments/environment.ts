@@ -4,8 +4,12 @@
 
 export const environment = {
   production: false,
-  apiBaseUrl: 'http://localhost:3000/api/v1/',
-  chatWebSocketUri: 'ws://localhost:6969'
+  host: '10.11.2.3',
+  httpPort: 4200,
+  apiPort: 3000,
+  socketPort: 6969,
+  get apiBaseUrl() { return `http://${this.host}:${this.apiPort}/api/v1/`},
+  get socketUri() {return `ws://${this.host}:${this.socketPort}`}
 };
 
 /*

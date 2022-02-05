@@ -7,6 +7,7 @@ import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {NgbDropdown} from "@ng-bootstrap/ng-bootstrap";
 import {BehaviorSubject} from "rxjs";
+import {Socket} from "ngx-socket-io";
 
 
 
@@ -15,22 +16,24 @@ import {BehaviorSubject} from "rxjs";
 })
 export class ChatService {
   public _currChat?: Chat;
-  public chats: Map<string, Chat> = new Map();
+  public chats: Map<string, Chat>;
   public dropdown: NgbDropdown;
 
-  private webSocket: WebSocket;
-  constructor(private oauthService: OAuthService, private http: HttpClient) {
+  // private webSocket: WebSocket;
+  constructor(private oauthService: OAuthService, private http: HttpClient, private socket: Socket) {
+    this.chats = new Map();
     this.oauthService.user$.subscribe({
       next: value => {
         if (value) {
           console.log('Chat Service');
-          this.webSocket = new WebSocket(environment.chatWebSocketUri);
+          socket.fromEvent<string>('chat broadcast-message').subscribe({next: this.receiveMessage.bind(this)});
+          // this.webSocket = new WebSocket(environment.chatWebSocketUri);
           this.fetchRooms();
-          this.webSocket.addEventListener('open', (event) => {
-            console.log(event);
-            this.webSocket.send('Hello this is ft_transcendence');
-            this.webSocket.addEventListener('message', this.receiveMessage);
-          })
+          // this.webSocket.addEventListener('open', (event) => {
+          //   console.log(event);
+          //   this.webSocket.send('Hello this is ft_transcendence');
+          //   this.webSocket.addEventListener('message', this.receiveMessage);
+          // })
         }
       }
     })
@@ -131,14 +134,23 @@ export class ChatService {
       };
       console.log(m);
       this.currChat.messages.push(m);
-      this.webSocket.send(JSON.stringify(m));
+      this.socket.emit('chat message', JSON.stringify(m));
+      // this.webSocket.send(JSON.stringify(m));
     } else {
       console.log('sendMessage(): there is no chat opened');
     }
   }
 
-  receiveMessage(message: MessageEvent) {
-    console.log(message);
+  receiveMessage = (message: string) => {
+    console.log('receiveMessage:')
+
+    let m: Message = JSON.parse(message);
+    m.timestamp = new Date(m.timestamp);
+
+    let chat = this.chats.get(m.roomID);
+    if (chat) {
+      chat.messages.push(m);
+    }
   }
 
   closeChat() {
@@ -157,6 +169,7 @@ export class ChatService {
         chats.forEach(value => {
           this.chats.set(value.roomID, value);
         })
+        console.log(this.chats);
       }
     });
   }

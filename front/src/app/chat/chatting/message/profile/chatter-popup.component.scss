@@ -1,3 +1,25 @@
 //button {
 //  padding: 0.25rem 0.5rem;
 //}
+
+.dot {
+  height: 12px;
+  width: 12px;
+  margin: 2px 4px;
+  background-color: #00D04E;
+  border-radius: 50%;
+}
+
+.status {
+
+  color: #00D04E;
+  font-weight: bold;
+  font-size: 12px;
+
+}
+
+.timepicker {
+  //width: 32px;
+  text-align: center;
+  //padding-left: 10px;
+}

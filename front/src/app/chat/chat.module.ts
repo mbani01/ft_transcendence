@@ -17,6 +17,11 @@ import {ChatRoomsComponent} from "./chat-rooms/chat-rooms.component";
 import {JoinModalComponent} from "./chat-rooms/join-modal/join-modal.component";
 import {FormsModule} from "@angular/forms";
 import {ChatterPopupComponent} from "./chatting/message/profile/chatter-popup.component";
+import {Socket} from "socket.io";
+import {SocketIoConfig, SocketIoModule} from "ngx-socket-io";
+import {environment} from "../../environments/environment";
+
+const config: SocketIoConfig = {url: environment.socketUri, options: {}}
 
 @NgModule({
   declarations: [
@@ -37,7 +42,8 @@ import {ChatterPopupComponent} from "./chatting/message/profile/chatter-popup.co
         NgbPopoverModule,
         NgbTooltipModule,
         NgbTimepickerModule,
-        FormsModule
+        FormsModule,
+        SocketIoModule.forRoot(config)
     ],
   exports: [
     ChatComponent
