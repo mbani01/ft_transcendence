@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-export const TYPEORM :string = "TYPEORM";
-export const DEVELOPMENT :string = 'development';
-export const TEST :string = 'test';
-export const PRODUCTION :string = 'production';
+export const TYPEORM: string = 'TYPEORM';
+export const DEVELOPMENT: string = 'development';
+export const TEST: string = 'test';
+export const PRODUCTION: string = 'production';

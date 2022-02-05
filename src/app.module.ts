@@ -5,6 +5,9 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GameModule } from './modules/game/game.module';
 import { SocketModule } from './modules/socket/socket.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersService } from './users/users.service';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -21,8 +24,10 @@ import { SocketModule } from './modules/socket/socket.module';
       autoLoadEntities: true, // help load entities automatically.
       synchronize: true, // insures our entities are sync with the database every time we run our app.
     }),
+    AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, UsersService],
 })
 export class AppModule {}

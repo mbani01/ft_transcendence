@@ -14,23 +14,25 @@ import { TYPEORM, DEVELOPMENT, TEST, PRODUCTION } from '../constants';
 import { databaseConfig } from './database.config';
 import { createConnection } from 'typeorm';
 
-export const databaseProviders = [{
-   provide: TYPEORM,
+export const databaseProviders = [
+  {
+    provide: TYPEORM,
     useFactory: async () => {
-        let config;
-        switch (process.env.NODE_ENV) {
+      let config;
+      switch (process.env.NODE_ENV) {
         case DEVELOPMENT:
-           config = databaseConfig.development;
-           break;
+          config = databaseConfig.development;
+          break;
         case TEST:
-           config = databaseConfig.test;
-           break;
+          config = databaseConfig.test;
+          break;
         case PRODUCTION:
-           config = databaseConfig.production;
-           break;
+          config = databaseConfig.production;
+          break;
         default:
-           config = databaseConfig.development;
-        }
-      await createConnection(config);
+          config = databaseConfig.development;
       }
-}];
+      await createConnection(config);
+    },
+  },
+];

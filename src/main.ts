@@ -8,6 +8,6 @@ async function bootstrap() {
   app.useWebSocketAdapter(new WsAdapter(80));
   app.setGlobalPrefix('api');
   await app.listen(PORT);
-  console.log("App Listening on Port : " + PORT);
+  console.log('App Listening on Port : ' + PORT);
 }
 bootstrap();
