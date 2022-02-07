@@ -3,7 +3,8 @@
     <chatter-popup [user]="message.sender" [popover]="p"></chatter-popup>
   </ng-template>
 
-  <div class="img-frame mt-auto m-1" [ngbPopover]="chatterPopup" popoverClass="popover-dark" autoClose="outside" #p="ngbPopover">
+  <div class="img-frame mt-auto m-1" [ngbPopover]="chatterPopup"
+       popoverClass="popover-dark" autoClose="outside" #p="ngbPopover" placement="auto">
     <img *ngIf="!isMine() && showAvatar()" class="rounded-circle my-auto" alt="Cinque Terre" [src]="message.sender.img">
   </div>
 

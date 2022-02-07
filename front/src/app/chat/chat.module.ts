@@ -21,7 +21,7 @@ import {Socket} from "socket.io";
 import {SocketIoConfig, SocketIoModule} from "ngx-socket-io";
 import {environment} from "../../environments/environment";
 
-const config: SocketIoConfig = {url: environment.socketUri, options: {}}
+const config: SocketIoConfig = {url: environment.chatSocketUri, options: {}}
 
 @NgModule({
   declarations: [

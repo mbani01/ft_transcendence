@@ -15,7 +15,7 @@
       <div class="ml-auto h-100 my-auto">
         <i *ngIf="chat.type == chatType.PROTECTED" class="bi bi-lock-fill mr-3"
            ngbTooltip="Password" [openDelay]="500"></i>
-        <button class="btn btn-primary" (click)="open(content, chat)">Join</button>
+        <button class="btn btn-primary" (click)="joinChannel(chat)">Join</button>
       </div>
     </li>
   </ul>

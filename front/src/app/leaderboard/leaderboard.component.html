@@ -1,5 +1,5 @@
 <div class="container mt-3">
-  <table class="table">
+  <table class="table font-weight-bold">
     <thead>
       <tr>
         <th>Ranking</th>
@@ -10,10 +10,10 @@
     </thead>
     <tbody>
       <tr *ngFor="let user of topPlayers | async; index as i">
-        <td class="col-1 text-center">{{i}}</td>
+        <td class="col-1 text-center">{{i + 1}}</td>
         <td>
-          <img [src]="user.img" class="rounded-circle" width="64" height="64" alt="">
-          {{user.name}}
+          <img [src]="user.img" class="rounded-circle mr-3" width="64" height="64" alt="">
+          <span class="font-weight-bold">{{user.name}}</span>
         </td>
         <td>
           Diamond

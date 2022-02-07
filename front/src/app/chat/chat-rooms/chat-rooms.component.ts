@@ -1,4 +1,4 @@
-import {Component, TemplateRef} from "@angular/core";
+import {Component, TemplateRef, ViewChild} from "@angular/core";
 import {ChatRoom, ChatType} from "../shared/chat-room.model";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
@@ -15,6 +15,8 @@ export class ChatRoomsComponent {
   chatType = ChatType;
   selectedChat: ChatRoom;
 
+  @ViewChild('content') content: TemplateRef<any>;
+
   constructor(private http: HttpClient, private ngbModal: NgbModal) {
     http.get<ChatRoom[]>(`${environment.apiBaseUrl}chat/channel`).subscribe(
       {
@@ -26,12 +28,18 @@ export class ChatRoomsComponent {
     );
   }
 
-  open(content: TemplateRef<any>, chat: ChatRoom) {
-    this.ngbModal.open(content, {centered: true});
+  openPasswordModal(chat: ChatRoom) {
+    this.ngbModal.open(this.content, {centered: true});
     this.selectedChat = chat;
   }
 
   joinModalEvent(joinModal: JoinModalComponent) {
     joinModal.room = this.selectedChat;
+  }
+
+  joinChannel(chat: ChatRoom) {
+    if (chat.type == ChatType.PROTECTED) {
+      this.openPasswordModal(chat);
+    }
   }
 }

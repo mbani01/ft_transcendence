@@ -19,6 +19,10 @@ export class MessageComponent {
     popover.popoverClass = 'popover-dark';
   }
 
+  ngOnInit() {
+    console.log(this.message);
+
+  }
   showAvatar() {
     return !(this.next && this.next.sender.uid == this.message.sender.uid);
 
