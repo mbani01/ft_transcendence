@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/04 09:50:56 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/04 17:58:07 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/07 16:45:13 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@ export interface CustomSocket extends Socket {
   
 export class WsAdapter extends IoAdapter {
 	createIOServer(port: number, options?: any) {
-		const server = super.createIOServer(port, options);
-		server.use((socket :Socket, next: any)=>{
+		const server = super.createIOServer(port, { cors: true });
+		server.use((socket :CustomSocket, next: any)=>{
+			socket.user = "mbani";
 			//Verify jwt token Here !
 			// if (Verified)
 			// 	next();
