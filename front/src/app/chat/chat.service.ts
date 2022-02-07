@@ -26,8 +26,8 @@ export class ChatService {
       next: value => {
         if (value) {
           console.log('Chat Service');
-          socket.fromEvent<string>('chat broadcast-message').subscribe({next: this.receiveMessage.bind(this)});
-          
+          socket.fromEvent<string>('message').subscribe({next: this.receiveMessage.bind(this)});
+
           // this.webSocket = new WebSocket(environment.chatWebSocketUri);
           this.fetchRooms();
           // this.webSocket.addEventListener('open', (event) => {
