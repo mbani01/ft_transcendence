@@ -4,6 +4,8 @@ import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {JoinModalComponent} from "./join-modal/join-modal.component";
+import {ChatService} from "../chat.service";
+import {Chat} from "../shared/chat.model";
 
 @Component({
   selector: 'chat-rooms',
@@ -17,7 +19,7 @@ export class ChatRoomsComponent {
 
   @ViewChild('content') content: TemplateRef<any>;
 
-  constructor(private http: HttpClient, private ngbModal: NgbModal) {
+  constructor(private http: HttpClient, private ngbModal: NgbModal, private chatService: ChatService) {
     http.get<ChatRoom[]>(`${environment.apiBaseUrl}chat/channel`).subscribe(
       {
         next: value => {
@@ -40,6 +42,12 @@ export class ChatRoomsComponent {
   joinChannel(chat: ChatRoom) {
     if (chat.type == ChatType.PROTECTED) {
       this.openPasswordModal(chat);
+    } else {
+      this.chatService.joinChannel(chat.roomID!, '', (room: Chat) => {
+        console.log(room);
+        this.chatService.chats.set(room.roomID, room);
+        this.chatService.openChat(room.roomID);
+      });
     }
   }
 }

@@ -26,7 +26,8 @@ export class ChatService {
       next: value => {
         if (value) {
           console.log('Chat Service');
-          socket.fromEvent<string>('message').subscribe({next: this.receiveMessage.bind(this)});
+          socket.on('message', this.receiveMessage);
+          // socket.fromEvent<string>('message').subscribe({next: this.receiveMessage.bind(this)});
 
           // this.webSocket = new WebSocket(environment.chatWebSocketUri);
           this.fetchRooms();
@@ -44,18 +45,24 @@ export class ChatService {
     this.dropdown.open();
   }
 
-  joinChannel(roomID: string) {
-    let chat = this.chats.get(roomID);
-    if (chat !== undefined) {
-      this.currChat = chat;
-    }
-    this.http.post<Chat>(`${environment.apiBaseUrl}chat/
-    channel/${roomID}`, this.oauthService.user).subscribe({
-      next: chat => {
-        this.chats.set(roomID, chat);
-        this.currChat = chat;
-      }
-    });
+  joinChannel(roomID: string, password: string, callback: Function) {
+    console.log(password);
+    this.socket.emit('join', {
+        roomID: roomID,
+        password: password
+      }, callback
+    );
+    // let chat = this.chats.get(roomID);
+    // if (chat !== undefined) {
+    //   this.currChat = chat;
+    // }
+    // this.http.post<Chat>(`${environment.apiBaseUrl}chat/
+    // channel/${roomID}`, this.oauthService.user).subscribe({
+    //   next: chat => {
+    //     this.chats.set(roomID, chat);
+    //     this.currChat = chat;
+    //   }
+    // });
   }
 
   openConversation(user: User) {
@@ -134,18 +141,18 @@ export class ChatService {
         timestamp: new Date()
       };
       console.log(m);
-      this.currChat.messages.push(m);
-      this.socket.emit('chat message', JSON.stringify(m));
+      // this.currChat.messages.push(m);
+      this.socket.emit('message', JSON.stringify(m));
       // this.webSocket.send(JSON.stringify(m));
     } else {
       console.log('sendMessage(): there is no chat opened');
     }
   }
 
-  receiveMessage = (message: string) => {
+  receiveMessage = (message: Message) => {
     console.log('receiveMessage:')
 
-    let m: Message = JSON.parse(message);
+    let m: Message = message;
     m.timestamp = new Date(m.timestamp);
 
     let chat = this.chats.get(m.roomID);
@@ -160,18 +167,19 @@ export class ChatService {
 
   fetchRooms() {
     console.log(this.oauthService.user);
-    this.http.get<Chat[]>(`${environment.apiBaseUrl}chat/room`,
-      {
-        params: {
-          user: this.oauthService.user.uid
-        }
-      }).subscribe({
-      next: chats => {
-        chats.forEach(value => {
-          this.chats.set(value.roomID, value);
-        })
-        console.log(this.chats);
-      }
+    this.socket.emit('fetch-rooms', (rooms: Chat[]) => {
+      rooms.forEach(value => {
+        this.chats.set(value.roomID, value);
+      })
+      console.log(this.chats);
     });
+    // this.http.get<Chat[]>(`${environment.apiBaseUrl}chat/fetch-rooms`).subscribe({
+    //   next: chats => {
+    //     chats.forEach(value => {
+    //       this.chats.set(value.roomID, value);
+    //     })
+    //     console.log(this.chats);
+    //   }
+    // });
   }
 }

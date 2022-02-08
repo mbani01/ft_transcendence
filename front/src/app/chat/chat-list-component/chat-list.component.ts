@@ -8,8 +8,8 @@ import {ChatService} from "../chat.service";
 })
 export class ChatListComponent {
   constructor(private chatService: ChatService) {
-
   }
+
   ngOnInit() {
   }
   get chats() {

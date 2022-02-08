@@ -20,8 +20,6 @@ export class MessageComponent {
   }
 
   ngOnInit() {
-    console.log(this.message);
-
   }
   showAvatar() {
     return !(this.next && this.next.sender.uid == this.message.sender.uid);

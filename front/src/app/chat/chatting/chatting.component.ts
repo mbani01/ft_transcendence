@@ -25,6 +25,11 @@ export class ChattingComponent {
       this.chatService.loadMessages(this.chatService.currChat).subscribe({
         next: value => {
           this.loading = false;
+          console.log(this.content.nativeElement.scrollTop);
+          this.content.nativeElement.onscroll = (da: any) => {
+            console.log('SCROLL ' + da.target.scrollTop);
+            console.log(da);
+          }
           this.scrollDown();
         }
       });
@@ -44,6 +49,7 @@ export class ChattingComponent {
 
   scrollDown() {
     this.content.nativeElement.scrollTop = this.content.nativeElement.scrollHeight;
+    console.log('YO ' + this.content.nativeElement.scrollTop);
   }
 
   get chat() {

@@ -6,6 +6,7 @@ import {environment} from "../../../../environments/environment";
 import {OAuthService} from "../../../login/oauth.service";
 import {NgForm} from "@angular/forms";
 import {Socket} from "ngx-socket-io";
+import {ChatService} from "../../chat.service";
 
 @Component({
   selector: 'join-modal',
@@ -18,7 +19,7 @@ export class JoinModalComponent {
   @Output() joinModal = new EventEmitter<JoinModalComponent>();
 
   constructor(private ngbModal:NgbModal, private http: HttpClient, private oauthService: OAuthService,
-              private socket: Socket) {
+              private socket: Socket, private chatService: ChatService) {
   }
 
   ngOnInit() {
@@ -27,22 +28,39 @@ export class JoinModalComponent {
   }
 
   joinRoom(joinForm: NgForm) {
-    console.log(joinForm.value.password);
+    // console.log(joinForm.value.password);
 
-    this.socket.emit('join', {
-        roomID: this.room.roomID,
-        password: joinForm.value.password
-      }
-    );
+    // this.socket.emit('join', {
+    //     roomID: this.room.roomID,
+    //     password: joinForm.value.password
+    //   }
+    // , (error: {error: string}) => {
+    //     console.log(error);
+    //     if (error.error) {
+    //       joinForm.form.controls['password'].setErrors(error);
+    //     } else {
+    //       this.modal.close('Close click');
+    //     }
+    //   });
+    // if (this.room.roomID) {
+      this.chatService.joinChannel(this.room.roomID!, joinForm.value.password, (error: {error: string}) => {
+        console.log(error);
+        if (error?.error) {
+          joinForm.form.controls['password'].setErrors(error);
+        } else {
+          this.modal.close('Close click');
+        }
+      })
+    // }
 
-    this.socket.once('join', (error: {error: string}) => {
-      console.log(error);
-      if (error) {
-        joinForm.form.controls['password'].setErrors(error);
-      } else {
-        this.modal.close('Close click');
-      }
-    });
+    // this.socket.once('join', (error: {error: string}) => {
+    //   console.log(error);
+    //   if (error) {
+    //     joinForm.form.controls['password'].setErrors(error);
+    //   } else {
+    //     this.modal.close('Close click');
+    //   }
+    // });
 
     // this.http.post(`${environment.apiBaseUrl}chat/join`,
     //   {

@@ -1,6 +1,5 @@
 .container {
-  color: #333;
-  border: 1px solid #55555555;
+  //border: 1px solid #55555555;
   margin: 5px 0;
 }
 //.row {
@@ -17,13 +16,14 @@
 }
 
 .victory {
-  color: #118537;
+  color: #00732f;
 }
 .defeat {
-  color: #c91717;
+  color: #a40000;
 }
 
 .score {
+  color: #cecece;
   font-weight: bold;
   font-size: 16px;
 }
