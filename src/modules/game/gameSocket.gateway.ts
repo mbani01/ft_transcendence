@@ -6,11 +6,11 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/09 12:21:32 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/09 14:33:19 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-import { ConnectedSocket, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { ConnectedSocket, SubscribeMessage, WebSocketGateway, WebSocketServer, MessageBody } from "@nestjs/websockets";
 import { Game } from "./game";
 import {GameQueueService} from "./gameQueue"
 
@@ -26,13 +26,13 @@ export class gameSocketGateway
 	joinGameRoom(gameId, Players)
 	{
 		Players.forEach(socket=> socket.join(gameId));
-		console.log("Joined !")
 	}
 
 	async startGame()
 	{
-		console.log(this.publicQueue.isfull());
 		const Players = this.publicQueue.getPlayers();
+		if (Players[0] == Players[1])
+			return ;
 		const game = new Game(true, Players);
 		const GameId = game.getGameId();
 		this.joinGameRoom(GameId, Players);
@@ -54,5 +54,11 @@ export class gameSocketGateway
 		// console.log(client.user);
 	}
 	
+	@SubscribeMessage('sync')
+	syncGame(@ConnectedSocket() socket: any, @MessageBody() data :any)
+	{
+		if (data.GameId)
+			socket.to(String(data.GameId)).emit("sync", data);
+	}
 	
 }
