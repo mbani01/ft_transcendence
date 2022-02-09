@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/09 14:33:19 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/09 16:13:17 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ export class gameSocketGateway
 	@WebSocketServer()
 	server;
 
+	Games :Array<Game> = [];
+
 	publicQueue :GameQueueService = new GameQueueService();
 
 	joinGameRoom(gameId, Players)
@@ -34,13 +36,26 @@ export class gameSocketGateway
 		if (Players[0] == Players[1])
 			return ;
 		const game = new Game(true, Players);
+		this.Games.push(game);
 		const GameId = game.getGameId();
 		this.joinGameRoom(GameId, Players);
 		this.server.to(GameId).emit('gameStarted', GameId);
 	}
 	
+	@SubscribeMessage('watchGame')
+	watchGame(@ConnectedSocket() socket: any, @MessageBody() data :any)	
+	{
+		if(!data.GameId)
+			return ;
+		this.Games.forEach(game=>
+		{
+			if(game.getGameId() === String(data.GameId))
+				socket.join(String(data.GameId));
+		});
+	}
+
 	@SubscribeMessage('joinGame')
-	async joinQueue(@ConnectedSocket() socket: any)
+	joinQueue(@ConnectedSocket() socket: any)
 	{
 		this.publicQueue.addUser(socket);
 		if (this.publicQueue.isfull())
@@ -54,10 +69,18 @@ export class gameSocketGateway
 		// console.log(client.user);
 	}
 	
+	isPlayer(socket: any)
+	{
+		for(let game in this.Games)
+			if(this.Games[game].isPlayer(socket))
+				return true;
+		return false;
+	}
+
 	@SubscribeMessage('sync')
 	syncGame(@ConnectedSocket() socket: any, @MessageBody() data :any)
 	{
-		if (data.GameId)
+		if (data.GameId && this.isPlayer(socket))
 			socket.to(String(data.GameId)).emit("sync", data);
 	}
 	
