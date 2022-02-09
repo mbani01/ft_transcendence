@@ -55,7 +55,7 @@ export class OAuthService {
   }
 
   fetchUser() {
-    this.http.get<User>(`${environment.apiBaseUrl}users/me`).subscribe({
+    this.http.get<User>(`${environment.apiBaseUrl}/users/me`).subscribe({
       next: value => {
         this.user$.next(value);
       },

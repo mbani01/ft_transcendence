@@ -390,6 +390,31 @@
       "enabled": true,
       "randomResponse": false,
       "sequentialResponse": false
+    },
+    {
+      "uuid": "37efcdae-b987-4673-9970-f1e1dd15d215",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "chat/channel",
+      "responses": [
+        {
+          "uuid": "8341568a-93e0-45e0-ba9b-d2a43eb20591",
+          "body": "{\n  \"error\": \"name already exists.\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
     }
   ],
   "proxyMode": false,

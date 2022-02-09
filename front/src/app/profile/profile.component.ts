@@ -20,7 +20,7 @@ export class ProfileComponent implements OnInit {
     route.params.subscribe( {
       next: (value) => {
         console.log(value);
-        this.http.get(`${environment.apiBaseUrl}users/${value['id']}`).subscribe({
+        this.http.get(`${environment.apiBaseUrl}/users/${value['id']}`).subscribe({
           next: () => {
             console.log("fetch user info");
             this.loadUser(value['id']);
@@ -40,7 +40,7 @@ export class ProfileComponent implements OnInit {
   }
 
   loadUserInfo(user: string) {
-    this.http.get<UserInfo>(`${environment.apiBaseUrl}userInfo/${user}`).subscribe({
+    this.http.get<UserInfo>(`${environment.apiBaseUrl}/userInfo/${user}`).subscribe({
       next: userInfo => {
         this.userInfo = userInfo;
       },
@@ -51,7 +51,7 @@ export class ProfileComponent implements OnInit {
   }
 
   loadUser(user: string) {
-    this.http.get<User>(`${environment.apiBaseUrl}users/${user}`).subscribe({
+    this.http.get<User>(`${environment.apiBaseUrl}/users/${user}`).subscribe({
       next: user => {
         this.user = user;
       },
@@ -62,7 +62,7 @@ export class ProfileComponent implements OnInit {
   }
 
   loadMatchHistory(user: string) {
-    this.http.get<MatchHistory[]>(`${environment.apiBaseUrl}matchHistory/${user}`).subscribe({
+    this.http.get<MatchHistory[]>(`${environment.apiBaseUrl}/matchHistory/${user}`).subscribe({
       next: matchHistory => {
         this.matchHistory = matchHistory;
       },

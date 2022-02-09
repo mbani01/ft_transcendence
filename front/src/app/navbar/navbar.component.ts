@@ -24,7 +24,7 @@ export class NavbarComponent implements OnInit {
   search(event: any) {
     console.log('input');
     this.loading = true;
-    this.users = this.http.get<User[]>(`${environment.apiBaseUrl}users`, {
+    this.users = this.http.get<User[]>(`${environment.apiBaseUrl}/users`, {
       params: {
         username: event.target.value
       }

@@ -18,7 +18,7 @@ export class LeaderboardComponent {
 
   getTopPlayers() {
     console.log("GET");
-    return this.http.get<LeaderboardPlayer[]>(`${environment.apiBaseUrl}leaderboard`, {
+    return this.http.get<LeaderboardPlayer[]>(`${environment.apiBaseUrl}/leaderboard`, {
       params: {
         sort: 'wins',
         limit: 20
