@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/04 09:51:02 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/07 16:45:25 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/09 10:18:58 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,6 @@ export class socketGateway {
   }
 @SubscribeMessage('connection')
 handleConnection(client: CustomSocket, data){
-	console.log(client.handshake.headers.token);
+	// console.log(client.handshake.headers.token);
 }
 }

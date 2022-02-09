@@ -1,25 +1,26 @@
-  /* ************************************************************************** */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   gameQueue.ts                                       :+:      :+:    :+:   */
+/*   game.service.ts                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/07 13:19:39 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/07 14:46:03 by mbani            ###   ########.fr       */
+/*   Created: 2022/02/09 10:52:22 by mbani             #+#    #+#             */
+/*   Updated: 2022/02/09 11:12:55 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+import { Injectable } from "@nestjs/common";
 
-export class gameQueue{
+@Injectable()
+export class GameQueueService{
 	
-	isPublic: boolean;
 	size: number;
 	data: Array<any>;
 	
-	constructor(isPublic: boolean)
+	constructor()
 	{
-		this.isPublic = isPublic;
+		console.log("Queue Created !");
 		this.size = 0;
 		this.data = [];
 	}
@@ -35,7 +36,7 @@ export class gameQueue{
 		this.data.length = 0;
 		this.size = 0;
 	}
-
+ 
 	isfull()
 	{
 		return (this.size === 2);
