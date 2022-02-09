@@ -20,6 +20,7 @@ import {ChatterPopupComponent} from "./chatting/message/profile/chatter-popup.co
 import {Socket} from "socket.io";
 import {SocketIoConfig, SocketIoModule} from "ngx-socket-io";
 import {environment} from "../../environments/environment";
+import {CreateModalComponent} from "./chat-rooms/create-modal/create-modal.component";
 
 const config: SocketIoConfig = {url: environment.chatSocketUri, options: {}}
 
@@ -33,6 +34,7 @@ const config: SocketIoConfig = {url: environment.chatSocketUri, options: {}}
     DateComponent,
     ChatRoomsComponent,
     JoinModalComponent,
+    CreateModalComponent,
     ChatterPopupComponent
   ],
     imports: [

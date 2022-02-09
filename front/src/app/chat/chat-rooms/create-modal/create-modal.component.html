@@ -1,0 +1,37 @@
+<form id="modal-container" #createForm="ngForm" (ngSubmit)="createRoom(createForm)">
+  <div class="modal-header">
+    <h4 class="modal-title">Create Room</h4>
+    <button type="button" class="close text-light" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row mr-2 mb-2">
+      <label class="col-4 my-auto">Room Name: </label>
+      <div class="col p-0">
+        <input type="text" name="name" required placeholder="Name" class="form-control bg-dark" ngModel>
+        <div *ngIf="createForm.controls['name']?.errors?.['error']" class="text-danger ml-1 mt-1" role="alert">
+          {{createForm.controls['name']?.errors?.['error']}}
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <label for="visibilityRadio" class="col-4">Visibility:</label>
+      <div id="visibilityRadio">
+        <div class="custom-control custom-radio my-1">
+          <input type="radio" id="customRadio1" name="isPublic" class="custom-control-input" [value]="false" checked [(ngModel)]="isPublic">
+          <label class="custom-control-label" for="customRadio1">Private</label>
+        </div>
+        <div class="custom-control custom-radio my-1">
+          <input type="radio" id="customRadio2" name="isPublic" class="custom-control-input" [value]="true" [(ngModel)]="isPublic">
+          <label class="custom-control-label" for="customRadio2">Public</label>
+        </div>
+        <input *ngIf="isPublic" type="password" name="password" placeholder="Password" class="form-control bg-dark col mt-2" ngModel>
+
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary m-auto w-25" [disabled]="!createForm.valid">Create</button>
+  </div>
+</form>

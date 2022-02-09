@@ -70,7 +70,7 @@ export class ChatService {
     if (roomID) {
       this.currChat = this.chats.get(roomID) as Chat;
     } else {
-      this.http.get<Chat>(`${environment.apiBaseUrl}chat/
+      this.http.get<Chat>(`${environment.apiBaseUrl}/chat/
     conversation?participants=${this.oauthService.user.uid},${user.uid}`).subscribe(
         {
           next: chat => {
@@ -83,7 +83,7 @@ export class ChatService {
   }
 
   loadMessages(chat: Chat) {
-    let obs = this.http.get<Message[]>(`${environment.apiBaseUrl}chat/messages/${chat.roomID}`)
+    let obs = this.http.get<Message[]>(`${environment.apiBaseUrl}/chat/messages/${chat.roomID}`)
     obs.subscribe({
       next: value => {
         chat.messages = value
@@ -121,7 +121,7 @@ export class ChatService {
   openChat(roomID: string) {
     let chat = this.chats.get(roomID);
     if (chat === undefined) {
-      this.http.get<Chat>(`${environment.apiBaseUrl}chat/${roomID}`).subscribe({
+      this.http.get<Chat>(`${environment.apiBaseUrl}/chat/${roomID}`).subscribe({
         next: (value) => {
           this.chats.set(roomID, value);
           this.currChat = value;

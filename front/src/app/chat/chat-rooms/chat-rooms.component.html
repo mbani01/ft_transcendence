@@ -1,8 +1,18 @@
 
-<ng-template #content let-modal>
+<ng-template #passwordModal let-modal>
   <join-modal [modal]="modal" (joinModal)="joinModalEvent($event)"></join-modal>
 </ng-template>
+
+<ng-template #createModal let-modal>
+  <create-modal [modal]="modal"></create-modal>
+</ng-template>
+
 <div class="container mt-5">
+  <div class="d-flex">
+    <input type="text" placeholder="Search" class="form-control col-4">
+    <button class="btn btn-success ml-auto" (click)="openCreateRoom(createModal)">Create Room</button>
+  </div>
+  <hr>
   <ul class="list-group">
     <li class="list-group-item d-flex" *ngFor="let chat of chats">
       <div class="mr-5">
@@ -15,7 +25,7 @@
       <div class="ml-auto h-100 my-auto">
         <i *ngIf="chat.type == chatType.PROTECTED" class="bi bi-lock-fill mr-3"
            ngbTooltip="Password" [openDelay]="500"></i>
-        <button class="btn btn-primary" (click)="joinChannel(chat)">Join</button>
+        <button class="btn btn-primary" (click)="joinChannel(chat, passwordModal)">Join</button>
       </div>
     </li>
   </ul>

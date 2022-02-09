@@ -17,10 +17,10 @@ export class ChatRoomsComponent {
   chatType = ChatType;
   selectedChat: ChatRoom;
 
-  @ViewChild('content') content: TemplateRef<any>;
+  // @ViewChild('passwordModal') passwordModal: TemplateRef<any>;
 
   constructor(private http: HttpClient, private ngbModal: NgbModal, private chatService: ChatService) {
-    http.get<ChatRoom[]>(`${environment.apiBaseUrl}chat/channel`).subscribe(
+    http.get<ChatRoom[]>(`${environment.apiBaseUrl}/chat/channel`).subscribe(
       {
         next: value => {
           console.log(value);
@@ -30,8 +30,8 @@ export class ChatRoomsComponent {
     );
   }
 
-  openPasswordModal(chat: ChatRoom) {
-    this.ngbModal.open(this.content, {centered: true});
+  openPasswordModal(chat: ChatRoom, content: TemplateRef<any>) {
+    this.ngbModal.open(content, {centered: true});
     this.selectedChat = chat;
   }
 
@@ -39,9 +39,9 @@ export class ChatRoomsComponent {
     joinModal.room = this.selectedChat;
   }
 
-  joinChannel(chat: ChatRoom) {
+  joinChannel(chat: ChatRoom, content: TemplateRef<any>) {
     if (chat.type == ChatType.PROTECTED) {
-      this.openPasswordModal(chat);
+      this.openPasswordModal(chat, content);
     } else {
       this.chatService.joinChannel(chat.roomID!, '', (room: Chat) => {
         console.log(room);
@@ -49,5 +49,9 @@ export class ChatRoomsComponent {
         this.chatService.openChat(room.roomID);
       });
     }
+  }
+
+  openCreateRoom(content: TemplateRef<any>) {
+    this.ngbModal.open(content, {centered: true});
   }
 }
