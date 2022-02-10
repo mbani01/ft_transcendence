@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/10 15:29:06 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/10 17:40:47 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,10 @@ export class gameSocketGateway
 			return ;
 		const game = new Game(true, Players);
 		this.Games.push(game);
-		const GameId = game.getGameId();
-		this.joinGameRoom(GameId, Players);
-		this.server.to(Players[0].id).emit('gameStarted', {GameId: GameId, isHost: true});
-		this.server.to(Players[1].id).emit('gameStarted', {GameId: GameId, isHost: false});
+		const gameInfos = game.getInfos();
+		this.joinGameRoom(gameInfos.GameId, Players);
+		this.server.to(Players[0].id).emit('gameStarted', {GameId: gameInfos.GameId, ball: gameInfos.ball, isHost: true});
+		this.server.to(Players[1].id).emit('gameStarted', {GameId:gameInfos.GameId, ball: gameInfos.ball, isHost: false});
 	}
 	
 	@SubscribeMessage('watchGame')
