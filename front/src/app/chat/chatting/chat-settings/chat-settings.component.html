@@ -1,0 +1,95 @@
+<div class="chat-settings mt-3">
+  <form #roomNameForm="ngForm" (ngSubmit)="saveName(roomNameForm)">
+    <div class="row w-100 pl-2 mb-2">
+      <label for="chatName" class="col-4 m-auto">Name:</label>
+      <div *ngIf="!editName" class="col">
+        <span>{{name}}</span>
+        <i role="button" class="bi bi-pencil-square text-info float-right" (click)="editName = true"></i>
+      </div>
+        <input *ngIf="editName" type="text" class="form-control col input-dark" id="chatName" name="name"
+               placeholder="Name" [ngModel]="name">
+    </div>
+    <div *ngIf="editName" class="row mt-3 mb-3">
+      <button class="btn btn-success ml-auto mr-1 px-4 btn-rounded">Save</button>
+      <button class="btn btn-danger mr-auto ml-1 btn-rounded" (click)="editName = false">Cancel</button>
+    </div>
+  </form>
+
+  <form #roomPasswordForm="ngForm" (ngSubmit)="savePassword(roomPasswordForm)">
+    <div class="row w-100 pl-2 mb-2">
+      <label for="chatPassword" class="col-4 m-auto">Password:</label>
+      <div *ngIf="!editPassword" class="col">
+        <span>******</span>
+        <i role="button" class="bi bi-pencil-square text-info float-right" (click)="editPassword = true"></i>
+      </div>
+      <input *ngIf="editPassword" type="text" class="form-control col input-dark" name="password" id="chatPassword"
+             placeholder="Password" ngModel>
+    </div>
+    <div *ngIf="editPassword" class="row mt-3 mb-3">
+      <button class="btn btn-success ml-auto mr-1 px-4 btn-rounded">Save</button>
+      <button class="btn btn-danger mr-auto ml-1 btn-rounded" (click)="editPassword = false">Cancel</button>
+    </div>
+  </form>
+
+  <!--  <div class="row w-100 pl-2 mb-2">-->
+<!--    <label for="chatPassword" class="col-4 m-auto">Password:</label>-->
+<!--    <input type="text" class="form-control col input-dark" id="chatPassword" placeholder="Password">-->
+<!--  </div>-->
+<!--  <div class="row w-100 mb-2 mt-3">-->
+<!--    <button class="btn btn-success mx-auto btn-rounded px-4">Save</button>-->
+<!--  </div>-->
+  <hr>
+  <div class="flex-column justify-content-center">
+<!--    <h4 class="text-center">Members</h4>-->
+    <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-pills" orientation="horizontal">
+      <li ngbNavItem="members" class="col">
+        <a ngbNavLink class="members-nav">Members</a>
+        <ng-template ngbNavContent>
+<!--          <p  class="mt-4">Members</p>-->
+          <ul class="list-group">
+            <li class="list-group-item" *ngFor="let member of members | async" [ngbPopover]="chatterPopup"
+                popoverClass="popover-dark" autoClose="outside" #p="ngbPopover" placement="left">
+              <ng-template #chatterPopup>
+                <chatter-popup [user]="member" [popover]="p"></chatter-popup>
+              </ng-template>
+              <img class="rounded-circle my-auto" width="48" height="48" alt="Cinque Terre" [src]="member.img">
+              <span class="ml-2">
+                {{member.name}}
+              </span>
+            </li>
+          </ul>
+        </ng-template>
+      </li>
+      <li ngbNavItem="mutes" class="col">
+        <a ngbNavLink class="mutes-nav">Mutes</a>
+        <ng-template ngbNavContent>
+          <ul class="list-group">
+            <li class="list-group-item" *ngFor="let member of members | async">
+              <img class="rounded-circle my-auto" width="48" height="48" alt="Cinque Terre" [src]="member.img">
+              <span class="ml-2">
+                {{member.name}}
+              </span>
+              <button class="btn btn-warning float-right" (click)="unmute(member)">Unmute</button>
+            </li>
+          </ul>
+        </ng-template>
+      </li>
+      <li ngbNavItem="bans" class="col">
+        <a ngbNavLink class="bans-nav">Bans</a>
+        <ng-template ngbNavContent>
+          <ul class="list-group">
+            <li class="list-group-item" *ngFor="let member of members | async">
+              <img class="rounded-circle my-auto" width="48" height="48" alt="Cinque Terre" [src]="member.img">
+              <span class="ml-2">
+                {{member.name}}
+              </span>
+              <button class="btn btn-danger float-right" (click)="unban(member)">Unban</button>
+            </li>
+          </ul>
+        </ng-template>
+      </li>
+    </ul>
+    <div [ngbNavOutlet]="nav" class="ml-4"></div>
+
+  </div>
+</div>

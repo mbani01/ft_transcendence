@@ -20,9 +20,9 @@
   <div class="row justify-content-around m-0">
     <div class="row my-2 w-100 d-flex">
       <button class="btn btn-warning m-auto" (click)="mute(hourInput.value, minuteInput.value)">Mute</button>
-      <input type="number" maxlength="6" class="form-control col-3 p-0 text-center mr-1 ml-auto" placeholder="HH"
+      <input type="number" maxlength="6" class="form-control col-3 p-0 text-center mr-1 ml-auto input-dark" placeholder="HH"
              value="0" (input)="validate(hourInput)" #hourInput>:
-      <input type="number" maxlength="6" class="form-control col-3 p-0 text-center ml-1" placeholder="MM"
+      <input type="number" maxlength="6" class="form-control col-3 p-0 text-center ml-1 input-dark" placeholder="MM"
              value="0" (input)="validate(minuteInput)" #minuteInput>
 <!--      <ngb-timepicker class="" [(ngModel)]="muteTime" size="small" #timepicker></ngb-timepicker>-->
     </div>

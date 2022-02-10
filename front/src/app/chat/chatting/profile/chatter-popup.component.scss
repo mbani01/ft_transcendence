@@ -23,3 +23,11 @@
   text-align: center;
   //padding-left: 10px;
 }
+
+
+.input-dark {
+  background-color: var(--dark);
+  color: var(--light);
+  border-color: #0a0b0c;
+  border-radius: 360px;
+}

@@ -9,10 +9,18 @@
 
 <div class="container mt-5">
   <div class="d-flex">
-    <input type="text" placeholder="Search" class="form-control col-4">
+    <!-- Search Form -->
+    <form class="col-5 d-flex" (ngSubmit)="searchChannel(searchForm)" #searchForm="ngForm">
+      <input type="text" placeholder="Search" class="form-control col mr-1" name="like" ngModel>
+      <button class="btn btn-info col-auto">
+        <i class="bi bi-search"></i>
+      </button>
+    </form>
+    <!-- Create Room -->
     <button class="btn btn-success ml-auto" (click)="openCreateRoom(createModal)">Create Room</button>
   </div>
   <hr>
+  <!-- Channel List -->
   <ul class="list-group">
     <li class="list-group-item d-flex" *ngFor="let chat of chats">
       <div class="mr-5">
@@ -29,4 +37,11 @@
       </div>
     </li>
   </ul>
+  <hr>
+  <!-- Pagination -->
+  <div class="d-flex  justify-content-center">
+    <ngb-pagination class="custom-pagination" [collectionSize]="pagination.collectionSize" [(page)]="pagination.page"
+                    [maxSize]="pagination.maxSize" [rotate]="true" [boundaryLinks]="true" (pageChange)="changePage()"></ngb-pagination>
+  </div>
+
 </div>

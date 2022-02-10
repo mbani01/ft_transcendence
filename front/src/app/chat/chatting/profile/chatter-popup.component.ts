@@ -1,6 +1,6 @@
-import {Component, Input, SimpleChange, ViewChild} from "@angular/core";
-import {User} from "../../../../shared/user";
-import {NgbPopover, NgbTimepicker, NgbTimepickerConfig} from "@ng-bootstrap/ng-bootstrap";
+import {Component, Input} from "@angular/core";
+import {User} from "../../../shared/user";
+import {NgbPopover} from "@ng-bootstrap/ng-bootstrap";
 import {Router} from "@angular/router";
 
 @Component({

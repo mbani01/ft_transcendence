@@ -6,7 +6,6 @@ import {Chat} from "./shared/chat.model";
 import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {NgbDropdown} from "@ng-bootstrap/ng-bootstrap";
-import {BehaviorSubject} from "rxjs";
 import {Socket} from "ngx-socket-io";
 
 
@@ -50,7 +49,14 @@ export class ChatService {
     this.socket.emit('join', {
         roomID: roomID,
         password: password
-      }, callback
+      }, (room: any) => {
+        if (!room?.error) {
+          this.chats.set(room.roomID, room);
+          this.loadMessages(room);
+          this.openChat(room.roomID);
+        }
+        callback(room);
+      }
     );
     // let chat = this.chats.get(roomID);
     // if (chat !== undefined) {
@@ -82,11 +88,20 @@ export class ChatService {
     }
   }
 
-  loadMessages(chat: Chat) {
-    let obs = this.http.get<Message[]>(`${environment.apiBaseUrl}/chat/messages/${chat.roomID}`)
+  loadMessages(chat: Chat, before: boolean = false) {
+    let obs = this.http.get<Message[]>(`${environment.apiBaseUrl}/chat/messages/${chat.roomID}`,
+      before ? {
+        params: {
+          before: new Date(chat.messages[0].timestamp).getTime()
+        }
+      } : {})
     obs.subscribe({
       next: value => {
-        chat.messages = value
+        if (before) {
+          chat.messages.unshift(...value);
+        } else {
+          chat.messages = value
+        }
       }
     });
     return obs;
@@ -94,7 +109,6 @@ export class ChatService {
 
   set currChat(value) {
     this._currChat = value;
-    console.log(this._currChat);
     // this.showChat();
     // if (value?.messages.length === 0) {
       // this.loadMessages(value);

@@ -1,6 +1,5 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {ChatService} from "./chat.service";
-import {NgbDropdown} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-chat',
@@ -9,8 +8,8 @@ import {NgbDropdown} from "@ng-bootstrap/ng-bootstrap";
 })
 export class ChatComponent implements OnInit {
   public test: string = 'Hello';
-  @ViewChild('dropdown') dropdown: NgbDropdown;
-
+  // @ViewChild('dropdown') dropdown: NgbDropdown;
+  isSettings = false;
   constructor(public chatService: ChatService) {
   }
 
@@ -18,7 +17,7 @@ export class ChatComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.chatService.dropdown = this.dropdown;
+    // this.chatService.dropdown = this.dropdown;
   }
 
 }

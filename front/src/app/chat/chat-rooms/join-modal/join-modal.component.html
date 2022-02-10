@@ -6,7 +6,7 @@
     </button>
   </div>
   <div class="modal-body row">
-    <input type="password" name="password" required placeholder="Password" class="form-control bg-dark col m-3" ngModel>
+    <input type="password" name="password" required placeholder="Password" class="form-control bg-dark text-light col m-3" ngModel>
     <div *ngIf="joinForm.controls['password']?.errors?.['error']" class="text-danger ml-1 mt-1" role="alert">
       {{joinForm.controls['password']?.errors?.['error']}}
     </div>

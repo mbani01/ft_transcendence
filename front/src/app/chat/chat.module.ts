@@ -6,21 +6,20 @@ import {ChatComponent} from "./chat.component";
 import {ChattingComponent} from "./chatting/chatting.component";
 import {MessageComponent} from "./chatting/message/message.component";
 import {
-  NgbDropdownModule,
-  NgbModule,
-  NgbPopoverConfig,
-  NgbPopoverModule, NgbTimepickerModule,
-  NgbTooltipModule
+    NgbDropdownModule, NgbNavModule,
+    NgbPaginationModule,
+    NgbPopoverModule, NgbTimepickerModule,
+    NgbTooltipModule
 } from "@ng-bootstrap/ng-bootstrap";
 import { DateComponent } from './chatting/date/date.component';
 import {ChatRoomsComponent} from "./chat-rooms/chat-rooms.component";
 import {JoinModalComponent} from "./chat-rooms/join-modal/join-modal.component";
 import {FormsModule} from "@angular/forms";
-import {ChatterPopupComponent} from "./chatting/message/profile/chatter-popup.component";
-import {Socket} from "socket.io";
+import {ChatterPopupComponent} from "./chatting/profile/chatter-popup.component";
 import {SocketIoConfig, SocketIoModule} from "ngx-socket-io";
 import {environment} from "../../environments/environment";
 import {CreateModalComponent} from "./chat-rooms/create-modal/create-modal.component";
+import {ChatSettingsComponent} from "./chatting/chat-settings/chat-settings.component";
 
 const config: SocketIoConfig = {url: environment.chatSocketUri, options: {}}
 
@@ -35,7 +34,8 @@ const config: SocketIoConfig = {url: environment.chatSocketUri, options: {}}
     ChatRoomsComponent,
     JoinModalComponent,
     CreateModalComponent,
-    ChatterPopupComponent
+    ChatterPopupComponent,
+    ChatSettingsComponent
   ],
     imports: [
         CommonModule,
@@ -44,8 +44,10 @@ const config: SocketIoConfig = {url: environment.chatSocketUri, options: {}}
         NgbPopoverModule,
         NgbTooltipModule,
         NgbTimepickerModule,
+        NgbPaginationModule,
         FormsModule,
-        SocketIoModule.forRoot(config)
+        SocketIoModule.forRoot(config),
+        NgbNavModule
     ],
   exports: [
     ChatComponent

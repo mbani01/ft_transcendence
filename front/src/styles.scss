@@ -17,6 +17,9 @@ $body-color: $light;
 
 body {
   //background: red;
+  //background: conic-gradient(from -11.05deg at 50% 71.93%,#9c3cf7 0deg,#70b1ff 54.64deg,#bbb0ff 65.63deg,#56b3ff 73.72deg,#7b70ff 119.43deg,#3654ff 193.12deg,rgba(37,54,71,.87) 226.37deg,#164d8e 262.5deg,#1a62b9 306.49deg,#1821ff 320.77deg,rgba(112,177,255,.5) 326.27deg,#70b1ff 337.21deg,#9c3cf7 1turn);
+
+  //background: linear-gradient(to right, #4a1a6c, #822fd7); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   background: linear-gradient(to right, #6a3093, #a044ff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   //background: linear-gradient(to right, #360033, #0b8793); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   font-family: 'Poppins', sans-serif !important;

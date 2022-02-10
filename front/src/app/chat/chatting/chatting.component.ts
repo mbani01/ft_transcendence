@@ -1,10 +1,7 @@
-import {Component, ElementRef, Input, OnInit, TemplateRef, ViewChild} from "@angular/core";
+import {Component, ElementRef, ViewChild} from "@angular/core";
 import {ChatService} from "../chat.service";
-import {Chat} from "../shared/chat.model";
 import {Message} from "../shared/message.model";
-import {NgIfContext} from "@angular/common";
 import {NgForm} from "@angular/forms";
-import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-chatting',
@@ -14,29 +11,48 @@ import {Observable} from "rxjs";
 export class ChattingComponent {
 
   @ViewChild('content') content: ElementRef;
-  @ViewChild('messageTemplate') messageTemplate: TemplateRef<NgIfContext<boolean>>;
+  // @ViewChild('messageTemplate') messageTemplate: TemplateRef<NgIfContext<boolean>>;
   readonly maxMsToShowDate: number = 60 * 60 * 1000; // 1 hour
 
   loading = false;
+
+  private isAllMessage = false;
+  settings = false;
 
   constructor(public chatService: ChatService) {
     if (this.chatService.currChat?.messages.length == 0) {
       this.loading = true;
       this.chatService.loadMessages(this.chatService.currChat).subscribe({
-        next: value => {
-          this.loading = false;
-          console.log(this.content.nativeElement.scrollTop);
-          this.content.nativeElement.onscroll = (da: any) => {
-            console.log('SCROLL ' + da.target.scrollTop);
-            console.log(da);
+        next: chats => {
+          if (chats.length < 30) {
+            this.isAllMessage = true;
           }
+          this.loading = false;
           this.scrollDown();
         }
       });
     }
   }
 
+  ngOnInit() {
+  }
   ngAfterViewInit(): void {
+    this.content.nativeElement.onscroll = (scroll: any) => {
+      console.log('SCROLL ' + scroll.target.scrollTop);
+      if (scroll.target.scrollTop == 0 && !this.isAllMessage && this.chatService.currChat) {
+        this.loading = true;
+        let topMessage = this.chatService.currChat.messages[0];
+        this.chatService.loadMessages(this.chatService.currChat, true).subscribe({
+          next: (chats) => {
+            this.loading = false
+            if (chats.length < 30) {
+              this.isAllMessage = true;
+            }
+          }});
+
+      }
+    }
+
     this.scrollDown();
   }
 
@@ -65,7 +81,11 @@ export class ChattingComponent {
   }
 
   back() {
-    this.chatService.closeChat();
+    if (this.settings) {
+      this.settings = false;
+    } else {
+      this.chatService.closeChat();
+    }
   }
 
   sendMessage(form: NgForm) {
@@ -77,4 +97,8 @@ export class ChattingComponent {
       setTimeout(() => this.scrollDown(), 100);
     }
   }
+
+  // onScroll($event: Event) {
+  //   console.log($event);
+  // }
 }

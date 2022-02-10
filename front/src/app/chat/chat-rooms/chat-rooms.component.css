@@ -2,4 +2,14 @@
   background-color: #00000000;
 }
 
+:host ::ng-deep .page-link {
+  background-color: #00000000 !important;
+  color: white;
+}
+
+:host ::ng-deep .page-item.active .page-link {
+  background-color: var(--primary) !important;
+  color: white;
+}
+
 /*# sourceMappingURL=chat-rooms.component.css.map */

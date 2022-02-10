@@ -167,6 +167,131 @@
       "sequentialResponse": false
     },
     {
+      "uuid": "28127086-ed7e-4c99-b876-5471bb187985",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "chat/da/members",
+      "responses": [
+        {
+          "uuid": "bbbfc0da-12b6-417d-867a-e20b3b526962",
+          "body": "[\n  {\n    \"uid\": \"1337\",\n    \"name\": \"MoJriM\",\n    \"img\": \"/assets/img.webp\"\n  },\n  {\n    \"uid\": \"1337\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\"\n  },\n  {\n    \"uid\": \"1337\",\n    \"name\": \"hamid\",\n    \"img\": \"/assets/img.webp\"\n  },\n  {\n    \"uid\": \"1337\",\n    \"name\": \"pimi\",\n    \"img\": \"/assets/img.webp\"\n  }\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "37efcdae-b987-4673-9970-f1e1dd15d215",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "chat/channels",
+      "responses": [
+        {
+          "uuid": "8341568a-93e0-45e0-ba9b-d2a43eb20591",
+          "body": "{\n  \"error\": \"name already exists.\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "6dcc8ed3-28f8-4ac1-9176-19b786f53502",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "chat/fetch-rooms",
+      "responses": [
+        {
+          "uuid": "eefac46c-c51a-48e0-809a-252881cb3f7d",
+          "body": "[\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"3\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"14\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"15\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"15\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"123\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"2\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  }\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "18414069-d8e3-4e03-ab1c-3f1dc2613ea0",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "chat/join",
+      "responses": [
+        {
+          "uuid": "bdbf3acf-ca6c-47fd-a2c4-b9bebb0d84b8",
+          "body": "{\n  \"error\": \"incorrect password\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "b787d9d6-484f-4ddf-895c-842f4516b0e4",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "chat/channels",
+      "responses": [
+        {
+          "uuid": "1c5c1a72-035d-4795-8e44-090415eeca58",
+          "body": "{\n  \"channels\": [\n    {\n      \"roomID\": \"da\",\n      \"name\": \"Channel name 1\",\n      \"isChannel\": true,\n      \"type\": 0,\n      \"owner\": {\n        \"uid\": \"dsa\",\n        \"name\": \"ojoubout\",\n        \"img\": \"/assets/img.webp\"\n      }\n    },\n    {\n      \"roomID\": \"do\",\n      \"name\": \"Channel name 2\",\n      \"isChannel\": true,\n      \"type\": 2,\n      \"owner\": {\n        \"uid\": \"dso\",\n        \"name\": \"MoJriM\",\n        \"img\": \"/assets/img.webp\"\n      }\n    }\n  ],\n  \"collectionSize\": 2\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
       "uuid": "40416f8f-de0e-4b49-b79e-e5d045127df1",
       "documentation": "",
       "method": "get",
@@ -292,81 +417,6 @@
       "sequentialResponse": false
     },
     {
-      "uuid": "6dcc8ed3-28f8-4ac1-9176-19b786f53502",
-      "documentation": "",
-      "method": "get",
-      "endpoint": "chat/fetch-rooms",
-      "responses": [
-        {
-          "uuid": "eefac46c-c51a-48e0-809a-252881cb3f7d",
-          "body": "[\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"3\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"14\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"15\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"15\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"123\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"1\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  },\n  {\n    \"roomID\": \"2\",\n    \"name\": \"ojoubout\",\n    \"isChannel\": false,\n    \"users\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"messages\": [],\n    \"unread\": 2\n  }\n]",
-          "latency": 0,
-          "statusCode": 200,
-          "label": "",
-          "headers": [],
-          "filePath": "",
-          "sendFileAsBody": false,
-          "rules": [],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false
-        }
-      ],
-      "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
-    },
-    {
-      "uuid": "b787d9d6-484f-4ddf-895c-842f4516b0e4",
-      "documentation": "",
-      "method": "get",
-      "endpoint": "chat/channel",
-      "responses": [
-        {
-          "uuid": "1c5c1a72-035d-4795-8e44-090415eeca58",
-          "body": "[\n  {\n    \"roomID\": \"da\",\n    \"name\": \"Channel name 1\",\n    \"isChannel\": true,\n    \"type\": 0,\n    \"owner\": {\n      \"uid\": \"dsa\",\n      \"name\": \"ojoubout\",\n      \"img\": \"/assets/img.webp\"\n    }\n  },\n  {\n    \"roomID\": \"do\",\n    \"name\": \"Channel name 2\",\n    \"isChannel\": true,\n    \"type\": 2,\n    \"owner\": {\n      \"uid\": \"dso\",\n      \"name\": \"MoJriM\",\n      \"img\": \"/assets/img.webp\"\n    }\n  }\n]",
-          "latency": 0,
-          "statusCode": 200,
-          "label": "",
-          "headers": [],
-          "filePath": "",
-          "sendFileAsBody": false,
-          "rules": [],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false
-        }
-      ],
-      "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
-    },
-    {
-      "uuid": "18414069-d8e3-4e03-ab1c-3f1dc2613ea0",
-      "documentation": "",
-      "method": "post",
-      "endpoint": "chat/join",
-      "responses": [
-        {
-          "uuid": "bdbf3acf-ca6c-47fd-a2c4-b9bebb0d84b8",
-          "body": "{\n  \"error\": \"incorrect password\"\n}",
-          "latency": 0,
-          "statusCode": 200,
-          "label": "",
-          "headers": [],
-          "filePath": "",
-          "sendFileAsBody": false,
-          "rules": [],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false
-        }
-      ],
-      "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
-    },
-    {
       "uuid": "23294b62-501d-4607-861b-69e4dc86369a",
       "documentation": "",
       "method": "get",
@@ -375,31 +425,6 @@
         {
           "uuid": "9a7088e5-f6f8-48ba-a609-bf1e4cd0b442",
           "body": "[\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  }\n]",
-          "latency": 0,
-          "statusCode": 200,
-          "label": "",
-          "headers": [],
-          "filePath": "",
-          "sendFileAsBody": false,
-          "rules": [],
-          "rulesOperator": "OR",
-          "disableTemplating": false,
-          "fallbackTo404": false
-        }
-      ],
-      "enabled": true,
-      "randomResponse": false,
-      "sequentialResponse": false
-    },
-    {
-      "uuid": "37efcdae-b987-4673-9970-f1e1dd15d215",
-      "documentation": "",
-      "method": "post",
-      "endpoint": "chat/channel",
-      "responses": [
-        {
-          "uuid": "8341568a-93e0-45e0-ba9b-d2a43eb20591",
-          "body": "{\n  \"error\": \"name already exists.\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",

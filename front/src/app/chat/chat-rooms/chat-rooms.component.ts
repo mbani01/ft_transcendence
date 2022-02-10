@@ -1,4 +1,4 @@
-import {Component, TemplateRef, ViewChild} from "@angular/core";
+import {Component, TemplateRef} from "@angular/core";
 import {ChatRoom, ChatType} from "../shared/chat-room.model";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
@@ -6,6 +6,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {JoinModalComponent} from "./join-modal/join-modal.component";
 import {ChatService} from "../chat.service";
 import {Chat} from "../shared/chat.model";
+import {NgForm} from "@angular/forms";
 
 @Component({
   selector: 'chat-rooms',
@@ -18,16 +19,16 @@ export class ChatRoomsComponent {
   selectedChat: ChatRoom;
 
   // @ViewChild('passwordModal') passwordModal: TemplateRef<any>;
+  private like: string;
+  pagination = {
+    page: 0,
+    collectionSize: 0,
+    maxSize: 10,
+  }
+  page: number = 1;
 
   constructor(private http: HttpClient, private ngbModal: NgbModal, private chatService: ChatService) {
-    http.get<ChatRoom[]>(`${environment.apiBaseUrl}/chat/channel`).subscribe(
-      {
-        next: value => {
-          console.log(value);
-          this.chats = value;
-        }
-      }
-    );
+    this.httpGetChannels();
   }
 
   openPasswordModal(chat: ChatRoom, content: TemplateRef<any>) {
@@ -45,13 +46,46 @@ export class ChatRoomsComponent {
     } else {
       this.chatService.joinChannel(chat.roomID!, '', (room: Chat) => {
         console.log(room);
-        this.chatService.chats.set(room.roomID, room);
-        this.chatService.openChat(room.roomID);
+        // this.chatService.chats.set(room.roomID, room);
+        // this.chatService.openChat(room.roomID);
       });
     }
   }
 
   openCreateRoom(content: TemplateRef<any>) {
     this.ngbModal.open(content, {centered: true});
+  }
+
+  httpGetChannels() {
+    console.log('params:');
+    console.log({
+      like: this.like,
+      page: this.pagination.page
+    });
+
+    this.http.get<{channels: ChatRoom[], collectionSize: number}>(`${environment.apiBaseUrl}/chat/channel`, {
+      params: {
+        like: this.like,
+        page: this.pagination.page
+      }
+    }).subscribe(
+      {
+        next: value => {
+          console.log(value);
+          this.chats = value.channels;
+          this.pagination.collectionSize = value.collectionSize;
+        }
+      }
+    );
+  }
+
+  searchChannel(searchForm: NgForm) {
+    this.like = searchForm.value.like;
+    this.httpGetChannels();
+  }
+
+  changePage() {
+    console.log(this.pagination.page);
+    this.httpGetChannels();
   }
 }

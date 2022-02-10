@@ -24,16 +24,17 @@ chatSocket.on('connection', (socket) => {
       console.log(room.roomID);
       // let roomO = JSON.parse(room);
       socket.join(room.roomID);
-      if (room.password == 'lol') {
+      if (room.password === 'lol') {
         callback({error: "password can't be 'lol'"});
       } else {
         callback(
           {
             roomID: room.roomID,
             messages: [],
-            name: "Channel 1"
+            name: "Channel 1",
+            isChannel: true
           }
-          
+
         );
       }
 
@@ -47,7 +48,7 @@ chatSocket.on('connection', (socket) => {
         console.log('message: ' + msgO.roomID);
         chatSocket.to(msgO.roomID).emit('message', msgO);
     });
-    
+
 });
 
 server.listen(6969, () => {
