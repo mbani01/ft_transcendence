@@ -63,7 +63,7 @@ export class ChatRoomsComponent {
       page: this.pagination.page
     });
 
-    this.http.get<{channels: ChatRoom[], collectionSize: number}>(`${environment.apiBaseUrl}/chat/channel`, {
+    this.http.get<{channels: ChatRoom[], collectionSize: number}>(`${environment.apiBaseUrl}/chat/channels`, {
       params: {
         like: this.like,
         page: this.pagination.page

@@ -30,7 +30,7 @@ export class CreateModalComponent {
 
   createRoom(createRoom: NgForm) {
     console.log(createRoom.value);
-    this.http.post(`${environment.apiBaseUrl}/chat/channel`, createRoom.value).subscribe({
+    this.http.post(`${environment.apiBaseUrl}/chat/channels`, createRoom.value).subscribe({
       next: value => {
         console.log('next:' + value);
         this.modal.close();
