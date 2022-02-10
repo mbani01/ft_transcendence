@@ -41,9 +41,9 @@ export class ChatService {
     })
   }
 
-  showChat() {
-    this.dropdown.open();
-  }
+  // showChat() {
+  //   this.dropdown.open();
+  // }
 
   joinChannel(roomID: string, password: string, callback: Function) {
     console.log(password);
@@ -56,7 +56,7 @@ export class ChatService {
     // if (chat !== undefined) {
     //   this.currChat = chat;
     // }
-    // this.http.post<Chat>(`${environment.apiBaseUrl}chat/
+    // this.http.post<Chat>(`${environment.apiBaseUrl}/chat/
     // channel/${roomID}`, this.oauthService.user).subscribe({
     //   next: chat => {
     //     this.chats.set(roomID, chat);
@@ -94,7 +94,8 @@ export class ChatService {
 
   set currChat(value) {
     this._currChat = value;
-    this.showChat();
+    console.log(this._currChat);
+    // this.showChat();
     // if (value?.messages.length === 0) {
       // this.loadMessages(value);
     // }
@@ -167,19 +168,19 @@ export class ChatService {
 
   fetchRooms() {
     console.log(this.oauthService.user);
-    this.socket.emit('fetch-rooms', (rooms: Chat[]) => {
-      rooms.forEach(value => {
-        this.chats.set(value.roomID, value);
-      })
-      console.log(this.chats);
-    });
-    // this.http.get<Chat[]>(`${environment.apiBaseUrl}chat/fetch-rooms`).subscribe({
-    //   next: chats => {
-    //     chats.forEach(value => {
-    //       this.chats.set(value.roomID, value);
-    //     })
-    //     console.log(this.chats);
-    //   }
+    // this.socket.emit('fetch-rooms', (rooms: Chat[]) => {
+    //   rooms.forEach(value => {
+    //     this.chats.set(value.roomID, value);
+    //   })
+    //   console.log(this.chats);
     // });
+    this.http.get<Chat[]>(`${environment.apiBaseUrl}/chat/fetch-rooms`).subscribe({
+      next: chats => {
+        chats.forEach(value => {
+          this.chats.set(value.roomID, value);
+        })
+        console.log(this.chats);
+      }
+    });
   }
 }

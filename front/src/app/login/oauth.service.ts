@@ -25,11 +25,11 @@ export class OAuthService {
   }
 
   getAuthPage() {
-    return this.http.get<{page: string}>(environment.apiBaseUrl + 'oauth_page');
+    return this.http.get<{page: string}>(environment.apiBaseUrl + '/oauth_page');
   }
 
   generateAccessToken(code: string) {
-    return this.http.post<{access_token: string, user: User}>(environment.apiBaseUrl + 'access_token', code).subscribe({
+    return this.http.post<{access_token: string, user: User}>(environment.apiBaseUrl + '/access_token', code).subscribe({
       next: (token) => {
         console.log(token);
         this.access_token = token.access_token;

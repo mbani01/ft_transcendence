@@ -2,14 +2,25 @@
   background-color: #00000000;
 }
 
-
-td {
-  //backdrop-filter: blur(5px);
-  vertical-align: middle;
-
-  //border-top-color: #daae51;
-}
-
-//tr {
-  //border-top: 1px solid;
+//.table {
+//  background-color: #00000000;
 //}
+
+table, thead, tr, th, tbody, td {
+
+  border: none;
+}
+//tr {
+//  border-color: #daae51;
+//
+//}
+td {
+//  //backdrop-filter: blur(5px);
+  vertical-align: middle;
+//
+//  border-top-color: #daae51;
+}
+//
+////tr {
+//  //border-top: 1px solid;
+////}

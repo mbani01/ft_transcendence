@@ -1,22 +1,26 @@
-.chat-container {
+.chatting-container {
   display: flex;
-  height: 500px;
+  height: 100%;
   flex-direction: column;
-  color: var(--dark);
+  //color: var(--dark);
   //padding: 0;
   //margin: 0;
+  color: white;
+
 }
 
 #header {
+  flex: initial;
   //background-color: red;
-  height: 10%;
+  //height: 10%;
+  //height: 48px;
   //border-bottom: 1px solid black;
 }
 #content {
   //background-color: green;
-  flex: 2;
-  max-height: 80%;
-  overflow: scroll;
+  flex: 1;
+  //max-height: 80%;
+  overflow: auto;
   overflow-x: hidden;
   //max-width: 100%;
 
@@ -26,10 +30,18 @@
 }
 
 #prompt {
-  background-color: var(--body-bg);
-  height: 10%;
+  flex: initial;
+  margin: 2px;
+  //background-color: #3f4042;
+  //height: 48px;
+  //height: 10%;
 }
 
+.form-control {
+  background-color: #454648;
+  color: white;
+  border: none;
+}
 .form-rounded {
   border-radius: 1rem;
 }

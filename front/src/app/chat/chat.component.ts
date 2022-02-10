@@ -21,9 +21,4 @@ export class ChatComponent implements OnInit {
     this.chatService.dropdown = this.dropdown;
   }
 
-
-  helloClick() {
-    this.chatService.showChat();
-  }
-
 }

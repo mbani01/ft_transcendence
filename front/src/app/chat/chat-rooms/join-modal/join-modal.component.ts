@@ -62,7 +62,7 @@ export class JoinModalComponent {
     //   }
     // });
 
-    // this.http.post(`${environment.apiBaseUrl}chat/join`,
+    // this.http.post(`${environment.apiBaseUrl}/chat/join`,
     //   {
     //     roomID: this.room.roomID,
     //     password: joinForm.value.password

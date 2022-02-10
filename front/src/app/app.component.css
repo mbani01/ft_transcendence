@@ -1,0 +1,15 @@
+.container-fluid {
+  height: 100%;
+  margin-top: -51px;
+  padding: 51px 0 0 0; /*set left/right padding according to needs*/
+
+}
+
+#content {
+  /*max-width: 1024px;*/
+  /*justify-content: center;*/
+  /*display: flex;*/
+  /*width: 100%;*/
+  /*overflow: auto;*/
+  /*height: 100vh;*/
+}

@@ -1,12 +1,12 @@
 <form id="modal-container" #joinForm="ngForm" (ngSubmit)="joinRoom(joinForm)">
-  <div class="modal-header">
-    <h4 class="modal-title">{{room.name}}</h4>
+  <div class="modal-header bg-primary text-light">
+    <p class="modal-title">{{room.name}}</p>
     <button type="button" class="close text-light" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <div class="modal-body">
-    <input type="password" name="password" required placeholder="Password" class="form-control bg-dark w-100" ngModel>
+  <div class="modal-body row">
+    <input type="password" name="password" required placeholder="Password" class="form-control bg-dark col m-3" ngModel>
     <div *ngIf="joinForm.controls['password']?.errors?.['error']" class="text-danger ml-1 mt-1" role="alert">
       {{joinForm.controls['password']?.errors?.['error']}}
     </div>

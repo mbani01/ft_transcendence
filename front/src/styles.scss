@@ -1,5 +1,7 @@
 
 
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;1,300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins&family=Roboto:ital,wght@0,100;0,400;1,300&display=swap');
 
 $primary: #ff2828;
 $secondary: #daae51;
@@ -17,9 +19,17 @@ body {
   //background: red;
   background: linear-gradient(to right, #6a3093, #a044ff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   //background: linear-gradient(to right, #360033, #0b8793); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
+  font-family: 'Poppins', sans-serif !important;
   //background: linear-gradient(90deg, #83a4d4 0%, #b6fbff 100%);
+
 }
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
 //$body-bg: #e6e6e6;
 //$white: #e6e6e6;
 

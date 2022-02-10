@@ -2,6 +2,10 @@
   background-color: #00000000;
 }
 
+table, thead, tr, th, tbody, td {
+  border: none;
+}
+
 td {
   vertical-align: middle;
 }
