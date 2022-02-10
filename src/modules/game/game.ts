@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 12:00:29 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/09 16:08:30 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/10 15:25:55 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,10 @@ export class Game{
 	{
 		const found = this.Players.find(element=> element === player);
 		return (found !== undefined);
+	}
+
+	isHost(Player)
+	{
+		return Player === Player[0];
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/09 16:13:17 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/10 15:29:06 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ export class gameSocketGateway
 		this.Games.push(game);
 		const GameId = game.getGameId();
 		this.joinGameRoom(GameId, Players);
-		this.server.to(GameId).emit('gameStarted', GameId);
+		this.server.to(Players[0].id).emit('gameStarted', {GameId: GameId, isHost: true});
+		this.server.to(Players[1].id).emit('gameStarted', {GameId: GameId, isHost: false});
 	}
 	
 	@SubscribeMessage('watchGame')
@@ -69,18 +70,18 @@ export class gameSocketGateway
 		// console.log(client.user);
 	}
 	
-	isPlayer(socket: any)
+	isPlayer(socket: any, GameId: string)
 	{
-		for(let game in this.Games)
-			if(this.Games[game].isPlayer(socket))
-				return true;
+		const game = this.Games.find(element=> element.getGameId() === GameId);
+		if (game !== undefined)
+			return game.isPlayer(socket);
 		return false;
 	}
 
 	@SubscribeMessage('sync')
 	syncGame(@ConnectedSocket() socket: any, @MessageBody() data :any)
 	{
-		if (data.GameId && this.isPlayer(socket))
+		if (data.GameId && this.isPlayer(socket, String(data.GameId)))
 			socket.to(String(data.GameId)).emit("sync", data);
 	}
 	
