@@ -1,0 +1,25 @@
+<div class="container-fluid">
+  <div class="row m-5">
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-pills col-3 offset-1" orientation="vertical">
+      <li ngbNavItem="account">
+        <a ngbNavLink class="text-center">Account</a>
+        <ng-template ngbNavContent>
+          <account-tab></account-tab>
+        </ng-template>
+      </li>
+      <li ngbNavItem="friends">
+        <a ngbNavLink class="text-center">Friends</a>
+        <ng-template ngbNavContent>
+          <friends-list></friends-list>
+        </ng-template>
+      </li>
+      <li ngbNavItem="blocks">
+        <a ngbNavLink class="text-center">Blocks</a>
+        <ng-template ngbNavContent>
+          <blocks-list></blocks-list>
+        </ng-template>
+      </li>
+    </ul>
+    <div [ngbNavOutlet]="nav" class="ml-4 col"></div>
+  </div>
+</div>

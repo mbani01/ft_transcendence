@@ -31,13 +31,21 @@
     </div>
   </form>
 
-  <!--  <div class="row w-100 pl-2 mb-2">-->
-<!--    <label for="chatPassword" class="col-4 m-auto">Password:</label>-->
-<!--    <input type="text" class="form-control col input-dark" id="chatPassword" placeholder="Password">-->
-<!--  </div>-->
-<!--  <div class="row w-100 mb-2 mt-3">-->
-<!--    <button class="btn btn-success mx-auto btn-rounded px-4">Save</button>-->
-<!--  </div>-->
+  <form class="flex-column justify-content-center mt-4" #inviteForm="ngForm" (ngSubmit)="sendInvite(inviteForm)">
+<!--    <div class="row justify-content-center">-->
+<!--      <button class="btn btn-info col-auto px-4 btn-rounded">Invite a User</button>-->
+<!--    </div>-->
+    <h5 class="col text-center my-3">Invite a User</h5>
+    <div class="row w-100 pl-2 mb-2">
+      <label for="nickname" class="col-4 m-auto">Nickname:</label>
+      <input  type="text" required class="form-control col input-dark" id="nickname" name="nickname"
+             placeholder="Nickname" ngModel>
+    </div>
+    <div class="row justify-content-center mt-3">
+      <button class="btn btn-info col-auto px-4 btn-rounded">Invite</button>
+    </div>
+  </form>
+
   <hr>
   <div class="flex-column justify-content-center">
 <!--    <h4 class="text-center">Members</h4>-->

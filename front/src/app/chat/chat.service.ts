@@ -17,7 +17,9 @@ export class ChatService {
   public _currChat?: Chat;
   public chats: Map<string, Chat>;
   public dropdown: NgbDropdown;
+  public settings = false;
 
+  private _is2FA = false;
   // private webSocket: WebSocket;
   constructor(private oauthService: OAuthService, private http: HttpClient, private socket: Socket) {
     this.chats = new Map();
@@ -109,6 +111,7 @@ export class ChatService {
 
   set currChat(value) {
     this._currChat = value;
+    this.settings = false;
     // this.showChat();
     // if (value?.messages.length === 0) {
       // this.loadMessages(value);
@@ -197,4 +200,17 @@ export class ChatService {
       }
     });
   }
+
+  acceptDuel(sender: User) {
+
+  }
+
+  acceptInvite(roomInvite: {roomID: string; name: string} | undefined) {
+
+  }
+
+  sendInvite(value: { nickname: string }) {
+
+  }
+
 }

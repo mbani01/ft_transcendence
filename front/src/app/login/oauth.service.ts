@@ -12,7 +12,7 @@ import {BehaviorSubject} from "rxjs";
 export class OAuthService {
 
   private access_token: string = '';
-
+  private _is2FA = false;
   // @ts-ignore
   public user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
@@ -68,5 +68,18 @@ export class OAuthService {
   logout() {
     this.cookieService.delete('access_token', '/');
     this.access_token = '';
+  }
+
+
+  is2FAEnabled() {
+    return this._is2FA;
+  }
+
+  enable2FA() {
+    this._is2FA = true;
+  }
+
+  disable2FA() {
+    this._is2FA = false;
   }
 }

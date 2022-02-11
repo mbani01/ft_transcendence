@@ -124,7 +124,7 @@
       "responses": [
         {
           "uuid": "19395d6b-3e09-48d1-9335-05d872e4e09f",
-          "body": "[\n  {\n    \"roomID\": \"1\",\n    \"message\": \"Hello Hello Hello Hello\",\n    \"sender\": {\n      \"uid\": \"1337\",\n      \"name\": \"MoJriM\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"timestamp\": 1642870651\n  },\n  {\n    \"roomID\": \"1\",\n    \"message\": \"Hello Hello Hello Hello\",\n    \"sender\": {\n      \"uid\": \"1337\",\n      \"name\": \"MoJriM\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"timestamp\": 1642870651\n  },\n  {\n    \"roomID\": \"1\",\n    \"message\": \"Hello Hello Hello Hello\",\n    \"sender\": {\n      \"uid\": \"ojoubout\",\n      \"name\": \"MoJriM\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"timestamp\": 1642870651\n  },\n  {\n    \"roomID\": \"1\",\n    \"message\": \"Hello Hello Hello Hello\",\n    \"sender\": {\n      \"uid\": \"1337\",\n      \"name\": \"MoJriM\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"timestamp\": 1642870651\n  }\n\n]",
+          "body": "[\n  {\n    \"roomID\": \"1\",\n    \"message\": \"Hello Hello Hello Hello\",\n    \"sender\": {\n      \"uid\": \"1337\",\n      \"name\": \"MoJriM\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"timestamp\": 1642870651\n  },\n  {\n    \"roomID\": \"1\",\n    \"message\": \"Hello Hello Hello Hello\",\n    \"sender\": {\n      \"uid\": \"1337\",\n      \"name\": \"MoJriM\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"timestamp\": 1642870651\n  },\n  {\n    \"roomID\": \"1\",\n    \"message\": \"Hello Hello Hello Hello\",\n    \"sender\": {\n      \"uid\": \"ojoubout\",\n      \"name\": \"MoJriM\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"timestamp\": 1642870651\n  },\n  {\n    \"roomID\": \"1\",\n    \"message\": \"Hello Hello Hello Hello\",\n    \"sender\": {\n      \"uid\": \"1337\",\n      \"name\": \"MoJriM\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"timestamp\": 1642870651\n  },\n  {\n    \"roomID\": \"1\",\n    \"message\": \"Hello Hello Hello Hello\",\n    \"sender\": {\n      \"uid\": \"ojoubout\",\n      \"name\": \"MoJriM\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"duel\": \"MoJriM\",\n    \"timestamp\": 1642870651\n  },\n  {\n    \"roomID\": \"1\",\n    \"message\": \"Hello Hello Hello Hello\",\n    \"sender\": {\n      \"uid\": \"ojoubout\",\n      \"name\": \"MoJriM\",\n      \"img\": \"/assets/img.webp\"\n    },\n    \"roomInvite\": {\n      \"roomID\": \"123\",\n      \"name\": \"Channel 1\"\n    },\n    \"timestamp\": 1642870651\n  }\n\n]",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -425,6 +425,56 @@
         {
           "uuid": "9a7088e5-f6f8-48ba-a609-bf1e4cd0b442",
           "body": "[\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  },\n  {\n    \"uid\": \"\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\",\n    \"wins\": 561,\n    \"losses\": 246\n  }\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "f2a89681-bc0e-4fa8-9878-cd4b6710a2ee",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "users/1337/friends",
+      "responses": [
+        {
+          "uuid": "4d1507e5-7c91-42d3-86b2-fe26d7768bca",
+          "body": "[\n  {\n    \"uid\": \"1337\",\n    \"name\": \"MoJriM\",\n    \"img\": \"/assets/img.webp\"\n  },\n  {\n    \"uid\": \"1337\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\"\n  },\n  {\n    \"uid\": \"1337\",\n    \"name\": \"hamid\",\n    \"img\": \"/assets/img.webp\"\n  },\n  {\n    \"uid\": \"1337\",\n    \"name\": \"pimi\",\n    \"img\": \"/assets/img.webp\"\n  }\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "f6736fc5-f14f-49ae-bf88-00695cba220e",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "users/1337/block",
+      "responses": [
+        {
+          "uuid": "36c8a5aa-08a6-40d5-bbba-4b5ed9d81b9e",
+          "body": "[\n  {\n    \"uid\": \"1337\",\n    \"name\": \"MoJriM\",\n    \"img\": \"/assets/img.webp\"\n  },\n  {\n    \"uid\": \"1337\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\"\n  },\n  {\n    \"uid\": \"1337\",\n    \"name\": \"hamid\",\n    \"img\": \"/assets/img.webp\"\n  },\n  {\n    \"uid\": \"1337\",\n    \"name\": \"pimi\",\n    \"img\": \"/assets/img.webp\"\n  }\n]",
           "latency": 0,
           "statusCode": 200,
           "label": "",

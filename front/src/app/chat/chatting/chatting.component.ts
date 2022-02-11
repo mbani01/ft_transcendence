@@ -17,9 +17,10 @@ export class ChattingComponent {
   loading = false;
 
   private isAllMessage = false;
-  settings = false;
+  // settings = false;
 
   constructor(public chatService: ChatService) {
+    console.log('h1');
     if (this.chatService.currChat?.messages.length == 0) {
       this.loading = true;
       this.chatService.loadMessages(this.chatService.currChat).subscribe({
@@ -35,6 +36,7 @@ export class ChattingComponent {
   }
 
   ngOnInit() {
+    console.log('h2');
   }
   ngAfterViewInit(): void {
     this.content.nativeElement.onscroll = (scroll: any) => {
@@ -81,8 +83,8 @@ export class ChattingComponent {
   }
 
   back() {
-    if (this.settings) {
-      this.settings = false;
+    if (this.chatService.settings) {
+      this.chatService.settings = false;
     } else {
       this.chatService.closeChat();
     }
@@ -101,4 +103,7 @@ export class ChattingComponent {
   // onScroll($event: Event) {
   //   console.log($event);
   // }
+  deleteInvite(i: number) {
+    this.chatService.currChat!.messages.splice(i, 1);
+  }
 }

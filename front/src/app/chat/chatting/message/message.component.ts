@@ -1,4 +1,4 @@
-import {Component, Input} from "@angular/core";
+import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {Message} from "../../shared/message.model";
 import {ChatService} from "../../chat.service";
 import {OAuthService} from "../../../login/oauth.service";
@@ -13,9 +13,10 @@ export class MessageComponent {
   @Input() prev: Message | undefined;
   @Input() message: Message;
   @Input() next?: Message;
+  @Output('deleteInvite') deleteInvite = new EventEmitter();
   // @Input() showAvatar: boolean = false;
 
-  constructor(private oAuthService: OAuthService, private popover: NgbPopoverConfig) {
+  constructor(private oAuthService: OAuthService, private popover: NgbPopoverConfig, private chatService: ChatService) {
     popover.popoverClass = 'popover-dark';
   }
 
@@ -74,5 +75,26 @@ export class MessageComponent {
       return 'mb-2';
     }
     return '';
+  }
+
+  acceptDuel() {
+    this.chatService.acceptDuel(this.message.sender);
+    console.log(this.message);
+    this.deleteInvite.emit();
+  }
+
+  rejectDuel() {
+    this.deleteInvite.emit();
+  }
+
+  acceptInvite() {
+    this.chatService.acceptInvite(this.message.roomInvite);
+
+    console.log(this.message);
+    this.deleteInvite.emit();
+  }
+
+  rejectInvite() {
+    this.deleteInvite.emit();
   }
 }

@@ -49,8 +49,9 @@ const config: SocketIoConfig = {url: environment.chatSocketUri, options: {}}
         SocketIoModule.forRoot(config),
         NgbNavModule
     ],
-  exports: [
-    ChatComponent
-  ]
+    exports: [
+        ChatComponent,
+        ChatterPopupComponent
+    ]
 })
 export class ChatModule {}

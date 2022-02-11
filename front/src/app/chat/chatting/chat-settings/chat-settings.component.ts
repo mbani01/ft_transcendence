@@ -20,6 +20,7 @@ export class ChatSettingsComponent {
 
   activeTab = 'members';
   // roomName = this.chatService.currChat!.name;
+  // nickname: any;
 
   constructor(private http: HttpClient, private chatService: ChatService) {
     this.http.get<User[]>(`${environment.apiBaseUrl}/chat/${this.chatService.currChat!.roomID}/members`).subscribe({
@@ -55,5 +56,9 @@ export class ChatSettingsComponent {
     this.http.post(`${environment.apiBaseUrl}/chat/${this.chatService.currChat!.roomID}/unban`, {
       uid: member.uid,
     });
+  }
+
+  sendInvite(inviteForm: NgForm) {
+    this.chatService.sendInvite(inviteForm.value);
   }
 }
