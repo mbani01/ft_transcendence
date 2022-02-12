@@ -3,14 +3,23 @@
 }
 
 .navbar {
-  background: linear-gradient(90deg, #d53369 0%, #daae51 100%);
-  box-shadow: 0px -5px 8px;
-  position: fixed;
-  top: 0;
+  background: linear-gradient(to right, #6a3093, #a044ff);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   width: 100%;
   z-index: 999;
+  height: 51px;
 }
 
+.navbar-collapse {
+  background-color: #343A40FF;
+}
+
+@media (min-width: 992px) {
+  .navbar-collapse {
+    background: linear-gradient(to right, #6a3093, #a044ff);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  }
+}
 .nav-item {
   margin-bottom: 3px;
   transition-duration: 300ms;

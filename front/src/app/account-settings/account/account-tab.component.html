@@ -20,13 +20,13 @@
         <label for="nickname" class="col-5 font-weight-bolder">Name:</label>
         <div class="col p-0">
           <ng-template #errorTip>{{nicknameForm.controls['nickname']?.errors?.['error']}}</ng-template>
-          <input type="text" class="form-control input-dark" id="nickname" name="nickname"
+          <input type="text" class="form-control input-dark" id="nickname" name="nickname" required
                  placeholder="Name" [ngModel]="user.value?.name" [ngbTooltip]="errorTip" triggers="manual"
                  tooltipClass="error-tooltip" #t="ngbTooltip">
         </div>
       </div>
       <div class="row mt-3 mb-3 offset-5">
-        <button class="btn btn-success mr-1 px-4 btn-rounded">Save</button>
+        <button class="btn btn-success mr-1 px-4 btn-rounded" [disabled]="isValidNickname(nicknameForm)">Save</button>
         <button class="btn btn-danger ml-1 btn-rounded" (click)="editNickname = false">Cancel</button>
       </div>
     </div>

@@ -49,4 +49,11 @@ export class AccountTabComponent {
   remove2FA() {
     this.oauthService.disable2FA();
   }
+
+  isValidNickname(nicknameForm: NgForm) {
+    if (!nicknameForm.valid || !nicknameForm.dirty || nicknameForm.value.nickname == this.user.value.name) {
+      return true;
+    }
+    return false;
+  }
 }

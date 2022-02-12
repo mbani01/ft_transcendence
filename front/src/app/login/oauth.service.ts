@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {CookieService} from "ngx-cookie-service";
 import {Router} from "@angular/router";
@@ -28,17 +28,25 @@ export class OAuthService {
     return this.http.get<{page: string}>(environment.apiBaseUrl + '/oauth_page');
   }
 
-  generateAccessToken(code: string) {
-    return this.http.post<{access_token: string, user: User}>(environment.apiBaseUrl + '/access_token', code).subscribe({
+  generateAccessToken(code: string, _2fa?: string) {
+    let params = new HttpParams().append("code", code);
+    if (_2fa) {
+      params.append("twoFactorAuth", _2fa);
+    }
+
+    return this.http.post<{access_token: string, user: User}>(environment.apiBaseUrl + '/access_token', null, {
+      params: params
+    }).subscribe({
       next: (token) => {
         console.log(token);
         this.access_token = token.access_token;
         this.cookieService.set('access_token', this.access_token, undefined, '/');
-        console.log(this.token);
         this.user$.next(token.user);
       },
-      error: (error => console.log(error)),
-      complete: () => this.router.navigate([''])
+      error: (error => {
+        console.log(error)
+      }),
+      // complete: () => this.router.navigate([''])
     });
   }
 

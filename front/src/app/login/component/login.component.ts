@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {OAuthService} from "../oauth.service";
 
 @Component({
@@ -9,9 +9,15 @@ import {OAuthService} from "../oauth.service";
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private oauthService: OAuthService, private router: Router) {
+  public is2FA = false;
+  constructor(private oauthService: OAuthService, private router: Router, private route: ActivatedRoute) {
     if (this.oauthService.isAuthenticated()) {
       this.router.navigate(['']);
+    } else {
+      if (route.snapshot.queryParams['code']) {
+        this.is2FA = true;
+        console.log(route.snapshot.queryParams);
+      }
     }
   }
 

@@ -19,6 +19,22 @@
   height: 51px;
 }
 
+.navbar-collapse {
+  background-color: #343A40FF;
+
+}
+
+@media (min-width: 992px) {
+  .navbar-collapse {
+    background: linear-gradient(to right, #6a3093, #a044ff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  }
+}
+
+//.navbar-collapse.show, .navbar-collapse.collapsing {
+//  //background: linear-gradient(to right, #6a3093, #a044ff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+//  background-color: #343A40FF;
+//}
 .nav-item {
   margin-bottom: 3px;
   transition-duration: 300ms;
