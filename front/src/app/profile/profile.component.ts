@@ -28,7 +28,7 @@ export class ProfileComponent implements OnInit {
             this.loadMatchHistory(value['id']);
           },
           error: (err) => {
-            console.log(err);
+            // console.log(err);
             this.router.navigateByUrl('/not-found', {skipLocationChange: true})
           }
         });

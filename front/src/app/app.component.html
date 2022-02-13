@@ -24,12 +24,12 @@
 
 <div class="container-fluid h-100">
   <app-navbar *ngIf="oauthService.isAuthenticated()"></app-navbar>
-  <div class="row h-100">
+  <div class="row w-100 h-100 m-0">
 <!--      <div class="col-lg h-100 bg-warning"></div>-->
 <!--      <div class="col-auto h-100 bg-danger"></div>-->
       <div class="col-lg overflow-auto p-2 h-100">
           <router-outlet></router-outlet>
       </div>
-      <app-chat class="col col-lg-auto" *ngIf="oauthService.isAuthenticated()" style=""></app-chat>
+      <app-chat class="col col-lg-auto p-0" *ngIf="oauthService.isAuthenticated()" style=""></app-chat>
   </div>
 </div>

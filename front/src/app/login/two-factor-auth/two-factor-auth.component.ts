@@ -1,8 +1,9 @@
 import {Component} from "@angular/core";
 import {NgForm} from "@angular/forms";
-import {HttpClient, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {ActivatedRoute} from "@angular/router";
+import {OAuthService} from "../oauth.service";
 
 @Component({
   selector: 'two-factor-auth',
@@ -11,16 +12,24 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class TwoFactorAuthComponent {
 
-  private code: string;
-  constructor(private http: HttpClient, private route: ActivatedRoute) {
+  private readonly code: string;
+  // public is2FA = false;
+  public loading = false;
+
+  constructor(private http: HttpClient, private route: ActivatedRoute, public oauthService: OAuthService) {
     this.code = route.snapshot.queryParams['code'];
+    this.oauthService.generateAccessToken(this.code);
   }
 
   verify(twoFactorAuth: NgForm) {
-    let params = new HttpParams()
-      .append("code", this.code)
-      .append("auth_code", twoFactorAuth.value['twoFactorAuth']);
-    this.http.get(`${environment.apiBaseUrl}/login/access_token`, null)
-    twoFactorAuth.controls['twoFactorAuth'].setErrors({error: 'HASDDOASDHOAO'});
+    let twoFactorAuthCode = twoFactorAuth.value['twoFactorAuth'];
+    console.log(twoFactorAuth);
+    this.loading = true;
+    this.oauthService.generateAccessToken(this.code, twoFactorAuthCode).subscribe({
+      error: (err: HttpErrorResponse) => {
+        twoFactorAuth.controls['twoFactorAuth'].setErrors(err.error);
+        this.loading = false;
+      }
+    });
   }
 }

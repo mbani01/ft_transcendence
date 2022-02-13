@@ -15,7 +15,7 @@
       "responses": [
         {
           "uuid": "804e54fd-6acf-4a5e-8a61-00a567606cff",
-          "body": "{\n  \"page\": \"http://localhost:4200/login/callback\"\n}",
+          "body": "{\n  \"page\": \"http://localhost:4200/login?code=d\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -40,15 +40,69 @@
       "responses": [
         {
           "uuid": "33489243-69f0-4bb9-8eea-3727bd1b4589",
-          "body": "{\n  \"access_token\": \"dasdsdsada\",\n  \"user\": {\n    \"uid\": \"1337\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\"\n\n  }\n}",
-          "latency": 0,
-          "statusCode": 200,
+          "body": "{\n  \"2FA\": true\n}",
+          "latency": 500,
+          "statusCode": 401,
           "label": "",
           "headers": [],
           "filePath": "",
           "sendFileAsBody": false,
           "rules": [],
           "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        },
+        {
+          "uuid": "82232a00-f4b7-493a-9e08-73add054618f",
+          "body": "{\n  \"access_token\": \"dasdsdsada\",\n  \"user\": {\n    \"uid\": \"1337\",\n    \"name\": \"ojoubout\",\n    \"img\": \"/assets/img.webp\"\n  }\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "query",
+              "modifier": "code",
+              "value": "d",
+              "operator": "equals"
+            },
+            {
+              "target": "query",
+              "modifier": "twoFactorAuth",
+              "value": "aa",
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "AND",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        },
+        {
+          "uuid": "d70dfda0-a3fe-43ba-a0e1-7bf4557e795c",
+          "body": "{\n  \"error\": \"This Field is required\"\n}",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "query",
+              "modifier": "code",
+              "value": "d",
+              "operator": "equals"
+            },
+            {
+              "target": "query",
+              "modifier": "twoFactorAuth",
+              "value": "das",
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "AND",
           "disableTemplating": false,
           "fallbackTo404": false
         }
