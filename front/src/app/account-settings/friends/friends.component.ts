@@ -20,4 +20,8 @@ export class FriendsComponent {
       }
     });
   }
+
+  directMessage(friend: User) {
+    
+  }
 }

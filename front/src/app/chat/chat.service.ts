@@ -20,7 +20,7 @@ export class ChatService {
   public settings = false;
 
   private _is2FA = false;
-  // private webSocket: WebSocket;
+
   constructor(private oauthService: OAuthService, private http: HttpClient, private socket: Socket) {
     this.chats = new Map();
     this.oauthService.user$.subscribe({
@@ -29,7 +29,6 @@ export class ChatService {
           console.log('Chat Service');
           socket.on('message', this.receiveMessage);
           // socket.fromEvent<string>('message').subscribe({next: this.receiveMessage.bind(this)});
-
           // this.webSocket = new WebSocket(environment.chatWebSocketUri);
           this.fetchRooms();
           // this.webSocket.addEventListener('open', (event) => {
@@ -60,17 +59,6 @@ export class ChatService {
         callback(room);
       }
     );
-    // let chat = this.chats.get(roomID);
-    // if (chat !== undefined) {
-    //   this.currChat = chat;
-    // }
-    // this.http.post<Chat>(`${environment.apiBaseUrl}/chat/
-    // channel/${roomID}`, this.oauthService.user).subscribe({
-    //   next: chat => {
-    //     this.chats.set(roomID, chat);
-    //     this.currChat = chat;
-    //   }
-    // });
   }
 
   openConversation(user: User) {
@@ -159,9 +147,7 @@ export class ChatService {
         timestamp: new Date()
       };
       console.log(m);
-      // this.currChat.messages.push(m);
       this.socket.emit('message', JSON.stringify(m));
-      // this.webSocket.send(JSON.stringify(m));
     } else {
       console.log('sendMessage(): there is no chat opened');
     }
@@ -185,12 +171,7 @@ export class ChatService {
 
   fetchRooms() {
     console.log(this.oauthService.user);
-    // this.socket.emit('fetch-rooms', (rooms: Chat[]) => {
-    //   rooms.forEach(value => {
-    //     this.chats.set(value.roomID, value);
-    //   })
-    //   console.log(this.chats);
-    // });
+
     this.http.get<Chat[]>(`${environment.apiBaseUrl}/chat/fetch-rooms`).subscribe({
       next: chats => {
         chats.forEach(value => {

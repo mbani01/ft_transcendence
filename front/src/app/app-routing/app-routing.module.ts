@@ -10,7 +10,7 @@ import {AccountSettingsComponent} from "../account-settings/account-settings.com
 
 const routes: Routes = [
   {path: '', canActivate: [AuthGuard], children: [
-    {path: '', redirectTo: 'home', pathMatch: 'full'},
+    {path: '', redirectTo: 'play', pathMatch: 'full'},
     {path: 'play', component: EmptyComponent},
     {path: 'leaderboard', component: LeaderboardComponent},
     {path: 'chat-rooms', component: ChatRoomsComponent},
