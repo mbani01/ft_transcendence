@@ -37,10 +37,10 @@
         </div>
 
         <div class="dropdown">
-          <a data-toggle="dropdown" id="dropdownMenuButton">
-            <img width="30" height="30" class="rounded-circle" alt="Cinque Terre" src="/assets/img.webp">
+          <a data-toggle="dropdown" id="dropdownMenuButton" class="d-flex h-100">
+            <img width="30" height="30" class="rounded-circle m-auto" alt="Cinque Terre" src="/assets/img.webp">
           </a>
-          <div class="dropdown-menu dropdown-menu-right mt-2" aria-labelledby="dropdownMenuButton">
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" [routerLink]="['profile', 'ojoubout']"><i class="bi bi-person-lines-fill pr-2"></i> Profile</a>
             <a class="dropdown-item" routerLink="settings"><i class="bi bi-gear pr-2"></i> Account Settings</a>
             <a class="dropdown-item" (click)="logout()"><i class="bi bi-box-arrow-left pr-2"></i> Logout</a>
