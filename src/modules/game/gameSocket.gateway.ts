@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/14 14:43:13 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/14 15:43:45 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,10 +118,16 @@ export class gameSocketGateway
 		}
 	}
 	
+	@SubscribeMessage('createPrivateGame')
+	privateGame(@ConnectedSocket() socket: any, @MessageBody() data :any)
+	{
+		
+	}
+	
 	@SubscribeMessage('syncRound')
     syncRound(@ConnectedSocket() socket: any, @MessageBody() data :any)
     {
-		if (!data.GameId || !data.player1_score || !data.player2_score)
+		if (!data.GameId || isNaN(data.player1_score) || isNaN(data.player2_score))
 			return;
         if (this.isPlayer(socket, String(data.GameId)))
 		{
@@ -149,7 +155,7 @@ export class gameSocketGateway
 	}
 
 	@SubscribeMessage('disconnected')
- 	 async handleDisconnect(@ConnectedSocket() socket: any) {
+ 	async handleDisconnect(@ConnectedSocket() socket: any) {
 		const game = this.Games.find(element=> element.isPlayer(socket));
 		this.GameOver(game, socket);
 		this.Games = this.Games.filter(element => element != game);
