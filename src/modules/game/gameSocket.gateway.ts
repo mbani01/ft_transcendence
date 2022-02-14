@@ -146,11 +146,14 @@ export class gameSocketGateway
 	
 	GameOver(game :Game, disconnectedPlayer? :any)
 	{
-		const gameInfos = game.getInfos();
-		if (disconnectedPlayer !== undefined) // A Player disconnected
+		if (game)
 		{
-			this.server.to(gameInfos.GameId).emit('GameOver', {GameId: gameInfos.GameId, Players: gameInfos.Players, 
-			disconnectedPlayer: disconnectedPlayer.user});
+			const gameInfos = game.getInfos();
+			if (disconnectedPlayer !== undefined) // A Player disconnected
+			{
+				this.server.to(gameInfos.GameId).emit('GameOver', {GameId: gameInfos.GameId, Players: gameInfos.Players, 
+				disconnectedPlayer: disconnectedPlayer.user});
+			}
 		}
 	}
 
