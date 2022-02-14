@@ -6,11 +6,12 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/14 13:35:16 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/14 14:43:13 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { ConnectedSocket, SubscribeMessage, WebSocketGateway, WebSocketServer, MessageBody } from "@nestjs/websockets";
+import { elementAt } from "rxjs";
 import { Game } from "./game";
 import {GameQueueService} from "./gameQueue"
 
@@ -39,6 +40,8 @@ export class gameSocketGateway
 		const game = new Game(true, Players, isDefault);
 		this.Games.push(game);
 		const gameInfos = game.getInfos();
+		Players[0].GameId = gameInfos.GameId;
+		Players[1].GameId = gameInfos.GameId;
 		this.joinGameRoom(gameInfos.GameId, Players);
 		this.server.to(Players[0].id).emit('gameStarted', {GameId: gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: true});
 		this.server.to(Players[1].id).emit('gameStarted', {GameId:gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: false});
@@ -59,7 +62,6 @@ export class gameSocketGateway
 	@SubscribeMessage('joinDefaultGame')
 	joinQueue(@ConnectedSocket() socket: any)
 	{
-		console.log(socket);
 		this.DefautQueue.addUser(socket);
 		if (this.DefautQueue.isfull())
 			this.startGame(this.DefautQueue, true);
@@ -135,11 +137,22 @@ export class gameSocketGateway
         if (data.GameId && this.isPlayer(socket, String(data.GameId)))
             socket.to(String(data.GameId)).emit('focusLose', data);
     }
+	
+	GameOver(game :Game, disconnectedPlayer? :any)
+	{
+		const gameInfos = game.getInfos();
+		if (disconnectedPlayer !== undefined) // A Player disconnected
+		{
+			this.server.to(gameInfos.GameId).emit('GameOver', {GameId: gameInfos.GameId, Players: gameInfos.Players, 
+			disconnectedPlayer: disconnectedPlayer.user});
+		}
+	}
 
 	@SubscribeMessage('disconnected')
- 	 async handleDisconnect(client: any) {
-    console.log('disconnected from game gateway');
-     // I can see this message in console
-  	}
+ 	 async handleDisconnect(@ConnectedSocket() socket: any) {
+		const game = this.Games.find(element=> element.isPlayer(socket));
+		this.GameOver(game, socket);
+		this.Games = this.Games.filter(element => element != game);
+	}
 	
 }
