@@ -24,7 +24,7 @@ export class Game{
 	isPublic: boolean;
 	Players: Array<any>;
 	GameId: string;
-	ballPos: Array<number> = [200, -200];
+	ballPos: Array<number> = [600, -600];
 	ball: ball;
 	score: score;
 	isDefault: boolean;
