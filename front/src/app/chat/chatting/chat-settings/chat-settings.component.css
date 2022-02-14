@@ -1,0 +1,66 @@
+.chat-settings {
+  width: 100%;
+  height: 100%;
+}
+
+.input-dark {
+  background-color: var(--dark);
+  color: var(--light);
+  border-color: #0a0b0c;
+  border-radius: 360px;
+}
+
+.btn-rounded {
+  border-radius: 360px;
+}
+
+.list-group-item {
+  background-color: #00000000;
+  transition-duration: 200ms;
+  cursor: pointer;
+  user-select: none;
+}
+
+.list-group-item:hover {
+  transition-duration: 0ms;
+  background-color: var(--dark);
+}
+
+.tab-content {
+  margin: 0 !important;
+  margin-top: 8px !important;
+}
+
+.nav-link {
+  text-align: center;
+}
+
+.members-nav {
+  color: var(--info) !important;
+}
+
+.members-nav.active {
+  background-color: var(--info);
+}
+
+.mutes-nav {
+  color: #d99f06 !important;
+}
+
+.mutes-nav.active {
+  background-color: #d99f06;
+}
+
+.bans-nav {
+  color: var(--danger) !important;
+}
+
+.bans-nav.active {
+  background-color: var(--danger);
+}
+
+.nav-link.active {
+  color: var(--light) !important;
+}
+
+/*# sourceMappingURL=chat-settings.component.css.map */

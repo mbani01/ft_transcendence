@@ -11,11 +11,11 @@
       "uuid": "e9b1c9a2-04fe-4538-957b-7488f076c0ab",
       "documentation": "",
       "method": "get",
-      "endpoint": "oauth_page!",
+      "endpoint": "oauth_page",
       "responses": [
         {
           "uuid": "804e54fd-6acf-4a5e-8a61-00a567606cff",
-          "body": "{\n  \"page\": \"http://localhost:4200/login?code=d\"\n}",
+          "body": "{\n  \"page\": \"https://api.intra.42.fr/oauth/authorize?client_id=802dd62932bab69d1e0168a42ed0567a6b83267c134fb2f62d583c14b2a4ce97&redirect_uri=http%3A%2F%2Flocalhost%3A4200%2Flogin&response_type=code\"\n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -36,7 +36,7 @@
       "uuid": "6257927d-a9cf-40d6-b6ab-084875eaf995",
       "documentation": "",
       "method": "post",
-      "endpoint": "access_token!",
+      "endpoint": "access_token",
       "responses": [
         {
           "uuid": "33489243-69f0-4bb9-8eea-3727bd1b4589",
@@ -64,12 +64,6 @@
           "rules": [
             {
               "target": "query",
-              "modifier": "code",
-              "value": "d",
-              "operator": "equals"
-            },
-            {
-              "target": "query",
               "modifier": "twoFactorAuth",
               "value": "aa",
               "operator": "equals"
@@ -81,7 +75,7 @@
         },
         {
           "uuid": "d70dfda0-a3fe-43ba-a0e1-7bf4557e795c",
-          "body": "{\n  \"error\": \"This Field is required\"\n}",
+          "body": "{\n  \"error\": \"wrong code\"\n}",
           "latency": 0,
           "statusCode": 400,
           "label": "",
@@ -92,14 +86,8 @@
             {
               "target": "query",
               "modifier": "code",
-              "value": "d",
-              "operator": "equals"
-            },
-            {
-              "target": "query",
-              "modifier": "twoFactorAuth",
-              "value": "das",
-              "operator": "equals"
+              "value": ".*",
+              "operator": "regex"
             }
           ],
           "rulesOperator": "AND",
