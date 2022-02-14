@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/11 19:27:41 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/14 11:43:44 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,5 +91,45 @@ export class gameSocketGateway
 		if (data.GameId && this.isPlayer(socket, String(data.GameId)))
 			socket.to(String(data.GameId)).emit('syncBall', data);
 	}
+
+	@SubscribeMessage('leaveGame')
+	leaveGame(@ConnectedSocket() socket: any, @MessageBody() data :any)
+	{
+		/* Game is Over should :
+		 	- leave room for both players && watchers
+			- save score for both players
+			- delete game 
+		*/
+		if (!data.GameId && this.isPlayer(socket, String(data.GameId)))
+		{
+			
+		}
+	}
+	
+	@SubscribeMessage('syncRound')
+    syncRound(@ConnectedSocket() socket: any, @MessageBody() data :any)
+    {
+		if (!data.GameId || !data.player1_score || !data.player2_score)
+			return;
+        if (this.isPlayer(socket, String(data.GameId)))
+		{
+            socket.to(String(data.GameId)).emit('syncRound', data);
+			const currentGame = this.Games.find(element=> element.getGameId() === String(data.GameId));
+			currentGame.updateScore({player1: data.player1_score, player2: data.player2_score});
+		}
+    }
+    
+    @SubscribeMessage('focusLose')
+    focusLose(@ConnectedSocket() socket: any, @MessageBody() data :any)
+    {
+        if (data.GameId && this.isPlayer(socket, String(data.GameId)))
+            socket.to(String(data.GameId)).emit('focusLose', data);
+    }
+
+	@SubscribeMessage('disconnected')
+ 	 async handleDisconnect(client: any) {
+    console.log('disconnected from game gateway');
+     // I can see this message in console
+  	}
 	
 }
