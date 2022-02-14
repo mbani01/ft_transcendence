@@ -25,7 +25,7 @@ export class OAuthService {
   }
 
   getAuthPage() {
-    return this.http.get<{page: string}>(environment.apiBaseUrl + '/oauth_page');
+    return this.http.get<{page: string}>(environment.apiBaseUrl + '/auth/oauth_page');
   }
 
   generateAccessToken(code: string, _2fa?: string) {
@@ -34,7 +34,7 @@ export class OAuthService {
       params = params.set("twoFactorAuth", _2fa);
     }
     console.log(params);
-    let obs = this.http.post<{access_token: string, user: User}>(environment.apiBaseUrl + '/access_token', null, {
+    let obs = this.http.post<{access_token: string, user: User}>(environment.apiBaseUrl + '/auth/access_token', null, {
       params: params
     });
     obs.subscribe({
