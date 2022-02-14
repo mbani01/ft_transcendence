@@ -566,7 +566,7 @@
       "responses": [
         {
           "uuid": "95565967-18cc-4316-a92b-0a4a6f932e47",
-          "body": "{\n  \"error\": \"Yo!\"\n}",
+          "body": "false",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -580,7 +580,7 @@
         },
         {
           "uuid": "7693177e-ff87-47f6-a48c-227132820b73",
-          "body": "{\n  \"is2FA\": true\n}",
+          "body": "true",
           "latency": 0,
           "statusCode": 200,
           "label": "",

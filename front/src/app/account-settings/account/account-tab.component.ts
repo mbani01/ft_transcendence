@@ -49,16 +49,16 @@ export class AccountTabComponent {
 
   verifyCode(qrCodeForm: NgForm) {
     this.click2FA = true;
-    this.http.get<{is2FA: boolean, error: string}>(`${environment.apiBaseUrl}/twofa/turnon`, {
+    this.http.get<boolean>(`${environment.apiBaseUrl}/twofa/turnon`, {
       params: qrCodeForm.value
     }).subscribe({
       next: value => {
         this.click2FA = false;
-        if (value.is2FA) {
+        if (value) {
           this.oauthService.enable2FA();
           this.closeQRCode();
-        } else if (value.error) {
-          qrCodeForm.controls['code'].setErrors(value);
+        } else {
+          qrCodeForm.controls['code'].setErrors({error: "Wrong Code"});
           console.log(qrCodeForm);
           this.codeToolTip.open();
         }
