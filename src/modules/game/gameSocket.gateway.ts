@@ -160,5 +160,12 @@ export class gameSocketGateway
 		this.GameOver(game, socket);
 		this.Games = this.Games.filter(element => element != game);
 	}
+
+	@SubscribeMessage('syncPowerUp')
+	syncPowerUp(@ConnectedSocket() socket: any, @MessageBody() data :any)
+	{
+		if (data.GameId && this.isPlayer(socket, String(data.GameId)))
+			socket.to(String(data.GameId)).emit('syncPowerUp', data);
+	}
 	
 }
