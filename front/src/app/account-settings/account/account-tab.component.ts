@@ -17,9 +17,10 @@ export class AccountTabComponent {
 
   user: BehaviorSubject<User>;
   qrCode: string;
-
+  click2FA = false;
 
   @ViewChild('t') tooltip: NgbTooltip;
+  @ViewChild('codeToolTip') codeToolTip: NgbTooltip;
 
   constructor(private http: HttpClient, public oauthService: OAuthService) {
     this.user = oauthService.user$;
@@ -46,13 +47,27 @@ export class AccountTabComponent {
     this.qrCode = '';
   }
 
-  verifyCode(code: string) {
-    console.log(code);
-    this.oauthService.enable2FA();
-    this.closeQRCode();
+  verifyCode(qrCodeForm: NgForm) {
+    this.click2FA = true;
+    this.http.get<{is2FA: boolean, error: string}>(`${environment.apiBaseUrl}/twofa/turnon`, {
+      params: qrCodeForm.value
+    }).subscribe({
+      next: value => {
+        this.click2FA = false;
+        if (value.is2FA) {
+          this.oauthService.enable2FA();
+          this.closeQRCode();
+        } else if (value.error) {
+          qrCodeForm.controls['code'].setErrors(value);
+          console.log(qrCodeForm);
+          this.codeToolTip.open();
+        }
+      }
+    });
   }
 
   remove2FA() {
+    this.http.get<string>(`${environment.apiBaseUrl}/twofa/turnoff`);
     this.oauthService.disable2FA();
   }
 

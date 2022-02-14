@@ -38,12 +38,16 @@
   <label class="col-5">Two Factor Authentication:</label>
   <button *ngIf="!oauthService.is2FAEnabled() && !qrCode" class="btn btn-success" (click)="showQRCode()">Enable 2FA</button>
   <button *ngIf="oauthService.is2FAEnabled()" class="btn btn-danger" (click)="remove2FA()">Remove 2FA</button>
-  <div *ngIf="qrCode">
+  <form *ngIf="qrCode" #qrCodeForm="ngForm" (ngSubmit)="verifyCode(qrCodeForm)">
     <img [src]="qrCode">
+    <ng-template #qrCodeError>{{qrCodeForm.controls['code']?.errors?.['error']}}</ng-template>
     <input type="text" class="form-control input-dark" maxlength="6" id="code2FA" name="code"
-       placeholder="6 Digit Code" #codeInput>
-    <button class="btn btn-success mr-1 px-4 btn-rounded" (click)="verifyCode(codeInput.value)">Verify</button>
-    <button class="btn btn-danger ml-1 btn-rounded" (click)="closeQRCode()">Cancel</button>
+       placeholder="6 Digit Code" required ngModel
+           [ngbTooltip]="qrCodeError" triggers="manual"
+           tooltipClass="error-tooltip" #codeToolTip="ngbTooltip">
 
-  </div>
+    <button class="btn btn-success mr-1 px-4 btn-rounded" [disabled]="click2FA">Verify</button>
+    <button type="button" class="btn btn-danger ml-1 btn-rounded" (click)="closeQRCode()">Cancel</button>
+
+  </form>
 </div>
