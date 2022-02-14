@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 12:00:29 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/14 11:38:34 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/14 13:10:26 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,12 @@ export class Game{
 	ballPos: Array<number> = [200, -200];
 	ball: ball;
 	score: score;
+	isDefault: boolean;
 	
-	constructor(isPublic: boolean, Players: Array<any>)
+	constructor(isPublic: boolean, Players: Array<any>, isDefault: boolean)
 	{
 		this.isPublic = isPublic;
+		this.isDefault = isDefault;
 		this.Players = Players;
 		this.score = {player1: 0, player2: 0};
 		this.GameId = String(Date.now());

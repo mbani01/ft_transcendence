@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/14 11:43:44 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/14 13:35:16 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,24 +23,25 @@ export class gameSocketGateway
 
 	Games :Array<Game> = [];
 
-	publicQueue :GameQueueService = new GameQueueService();
+	DefautQueue :GameQueueService = new GameQueueService();
+	CustomQueue: GameQueueService = new GameQueueService();
 
 	joinGameRoom(gameId, Players)
 	{
 		Players.forEach(socket=> socket.join(gameId));
 	}
 
-	async startGame()
+	async startGame(GameQueue: GameQueueService, isDefault: boolean)
 	{
-		const Players = this.publicQueue.getPlayers();
+		const Players = GameQueue.getPlayers();
 		if (Players[0] == Players[1])
 			return ;
-		const game = new Game(true, Players);
+		const game = new Game(true, Players, isDefault);
 		this.Games.push(game);
 		const gameInfos = game.getInfos();
 		this.joinGameRoom(gameInfos.GameId, Players);
-		this.server.to(Players[0].id).emit('gameStarted', {GameId: gameInfos.GameId, ball: gameInfos.ball, isHost: true});
-		this.server.to(Players[1].id).emit('gameStarted', {GameId:gameInfos.GameId, ball: gameInfos.ball, isHost: false});
+		this.server.to(Players[0].id).emit('gameStarted', {GameId: gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: true});
+		this.server.to(Players[1].id).emit('gameStarted', {GameId:gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: false});
 	}
 	
 	@SubscribeMessage('watchGame')
@@ -55,12 +56,13 @@ export class gameSocketGateway
 		});
 	}
 
-	@SubscribeMessage('joinGame')
+	@SubscribeMessage('joinDefaultGame')
 	joinQueue(@ConnectedSocket() socket: any)
 	{
-		this.publicQueue.addUser(socket);
-		if (this.publicQueue.isfull())
-			this.startGame();
+		console.log(socket);
+		this.DefautQueue.addUser(socket);
+		if (this.DefautQueue.isfull())
+			this.startGame(this.DefautQueue, true);
 		// const sockets = await this.server.fetchSockets();
 		// sockets.forEach(socket => {
 		// 	socket.join('test');
@@ -68,6 +70,14 @@ export class gameSocketGateway
 		// });
 		// client.to("test").emit("test", "hello world");
 		// console.log(client.user);
+	}
+
+	@SubscribeMessage('joinCustomGame')
+	joinCustomGame(@ConnectedSocket() socket: any)
+	{
+		this.CustomQueue.addUser(socket);
+		if (this.CustomQueue.isfull())
+			this.startGame(this.CustomQueue, false);
 	}
 	
 	isPlayer(socket: any, GameId: string)
