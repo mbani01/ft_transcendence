@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   game.service.ts                                    :+:      :+:    :+:   */
+/*   gameQueue.ts                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 10:52:22 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/09 11:12:55 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/14 19:05:13 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ export class GameQueueService{
 	
 	constructor()
 	{
-		console.log("Queue Created !");
 		this.size = 0;
 		this.data = [];
 	}
@@ -50,5 +49,16 @@ export class GameQueueService{
 		if (this.data.length === 0)	
 			this.clearQueue();
 		return Players;
+	}
+
+	removeUser(user)
+	{
+		let removed = false;
+		this.data = this.data.filter(element => element !== user);
+		if (this.size !== this.data.length)
+			{removed = true;
+			console.log("Removed from Queue");}
+		this.size = this.data.length;
+		return removed;
 	}
 }

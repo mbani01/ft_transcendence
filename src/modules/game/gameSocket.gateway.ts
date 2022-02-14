@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/14 15:43:45 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/14 19:02:03 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,11 +154,14 @@ export class gameSocketGateway
 				this.server.to(gameInfos.GameId).emit('GameOver', {GameId: gameInfos.GameId, Players: gameInfos.Players, 
 				disconnectedPlayer: disconnectedPlayer.user});
 			}
+			this.server.socketsLeave(gameInfos.GameId); // make all players/watcher leave the room
 		}
 	}
 
 	@SubscribeMessage('disconnected')
  	async handleDisconnect(@ConnectedSocket() socket: any) {
+		if (this.DefautQueue.removeUser(socket) ||	this.CustomQueue.removeUser(socket))
+			return ; // if user is waiting in queue
 		const game = this.Games.find(element=> element.isPlayer(socket));
 		this.GameOver(game, socket);
 		this.Games = this.Games.filter(element => element != game);

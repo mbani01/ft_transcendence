@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/04 09:50:56 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/09 10:19:31 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/14 16:24:07 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ export interface CustomSocket extends Socket {
   
 export class WsAdapter extends IoAdapter {
 	createIOServer(port: number, options?: any) {
-		const server = super.createIOServer(port, { cors: true });
+		const server = super.createIOServer(port, { cors: true , namespace: 'chat'});
 		server.use((socket :CustomSocket, next: any)=>{
 			const user = {"username": "mbani"};
 			socket.user = socket.handshake.headers.token || user;
