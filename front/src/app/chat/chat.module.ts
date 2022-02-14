@@ -20,6 +20,7 @@ import {SocketIoConfig, SocketIoModule} from "ngx-socket-io";
 import {environment} from "../../environments/environment";
 import {CreateModalComponent} from "./chat-rooms/create-modal/create-modal.component";
 import {ChatSettingsComponent} from "./chatting/chat-settings/chat-settings.component";
+import {OrderByUnreadPipe} from "./chat-list-component/orderByUnread.pipe";
 
 const config: SocketIoConfig = {url: environment.chatSocketUri, options: {}}
 
@@ -35,7 +36,8 @@ const config: SocketIoConfig = {url: environment.chatSocketUri, options: {}}
     JoinModalComponent,
     CreateModalComponent,
     ChatterPopupComponent,
-    ChatSettingsComponent
+    ChatSettingsComponent,
+    OrderByUnreadPipe
   ],
     imports: [
         CommonModule,

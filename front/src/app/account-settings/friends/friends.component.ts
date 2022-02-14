@@ -24,9 +24,11 @@ export class FriendsComponent {
   }
 
   directMessage(friend: User) {
-    this.chatService.currChat = {
-      isChannel: false, messages: [], name: friend.name, roomID: "0", unread: 0
-    };
+    // this.chatService.currChat = {
+    //   isChannel: false, messages: [], name: friend.name, roomID: "0", unread: 0
+    // };
+
+    this.chatService.openConversation(friend);
     // this.chatService.openChat('0');
   }
 }

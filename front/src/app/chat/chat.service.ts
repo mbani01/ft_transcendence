@@ -66,8 +66,10 @@ export class ChatService {
     if (roomID) {
       this.currChat = this.chats.get(roomID) as Chat;
     } else {
-      this.http.get<Chat>(`${environment.apiBaseUrl}/chat/
-    conversation?participants=${this.oauthService.user.uid},${user.uid}`).subscribe(
+      this.http.post<Chat>(`${environment.apiBaseUrl}/chat/
+    conversation`, {
+        user: user.uid
+      }).subscribe(
         {
           next: chat => {
             this.currChat = chat;
@@ -131,10 +133,12 @@ export class ChatService {
         next: (value) => {
           this.chats.set(roomID, value);
           this.currChat = value;
+          this.currChat.unread = 0;
         }
       });
     } else {
       this.currChat = chat;
+      this.currChat.unread = 0;
     }
   }
 
@@ -162,6 +166,13 @@ export class ChatService {
     let chat = this.chats.get(m.roomID);
     if (chat) {
       chat.messages.push(m);
+        console.log('yo')
+      if (this.currChat?.roomID != chat.roomID) {
+        if (!chat.unread) {
+          chat.unread = 0;
+        }
+        chat.unread++;
+      }
     }
   }
 
