@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/15 11:55:32 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/15 14:27:35 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@ import { ConnectedSocket, SubscribeMessage, WebSocketGateway, WebSocketServer, M
 import { elementAt } from "rxjs";
 import { Game } from "./game";
 import {GameQueueService} from "./gameQueue"
+import { Clients } from '../../adapters/socket.adapter'
 
 
 @WebSocketGateway({ cors: true })
@@ -23,7 +24,6 @@ export class gameSocketGateway
 	server;
 
 	Games :Array<Game> = [];
-
 	DefautQueue :GameQueueService = new GameQueueService();
 	CustomQueue: GameQueueService = new GameQueueService();
 
@@ -62,6 +62,7 @@ export class gameSocketGateway
 	@SubscribeMessage('joinDefaultGame')
 	joinQueue(@ConnectedSocket() socket: any)
 	{
+		console.log(Clients.get());
 		this.DefautQueue.addUser(socket);
 		if (this.DefautQueue.isfull())
 			this.startGame(this.DefautQueue, true);
