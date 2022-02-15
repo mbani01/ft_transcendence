@@ -17,6 +17,8 @@ app.get('/', (req, res) => {
 
 chatSocket.on('connection', (socket) => {
     console.log('a user connected');
+    console.log(socket.handshake.query);
+    // socket.disconnect();
     // io.of('chat').on
     socket.on('join', (room, callback) => {
       console.log('join');

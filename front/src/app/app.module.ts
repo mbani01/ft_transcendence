@@ -15,6 +15,8 @@ import {NgbNavModule, NgbPopoverModule, NgbTooltipModule} from "@ng-bootstrap/ng
 import {AccountSettingsComponent} from "./account-settings/account-settings.component";
 import {FormsModule} from "@angular/forms";
 import {AccountSettingsModule} from "./account-settings/account-settings.module";
+import {MainSocket} from "./socket/MainSocket";
+import {SocketIoModule} from "ngx-socket-io";
 
 @NgModule({
   declarations: [
@@ -30,9 +32,10 @@ import {AccountSettingsModule} from "./account-settings/account-settings.module"
     ChatModule,
     AppRoutingModule,
     NgbPopoverModule,
-    AccountSettingsModule
+    AccountSettingsModule,
+    SocketIoModule
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, MainSocket],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

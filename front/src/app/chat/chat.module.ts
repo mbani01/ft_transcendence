@@ -22,7 +22,7 @@ import {CreateModalComponent} from "./chat-rooms/create-modal/create-modal.compo
 import {ChatSettingsComponent} from "./chatting/chat-settings/chat-settings.component";
 import {OrderByUnreadPipe} from "./chat-list-component/orderByUnread.pipe";
 
-const config: SocketIoConfig = {url: environment.chatSocketUri, options: {}}
+// const config: SocketIoConfig = {url: environment.chatSocketUri, options: {}}
 
 @NgModule({
   declarations: [
@@ -48,7 +48,7 @@ const config: SocketIoConfig = {url: environment.chatSocketUri, options: {}}
         NgbTimepickerModule,
         NgbPaginationModule,
         FormsModule,
-        SocketIoModule.forRoot(config),
+        // SocketIoModule.forRoot(config),
         NgbNavModule
     ],
     exports: [

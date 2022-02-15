@@ -7,6 +7,7 @@ import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {NgbDropdown} from "@ng-bootstrap/ng-bootstrap";
 import {Socket} from "ngx-socket-io";
+import {MainSocket} from "../socket/MainSocket";
 
 
 
@@ -21,29 +22,18 @@ export class ChatService {
 
   private _is2FA = false;
 
-  constructor(private oauthService: OAuthService, private http: HttpClient, private socket: Socket) {
+  constructor(private oauthService: OAuthService, private http: HttpClient, private socket: MainSocket) {
     this.chats = new Map();
     this.oauthService.user$.subscribe({
       next: value => {
         if (value) {
           console.log('Chat Service');
           socket.on('message', this.receiveMessage);
-          // socket.fromEvent<string>('message').subscribe({next: this.receiveMessage.bind(this)});
-          // this.webSocket = new WebSocket(environment.chatWebSocketUri);
           this.fetchRooms();
-          // this.webSocket.addEventListener('open', (event) => {
-          //   console.log(event);
-          //   this.webSocket.send('Hello this is ft_transcendence');
-          //   this.webSocket.addEventListener('message', this.receiveMessage);
-          // })
         }
       }
     })
   }
-
-  // showChat() {
-  //   this.dropdown.open();
-  // }
 
   joinChannel(roomID: string, password: string, callback: Function) {
     console.log(password);
