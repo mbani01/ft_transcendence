@@ -7,6 +7,7 @@ import {OAuthService} from "../../../login/oauth.service";
 import {NgForm} from "@angular/forms";
 import {Socket} from "ngx-socket-io";
 import {ChatService} from "../../chat.service";
+import {MainSocket} from "../../../socket/MainSocket";
 
 @Component({
   selector: 'create-modal',
@@ -21,7 +22,7 @@ export class CreateModalComponent {
   isPublic: boolean = false;
 
   constructor(private ngbModal:NgbModal, private http: HttpClient, private oauthService: OAuthService,
-              private socket: Socket, private chatService: ChatService) {
+              private socket: MainSocket, private chatService: ChatService) {
   }
 
   ngOnInit() {
