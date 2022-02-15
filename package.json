@@ -2,6 +2,7 @@
   "dependencies": {
     "@types/socket.io-client": "^3.0.0",
     "http": "^0.0.1-security",
+    "phaser": "^3.55.2",
     "socket.io": "^4.4.1",
     "socket.io-client": "^4.4.1",
     "socketio": "^1.0.0",

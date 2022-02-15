@@ -3,6 +3,7 @@
 const socket = io("http://10.12.9.10:3000");
 let GameId : number;
 let isHost: number;
+let isDefaultGame : boolean;
 let ball_position : {x: number, y: number};
 // const socket = io("https://server-domain.com");
 
@@ -23,18 +24,27 @@ socket.on("syncRound", (obj) => {
 });
 
 socket.on("GameOver", (obj) => {
-    console.log("hello", obj);
-    
-
+    if (obj.hasOwnProperty('disconnectedPlayer')){
+        console.log("disco");
+        ball.setVisible(false);
+        game.scene.pause(scene);
+        scene.add.text(game.canvas.width / 4, game.canvas.height / 3, 'other Player Disconnected', {fontSize: '100px', fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
+    } else {
+        console.log("win");
+        ball.setVisible(false);
+        game.scene.pause(scene);
+        scene.add.text(game.canvas.width / 4, game.canvas.height / 3, 'game over', {fontSize: '100px', fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' });
+    }
 });
 
-socket.on("gameStarted", (obj : {GameId: number, ball: {x: number, y: number}, isHost: number}) => {
+socket.on("gameStarted", (obj : any) => {
     game = new Phaser.Game(config);
     
     GameId = obj.GameId;
     isHost = obj.isHost;
     ball_position = obj.ball;
     console.log("joined");
+    isDefaultGame = obj.isDefaultGame;
     // console.log(obj);
 });
 
@@ -91,8 +101,7 @@ var config = {
         parent: 'phaser',
         autoCenter: 1,
         width: 2400,
-        height: 1800,
-
+        height: 1800
     },
     physics: {
         default: 'arcade',
@@ -122,6 +131,8 @@ let timer_obj : Phaser.GameObjects.Text;
 let player1_score : number = 0;
 let player2_score : number = 0;
 let clock : Phaser.Time.Clock;
+let player1_collider : Phaser.Physics.Arcade.Collider ;
+let player2_collider : Phaser.Physics.Arcade.Collider ;
 
 let PLAYER_SPEED: number = 1000;
 let BALL_SPEED: number = 200;
@@ -137,7 +148,7 @@ function preload (this: Phaser.Scene) : void
     
     this.load.image("bar", "assets/bar.png");
     this.load.image("powerUp", "assets/pokeball.png");
-    this.load.image("ball", "assets/ball.png");
+    this.load.image("ball", "assets/whiteBall.png");
     this.load.audio("bip", "assets/bip.wav");
 }
 
@@ -153,21 +164,24 @@ function start_game(this: Phaser.Scene) : void
     if (isHost){
         ball.body.velocity.setTo(ball_position.x, ball_position.y);
         ball.setBounce(1);
+        this.physics.add.collider(ball, player1, HandleHit, null, player1);
+        this.physics.add.collider(ball, player2, HandleHit, null, player2);
     }
     player1_score_obj.setFontSize(100);
     player2_score_obj.setFontSize(100);
 }
 
-function onBlur() : void
+function onHidden() : void
 {
-    socket.emit('focusLose', { GameId: GameId, isHost: isHost, focus: false });
-    game.scene.pause(scene);
+    // socket.emit('focusLose', { GameId: GameId, isHost: isHost, focus: false });
+    console.log("hidden");
 }
+
 
 function onFocus() : void
 {
     socket.emit('focusLose', { GameId: GameId, isHost: isHost, focus: true });
-    game.scene.resume(scene);
+
 }
 
 socket.on('focusLose', (obj) => {
@@ -181,42 +195,52 @@ socket.on('focusLose', (obj) => {
 function create (this: Phaser.Scene) : void
 {
     this.sound.pauseOnBlur = false;
-    // game.events.addListener('blur', onBlur);
+    // game.events.addListener('blur', onHidden);
     // game.events.addListener('focus', onFocus);
+    // game.events.off('hidden', game.events., game);
     scene = this;
     clock = this.time;
     let line : Phaser.GameObjects.Line = this.add.line(this.sys.canvas.width / 2, this.sys.canvas.height / 2, 0, 0, 0, this.sys.canvas.height, 0xffffff).setLineWidth(5);
     let mid_circle : Phaser.GameObjects.Arc = this.add.circle(this.sys.canvas.width / 2, this.sys.canvas.height / 2, 100, 0).setStrokeStyle(10, 0xffffff);
     let left_circle : Phaser.GameObjects.Arc = this.add.circle(-700 / 2, this.sys.canvas.height / 2, 700, 0).setStrokeStyle(10, 0xffffff);
     let right_circle : Phaser.GameObjects.Arc = this.add.circle(this.sys.canvas.width + 700 / 2, this.sys.canvas.height / 2, 700, 0).setStrokeStyle(10, 0xffffff);
-    player1 = this.physics.add.sprite(this.sys.canvas.width * 5 / 100, this.sys.canvas.height / 2, "bar");
+    player1 = this.physics.add.sprite(this.sys.canvas.width * 1 / 100, this.sys.canvas.height / 2, "bar");
     player1.setDisplaySize(PLAYER_WIDTH, PLAYER_HEIGHT);
-    player2 = this.physics.add.sprite(this.sys.canvas.width * 95 / 100, this.sys.canvas.height / 2, "bar");
+    player2 = this.physics.add.sprite(this.sys.canvas.width * 99 / 100, this.sys.canvas.height / 2, "bar");
     player2.setDisplaySize(PLAYER_WIDTH, PLAYER_HEIGHT);
-    powerUpBall = this.physics.add.sprite(this.sys.canvas.width / 2, this.sys.canvas.height / 2, "powerUp");
-    powerUpBall.setDisplaySize(50, 50);
-    powerUpBall.setVisible(false);
-    powerUpBall.setOrigin(0.5, 0.5);
+    if (!isDefaultGame){
+        powerUpBall = this.physics.add.sprite(this.sys.canvas.width / 2, this.sys.canvas.height / 2, "powerUp");
+        powerUpBall.setDisplaySize(50, 50);
+        powerUpBall.setVisible(false);
+        powerUpBall.setOrigin(0.5, 0.5);
+    }
     ball = this.physics.add.sprite(this.sys.canvas.width / 2, this.sys.canvas.height / 2, "ball");
     ball.setDisplaySize(BALL_DIAMETER, BALL_DIAMETER);
     player1.setCollideWorldBounds(true);
     player2.setCollideWorldBounds(true);
     if (isHost){
         ball.setCollideWorldBounds(true);
-        powerUpBall.setCollideWorldBounds(true);
+        if (!isDefaultGame){
+            powerUpBall.setCollideWorldBounds(true);
+        }
     }
     ball.body.setAllowGravity(false);
-    powerUpBall.body.setAllowGravity(false);
+    if (!isDefaultGame){
+        powerUpBall.body.setAllowGravity(false);
+    }
     player1.body.setAllowGravity(false);
     player2.body.setAllowGravity(false);
     player1.body.setImmovable(true);
     player2.body.setImmovable(true);
-    player1.setDrag(3000);
-    player2.setDrag(3000);
+    player1.setDrag(4000);
+    player2.setDrag(4000);
     keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
     keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
     ball.body.world.on('worldbounds', function(this : Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, body: Phaser.Physics.Arcade.Body, up: boolean, down: boolean, left: boolean, right: boolean) {
         if (body.gameObject === this && isHost) {
+            scene.physics.world.removeCollider(player1_collider);
+            scene.physics.world.removeCollider(player2_collider);
+            ball.setAcceleration(0);
             if (right)
             {   
                 scene.sound.play("bip");
@@ -254,14 +278,44 @@ function create (this: Phaser.Scene) : void
         other_player = player1;
     }
     if (isHost){
-        this.physics.add.collider(ball, player1);
-        this.physics.add.collider(ball, player2);
-        this.physics.add.collider(powerUpBall, player1, setPowerUp, null, player1);
-        this.physics.add.collider(powerUpBall, player2, setPowerUp, null, player2);
+        this.physics.add.collider(ball, player1, HandleHit, null, player1);
+        this.physics.add.collider(ball, player2, HandleHit, null, player2);
+        if (!isDefaultGame){
+            this.physics.add.collider(powerUpBall, player1, setPowerUp, null, player1);
+            this.physics.add.collider(powerUpBall, player2, setPowerUp, null, player2);
+        }
     }
 
-    this.time.delayedCall(5000, showPowerUp, [], this);
+    if (!isDefaultGame)
+        this.time.delayedCall(5000, showPowerUp, [], this);
+    scene.time.addEvent({
+        delay: 500,                // ms
+        callback: function (){
+            let x = ball.body.velocity.x;
+            let y = ball.body.velocity.y;
+            if (x != 0 && y != 0)
+            {
+                // ball.setAcceleration(100);
+                // ball.body.setVelocity(x + 1000, y + 1000);
+            }
+        },
+        //args: [],
+        loop: true
+    });
 
+}
+
+function HandleHit(this: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody)
+{
+    if (this.y < ball.y)
+    {
+        ball.setVelocityY(-10 * (this.y - ball.y));
+    }
+    else if (this.y > ball.y)
+    {
+        ball.setVelocityY(10 * (ball.y - this.y));
+        console.log("right");
+    }
 }
 
 function enablePowerUps() : void
@@ -283,15 +337,16 @@ function setPowerUp(this: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody)
     else
         socket.emit('syncPowerUp', {"GameId":GameId, 'collided': 2});
     this.setDisplaySize(this.displayWidth, this.displayHeight * 1.5);
+    powerUpBall.setPosition(-200, -200);
     powerUpBall.setVelocity(0);
     powerUpBall.setVisible(false);
-    powerUpBall.setRandomPosition(500, 500);
     scene.time.delayedCall(10000, showPowerUp, [], this);
     scene.time.delayedCall(5000, resetPlayerSize, [], this);
 }
 
 function showPowerUp(this: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody)
 {
+    powerUpBall.setRandomPosition(0, 0, game.canvas.width, game.canvas.height);
     powerUpBall.setVisible(true);
     scene.time.delayedCall(3000, enablePowerUps, [], this);
 }
@@ -302,8 +357,9 @@ function update(this: Phaser.Scene) : void
     
     // first player movement
     // console.log(ball.x); 
-    if (isHost){    
-        socket.emit('syncBall', {"GameId":GameId, isVisible : powerUpBall.visible, isHost: isHost, ball: { x: ball.x, y: ball.y }});
+    if (isHost)
+        socket.emit('syncBall', {"GameId":GameId, isVisible : false, isHost: isHost, ball: { x: ball.x, y: ball.y }});
+    if (isHost && !isDefaultGame){    
         if (powerUpBall.visible)
             socket.emit('syncPowerUp', {"GameId":GameId, isHost: isHost, isVisible : powerUpBall.visible, powerUpBall: { x: powerUpBall.x, y: powerUpBall.y }});
         else if (!powerUpBall.visible)
