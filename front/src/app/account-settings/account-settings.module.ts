@@ -1,7 +1,7 @@
 import {NgModule} from "@angular/core";
 import {AccountSettingsComponent} from "./account-settings.component";
 import {AccountTabComponent} from "./account/account-tab.component";
-import {NgbNavModule, NgbPopoverModule, NgbTooltipModule} from "@ng-bootstrap/ng-bootstrap";
+import {NgbNavModule, NgbPopoverModule, NgbProgressbarModule, NgbTooltipModule} from "@ng-bootstrap/ng-bootstrap";
 import {FormsModule} from "@angular/forms";
 import {CommonModule} from "@angular/common";
 import {FriendsComponent} from "./friends/friends.component";
@@ -21,7 +21,8 @@ import {BlockComponent} from "./blocks/block.component";
     FormsModule,
     NgbTooltipModule,
     NgbPopoverModule,
-    ChatModule
+    ChatModule,
+    NgbProgressbarModule
   ],
   exports: [AccountSettingsComponent]
 })

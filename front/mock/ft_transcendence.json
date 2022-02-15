@@ -11,7 +11,7 @@
       "uuid": "e9b1c9a2-04fe-4538-957b-7488f076c0ab",
       "documentation": "",
       "method": "get",
-      "endpoint": "oauth_page",
+      "endpoint": "auth/oauth_page",
       "responses": [
         {
           "uuid": "804e54fd-6acf-4a5e-8a61-00a567606cff",
@@ -36,7 +36,7 @@
       "uuid": "6257927d-a9cf-40d6-b6ab-084875eaf995",
       "documentation": "",
       "method": "post",
-      "endpoint": "access_token",
+      "endpoint": "auth/access_token",
       "responses": [
         {
           "uuid": "33489243-69f0-4bb9-8eea-3727bd1b4589",
@@ -47,7 +47,14 @@
           "headers": [],
           "filePath": "",
           "sendFileAsBody": false,
-          "rules": [],
+          "rules": [
+            {
+              "target": "query",
+              "modifier": "code",
+              "value": "da",
+              "operator": "equals"
+            }
+          ],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false
@@ -64,9 +71,9 @@
           "rules": [
             {
               "target": "query",
-              "modifier": "twoFactorAuth",
-              "value": "aa",
-              "operator": "equals"
+              "modifier": "code",
+              "value": ".*",
+              "operator": "regex"
             }
           ],
           "rulesOperator": "AND",
@@ -88,6 +95,12 @@
               "modifier": "code",
               "value": ".*",
               "operator": "regex"
+            },
+            {
+              "target": "query",
+              "modifier": "twoFactorAuth",
+              "value": "aa ",
+              "operator": "equals"
             }
           ],
           "rulesOperator": "AND",
@@ -595,6 +608,31 @@
               "operator": "equals"
             }
           ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false
+        }
+      ],
+      "enabled": true,
+      "randomResponse": false,
+      "sequentialResponse": false
+    },
+    {
+      "uuid": "dbc44bc5-ddb3-4b11-b919-a6bd96440176",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "upload_avatar",
+      "responses": [
+        {
+          "uuid": "aa88f6c7-2c25-4b70-8861-84651da470e0",
+          "body": "{\n  \"upload\": true\n}",
+          "latency": 2000,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false
