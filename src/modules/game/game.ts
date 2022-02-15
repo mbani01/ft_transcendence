@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 12:00:29 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/14 14:41:47 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/15 11:50:10 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,14 @@ export class Game{
 	getInfos()
 	{
 		return {GameId: this.GameId, ball: this.ball, Players: [this.Players[0].user, this.Players[0].user], score: this.score};
+	}
+	getWinner()
+	{
+		if (this.score.player1 >= 10)
+			return this.Players[0].user;
+		if (this.score.player2 >= 10)
+			return this.Players[1].user;
+		return null;
 	}
 	updateScore(score: score)
 	{

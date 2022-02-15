@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/14 19:02:03 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/15 11:55:32 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,11 @@ export class gameSocketGateway
             socket.to(String(data.GameId)).emit('syncRound', data);
 			const currentGame = this.Games.find(element=> element.getGameId() === String(data.GameId));
 			currentGame.updateScore({player1: data.player1_score, player2: data.player2_score});
+			if (data.player1_score >= 10 || data.player2_score >= 10)
+			{
+				const game = this.Games.find(element=> element.isPlayer(socket));
+				this.GameOver(game);
+			}
 		}
     }
     
@@ -153,6 +158,12 @@ export class gameSocketGateway
 			{
 				this.server.to(gameInfos.GameId).emit('GameOver', {GameId: gameInfos.GameId, Players: gameInfos.Players, 
 				disconnectedPlayer: disconnectedPlayer.user});
+			}
+			else
+			{
+				const winner = game.getWinner();
+				this.server.to(gameInfos.GameId).emit('GameOver', {GameId: gameInfos.GameId, Players: gameInfos.Players, 
+					Winner: winner});
 			}
 			this.server.socketsLeave(gameInfos.GameId); // make all players/watcher leave the room
 		}
