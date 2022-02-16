@@ -14,7 +14,7 @@ async function bootstrap() {
       enableImplicitConversion: true
     }
   }))
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api/v1');
   await app.listen(PORT);
   console.log("App Listening on Port : " + PORT);
 }
