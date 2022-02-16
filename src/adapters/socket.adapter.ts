@@ -6,13 +6,13 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/04 09:50:56 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/16 14:36:43 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/15 14:33:12 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { Socket } from 'socket.io';
-import { activeUsers } from '../modules/socket/activeUsers';
+import { activeUsers } from 'src/modules/socket/activeUsers';
 
 export interface CustomSocket extends Socket { 
 	user: any;
