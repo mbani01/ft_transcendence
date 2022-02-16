@@ -17,6 +17,7 @@ import {FormsModule} from "@angular/forms";
 import {AccountSettingsModule} from "./account-settings/account-settings.module";
 import {MainSocket} from "./socket/MainSocket";
 import {SocketIoModule} from "ngx-socket-io";
+import {GameComponent} from "./game/game.component";
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import {SocketIoModule} from "ngx-socket-io";
     EmptyComponent,
     NotFoundComponent,
     LeaderboardComponent,
+    GameComponent
   ],
   imports: [
     BrowserModule,

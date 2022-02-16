@@ -20,8 +20,6 @@ export class ChatService {
   public dropdown: NgbDropdown;
   public settings = false;
 
-  private _is2FA = false;
-
   constructor(private oauthService: OAuthService, private http: HttpClient, private socket: MainSocket) {
     this.chats = new Map();
     this.oauthService.user$.subscribe({

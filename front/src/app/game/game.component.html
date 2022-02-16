@@ -1,0 +1,15 @@
+<div class="h-100 d-flex justify-content-center align-content-center">
+  <ng-container *ngIf="gameService.isMain(); else queueTemplate">
+    <button class="btn btn-primary m-auto" (click)="startGame()">Play Now</button>
+  </ng-container>
+  <ng-template #queueTemplate>
+    <ng-container *ngIf="gameService.isQueue(); else gameTemplate">
+      <div class="m-auto bg-dark p-5">
+        <span class="font-weight-bolder">00:01</span>
+      </div>
+    </ng-container>
+  </ng-template>
+  <ng-template #gameTemplate>
+      <div id="phaser" style="overflow: hidden; width: 100%; height: 100%;"></div>
+  </ng-template>
+</div>
