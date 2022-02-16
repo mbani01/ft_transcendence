@@ -35,10 +35,10 @@ export class AuthService {
   }
 
   async getUserData(code: string): Promise<CreateUserDto> {
-    let access_token: string = '6cffde5926db4839a8c0200ed8d11fb4359ce48285ddf31b534c8b536796d453';
+    let access_token: string;
     let userData: CreateUserDto;
     try {
-      // await this.getAccessToken(code).then((res) => (access_token = res));
+      await this.getAccessToken(code).then((res) => (access_token = res));
       console.log(access_token);
       await axios({
         method: "GET",
