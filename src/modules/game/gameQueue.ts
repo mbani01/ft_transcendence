@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 10:52:22 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/14 19:05:13 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/16 11:36:22 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,13 @@ export class GameQueueService{
 	
 	size: number;
 	data: Array<any>;
+	isPrivate: boolean;
 	
-	constructor()
+	constructor(isPrivate?: boolean)
 	{
 		this.size = 0;
 		this.data = [];
+		this.isPrivate = isPrivate || false;
 	}
 
 	addUser(user)

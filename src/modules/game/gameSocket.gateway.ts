@@ -6,12 +6,11 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/15 14:27:35 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/16 11:56:32 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { ConnectedSocket, SubscribeMessage, WebSocketGateway, WebSocketServer, MessageBody } from "@nestjs/websockets";
-import { elementAt } from "rxjs";
 import { Game } from "./game";
 import {GameQueueService} from "./gameQueue"
 import { Clients } from '../../adapters/socket.adapter'
@@ -25,7 +24,8 @@ export class gameSocketGateway
 
 	Games :Array<Game> = [];
 	DefautQueue :GameQueueService = new GameQueueService();
-	CustomQueue: GameQueueService = new GameQueueService();
+	CustomQueue :GameQueueService = new GameQueueService();
+	PrivateQueues :Array<GameQueueService> = [];
 
 	joinGameRoom(gameId, Players)
 	{
@@ -105,19 +105,19 @@ export class gameSocketGateway
 			socket.to(String(data.GameId)).emit('syncBall', data);
 	}
 
-	@SubscribeMessage('leaveGame')
-	leaveGame(@ConnectedSocket() socket: any, @MessageBody() data :any)
-	{
-		/* Game is Over should :
-		 	- leave room for both players && watchers
-			- save score for both players
-			- delete game 
-		*/
-		if (!data.GameId && this.isPlayer(socket, String(data.GameId)))
-		{
+	// @SubscribeMessage('leaveGame')
+	// leaveGame(@ConnectedSocket() socket: any, @MessageBody() data :any)
+	// {
+	// 	/* Game is Over should :
+	// 	 	- leave room for both players && watchers
+	// 		- save score for both players
+	// 		- delete game 
+	// 	*/
+	// 	if (!data.GameId && this.isPlayer(socket, String(data.GameId)))
+	// 	{
 			
-		}
-	}
+	// 	}
+	// }
 	
 	@SubscribeMessage('createPrivateGame')
 	privateGame(@ConnectedSocket() socket: any, @MessageBody() data :any)
