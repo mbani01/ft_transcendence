@@ -20,9 +20,9 @@ export class MessageEntity {
     @CreateDateColumn()
     createdAt: Date;
 
-    @ManyToOne(() => User, user => user.messages)
-    public user!: User;
+    // @ManyToOne(() => User, user => user.messages)
+    // public user!: User;
 
-    @ManyToOne(() => RoomEntity, room => room.messages)
-    public room!: RoomEntity;
+    // @ManyToOne(() => RoomEntity, room => room.messages)
+    // public room!: RoomEntity;
 }

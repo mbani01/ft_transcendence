@@ -17,10 +17,10 @@ export class MembersEntity {
     @Column({ default: 'member' })
     role: Roles;
 
-    @ManyToOne(() => User, user => user.memberShip)
-    public user!: User;
+    // @ManyToOne(() => User, user => user.memberShip)
+    // public user!: User;
 
-    @ManyToOne(() => RoomEntity, room => room.memberShip)
-    public room!: RoomEntity;
+    // @ManyToOne(() => RoomEntity, room => room.memberShip)
+    // public room!: RoomEntity;
 
 }

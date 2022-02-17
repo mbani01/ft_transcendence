@@ -13,18 +13,17 @@
 import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { CustomSocket } from "src/adapters/socket.adapter";
 
-@WebSocketGateway({cors: true})
+@WebSocketGateway({ cors: true })
 export class socketGateway {
 
-  
-  
-  @SubscribeMessage('message')
-  handleMessage(client: CustomSocket, message: any): void {
-    console.log(message);
-  }
-@SubscribeMessage('connection')
-handleConnection(client: CustomSocket, data){
-  
-	 console.log(client.user);
-}
+
+  // @SubscribeMessage('message')
+  // handleMessage(client: CustomSocket, message: any): void {
+  //   console.log(message);
+  // }
+  // @SubscribeMessage('connection')
+  // handleConnection(client: CustomSocket, data) {
+
+  //   console.log(client.user);
+  // }
 }

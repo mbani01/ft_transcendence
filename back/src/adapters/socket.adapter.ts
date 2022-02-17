@@ -18,7 +18,7 @@ import { JwtConstants } from 'src/auth/constants';
 
 export interface CustomSocket extends Socket {
 	user: any;
-}
+}	
 
 const Clients = new activeUsers();
 export class WsAdapter extends IoAdapter {
@@ -29,8 +29,7 @@ export class WsAdapter extends IoAdapter {
 			let decoded;
 			try
 			{
-				
-				const token = socket.handshake.headers.token as string;
+				const token = socket.handshake.query.token as string;
 				decoded = jwt.verify(token, JwtConstants.jwtSecret);
 				socket.user = decoded;
 			}

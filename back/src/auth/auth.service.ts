@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Res } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import axios from "axios";
 import { CreateUserDto } from "src/users/dto/create-user.dto";
@@ -61,7 +61,7 @@ export class AuthService {
     return userData;
   }
 
-  async sendJwtAccessToken(response: Response, user: User, is2fa: boolean) {
+  async sendJwtAccessToken(@Res() response: Response, user: User, is2fa: boolean) {
     const { access_token } = await this.loginJWT(user, is2fa);
     response
       .cookie("access_token", access_token, {
