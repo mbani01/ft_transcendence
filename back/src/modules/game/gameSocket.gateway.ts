@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/16 11:56:32 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/17 09:44:02 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ export class gameSocketGateway
 	@SubscribeMessage('joinDefaultGame')
 	joinQueue(@ConnectedSocket() socket: any)
 	{
-		console.log(Clients.get());
 		this.DefautQueue.addUser(socket);
 		if (this.DefautQueue.isfull())
 			this.startGame(this.DefautQueue, true);
