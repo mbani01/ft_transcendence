@@ -1,11 +1,39 @@
 
 
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;1,300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins&family=Roboto:ital,wght@0,100;0,400;1,300&display=swap');
 
-$primary: #ff4545;
-$dark: #282c34;
+$primary: #ff2828;
+$secondary: #daae51;
+//$primary: #daae51;
+//$secondary: #ff2828;
+$dark: #141517;
+$light: #dce0e3;
 //$secondary: #e6e6e6;
 //@import "../node_modules/bootstrap/scss/bootstrap";
-$body-bg: #e6e6e6;
+//$body-bg: linear-gradient(to right, #0F2027, #203A43, #2C5364, #2C5364, #203A43, #0F2027);
+//$body-bg: #e6e6e6;
+$body-color: $light;
+
+body {
+  //background: red;
+  //background: conic-gradient(from -11.05deg at 50% 71.93%,#9c3cf7 0deg,#70b1ff 54.64deg,#bbb0ff 65.63deg,#56b3ff 73.72deg,#7b70ff 119.43deg,#3654ff 193.12deg,rgba(37,54,71,.87) 226.37deg,#164d8e 262.5deg,#1a62b9 306.49deg,#1821ff 320.77deg,rgba(112,177,255,.5) 326.27deg,#70b1ff 337.21deg,#9c3cf7 1turn);
+
+  //background: linear-gradient(to right, #4a1a6c, #822fd7); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(to right, #6a3093, #a044ff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  //background: linear-gradient(to right, #360033, #0b8793); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  font-family: 'Poppins', sans-serif !important;
+  //background: linear-gradient(90deg, #83a4d4 0%, #b6fbff 100%);
+
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+//$body-bg: #e6e6e6;
 //$white: #e6e6e6;
 
 .smoked {
@@ -14,4 +42,13 @@ $body-bg: #e6e6e6;
   width: 100px;
   height: 100px;
 }
+
+.popover-dark {
+  background: aliceblue !important;
+  font-size: 125% !important;
+  background: var(--dark) !important;
+  //max-width: 360px !important;
+}
+
+
 @import "../node_modules/bootstrap/scss/bootstrap";

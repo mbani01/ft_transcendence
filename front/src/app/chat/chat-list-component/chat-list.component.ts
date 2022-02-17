@@ -1,6 +1,5 @@
 import {Component} from "@angular/core";
 import {ChatService} from "../chat.service";
-import {Chat} from "../shared/chat.model";
 
 @Component({
   selector: 'app-chat-list',
@@ -9,8 +8,8 @@ import {Chat} from "../shared/chat.model";
 })
 export class ChatListComponent {
   constructor(private chatService: ChatService) {
-
   }
+
   ngOnInit() {
   }
   get chats() {
@@ -23,7 +22,6 @@ export class ChatListComponent {
   }
 
   openChat(roomID: string) {
-    console.log(roomID);
     this.chatService.openChat(roomID);
   }
 }

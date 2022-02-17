@@ -1,0 +1,64 @@
+.nav-link {
+  transition-duration: 300ms;
+  color: white;
+  padding: 12px 24px;
+}
+
+.edit-span {
+  color: var(--warning);
+  //padding: 8px;
+  display: flex;
+  width: 32px;
+  height: 32px;
+  border-radius: 360px;
+  transition-duration: 200ms;
+}
+
+.edit-span:hover {
+  background-color: white;
+}
+
+.input-dark {
+  //background-color: #343A40FF;
+  //color: var(--light);
+  border-color: #0a0b0c;
+  border-radius: 360px;
+}
+.btn-rounded {
+  border-radius: 360px;
+}
+
+::ng-deep .error-tooltip .tooltip-inner {
+  background-color: var(--danger) ;
+
+}
+
+::ng-deep .error-tooltip .arrow::before {
+  border-top-color: var(--danger) ;
+}
+
+//
+//.nav-pills {
+//  list-style-type: none;
+//  padding: 0;
+//  border: 2px solid #ffffff55;
+//  border-bottom: none;
+//}
+
+
+.nav-item {
+  list-style-position:inside;
+
+  border: 2px solid #ffffff55;
+  border-bottom: none;
+  //border
+}
+//
+.nav-item:last-child {
+  border-bottom: 2px solid #ffffff55;
+}
+
+.tab-content {
+  border-left: 2px solid #ffffff55;
+  padding-left: 24px;
+}

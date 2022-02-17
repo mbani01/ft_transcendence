@@ -1,6 +1,5 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {ChatService} from "./chat.service";
-import {NgbDropdown} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-chat',
@@ -9,30 +8,16 @@ import {NgbDropdown} from "@ng-bootstrap/ng-bootstrap";
 })
 export class ChatComponent implements OnInit {
   public test: string = 'Hello';
-  @ViewChild('dropdown') dropdown: NgbDropdown;
-
+  // @ViewChild('dropdown') dropdown: NgbDropdown;
+  isSettings = false;
   constructor(public chatService: ChatService) {
   }
 
   ngOnInit() {
-    this.chatService.chats.set('1', {
-      roomID: '1',
-      name: 'ojoubout',
-      isChannel: false,
-      users: {uid: 'dsa', name: 'ojoubout', img: 'what'},
-      messages: [],
-      unread: 1
-    });
-
   }
 
   ngAfterViewInit() {
-    this.chatService.dropdown = this.dropdown;
-  }
-
-
-  helloClick() {
-    this.chatService.showChat();
+    // this.chatService.dropdown = this.dropdown;
   }
 
 }

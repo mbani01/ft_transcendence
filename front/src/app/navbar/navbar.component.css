@@ -1,14 +1,27 @@
-.navbar {
-  box-shadow: 0px -5px 8px;
+#logo {
+  color: #daae51;
 }
 
+.navbar {
+  background: linear-gradient(to right, #6a3093, #a044ff);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  width: 100%;
+  z-index: 999;
+  height: 51px;
+}
+
+@media (max-width: 992px) {
+  .navbar-collapse {
+    background: #343A40FF;
+  }
+}
 .nav-item {
   margin-bottom: 3px;
   transition-duration: 300ms;
 }
 
 .nav-link {
-  color: var(--dark);
+  color: var(--light);
   font-weight: 500;
   margin-bottom: 5px;
   transition-duration: 300ms;
@@ -19,12 +32,12 @@
 }
 
 .nav-item.active .nav-link {
-  color: var(--primary);
+  color: var(--secondary);
 }
 
 .nav-item.active {
   margin-bottom: 0;
-  border-bottom: 3px solid var(--primary);
+  border-bottom: 3px solid var(--secondary);
 }
 
 /*# sourceMappingURL=navbar.component.css.map */

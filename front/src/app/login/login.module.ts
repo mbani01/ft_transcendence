@@ -6,6 +6,8 @@ import {LeetLogoComponent} from "../shared/leet-logo/leet-logo.component";
 import {FortyTwoLogoComponent} from "../shared/forty-two-logo/forty-two-logo.component";
 import {RoutingModule} from "./routing.module";
 import {HttpClientModule} from "@angular/common/http";
+import {TwoFactorAuthComponent} from "./two-factor-auth/two-factor-auth.component";
+import {FormsModule} from "@angular/forms";
 
 
 
@@ -14,12 +16,14 @@ import {HttpClientModule} from "@angular/common/http";
     LoginComponent,
     CallbackComponent,
     LeetLogoComponent,
-    FortyTwoLogoComponent
+    FortyTwoLogoComponent,
+    TwoFactorAuthComponent
   ],
   imports: [
     CommonModule,
     RoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   exports: [LeetLogoComponent]
 })

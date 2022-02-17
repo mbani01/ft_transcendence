@@ -6,7 +6,8 @@ import {Chat} from "./shared/chat.model";
 import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {NgbDropdown} from "@ng-bootstrap/ng-bootstrap";
-import {BehaviorSubject} from "rxjs";
+import {Socket} from "ngx-socket-io";
+import {MainSocket} from "../socket/MainSocket";
 
 
 
@@ -15,36 +16,37 @@ import {BehaviorSubject} from "rxjs";
 })
 export class ChatService {
   public _currChat?: Chat;
-  public chats: Map<string, Chat> = new Map();
+  public chats: Map<string, Chat>;
   public dropdown: NgbDropdown;
+  public settings = false;
 
-  private webSocket: WebSocket;
-  constructor(private oauthService: OAuthService, private http: HttpClient) {
-    console.log('Chat Service');
-    this.webSocket = new WebSocket(environment.chatWebSocketUri);
-    this.webSocket.addEventListener('open', (event) => {
-      console.log(event);
-      this.webSocket.send('Hello this is ft_transcendence');
-      this.webSocket.addEventListener('message', this.receiveMessage);
+  constructor(private oauthService: OAuthService, private http: HttpClient, private socket: MainSocket) {
+    this.chats = new Map();
+    this.oauthService.user$.subscribe({
+      next: value => {
+        if (value) {
+          console.log('Chat Service');
+          socket.on('message', this.receiveMessage);
+          this.fetchRooms();
+        }
+      }
     })
   }
 
-  showChat() {
-    this.dropdown.open();
-  }
-
-  joinChannel(roomID: string) {
-    let chat = this.chats.get(roomID);
-    if (chat !== undefined) {
-      this.currChat = chat;
-    }
-    this.http.post<Chat>(`${environment.apiBaseUrl}chat/
-    channel/${roomID}`, this.oauthService.user).subscribe({
-      next: chat => {
-        this.chats.set(roomID, chat);
-        this.currChat = chat;
+  joinChannel(roomID: string, password: string, callback: Function) {
+    console.log(password);
+    this.socket.emit('join', {
+        roomID: roomID,
+        password: password
+      }, (room: any) => {
+        if (!room?.error) {
+          this.chats.set(room.roomID, room);
+          this.loadMessages(room);
+          this.openChat(room.roomID);
+        }
+        callback(room);
       }
-    });
+    );
   }
 
   openConversation(user: User) {
@@ -52,8 +54,10 @@ export class ChatService {
     if (roomID) {
       this.currChat = this.chats.get(roomID) as Chat;
     } else {
-      this.http.get<Chat>(`${environment.apiBaseUrl}chat/
-    conversation?participants=${this.oauthService.user.uid},${user.uid}`).subscribe(
+      this.http.post<Chat>(`${environment.apiBaseUrl}/chat/
+    conversation`, {
+        user: user.uid
+      }).subscribe(
         {
           next: chat => {
             this.currChat = chat;
@@ -64,11 +68,20 @@ export class ChatService {
     }
   }
 
-  loadMessages(chat: Chat) {
-    let obs = this.http.get<Message[]>(`${environment.apiBaseUrl}chat/messages/${chat.roomID}`)
+  loadMessages(chat: Chat, before: boolean = false) {
+    let obs = this.http.get<Message[]>(`${environment.apiBaseUrl}/chat/messages/${chat.roomID}`,
+      before ? {
+        params: {
+          before: new Date(chat.messages[0].timestamp).getTime()
+        }
+      } : {})
     obs.subscribe({
       next: value => {
-        chat.messages = value
+        if (before) {
+          chat.messages.unshift(...value);
+        } else {
+          chat.messages = value
+        }
       }
     });
     return obs;
@@ -76,7 +89,8 @@ export class ChatService {
 
   set currChat(value) {
     this._currChat = value;
-    this.showChat();
+    this.settings = false;
+    // this.showChat();
     // if (value?.messages.length === 0) {
       // this.loadMessages(value);
     // }
@@ -103,14 +117,16 @@ export class ChatService {
   openChat(roomID: string) {
     let chat = this.chats.get(roomID);
     if (chat === undefined) {
-      this.http.get<Chat>(`${environment.apiBaseUrl}chat/${roomID}`).subscribe({
+      this.http.get<Chat>(`${environment.apiBaseUrl}/chat/${roomID}`).subscribe({
         next: (value) => {
           this.chats.set(roomID, value);
           this.currChat = value;
+          this.currChat.unread = 0;
         }
       });
     } else {
       this.currChat = chat;
+      this.currChat.unread = 0;
     }
   }
 
@@ -118,21 +134,63 @@ export class ChatService {
     if (this.currChat) {
       let m: Message = {
         roomID: this.currChat.roomID,
-        sender: 'ojoubout',
+        sender: this.oauthService.user,
         message: message,
         timestamp: new Date()
       };
-      this.webSocket.send(JSON.stringify(m));
+      console.log(m);
+      this.socket.emit('message', JSON.stringify(m));
     } else {
       console.log('sendMessage(): there is no chat opened');
     }
   }
 
-  receiveMessage(message: MessageEvent) {
-    console.log(message);
+  receiveMessage = (message: Message) => {
+    console.log('receiveMessage:')
+
+    let m: Message = message;
+    m.timestamp = new Date(m.timestamp);
+
+    let chat = this.chats.get(m.roomID);
+    if (chat) {
+      chat.messages.push(m);
+        console.log('yo')
+      if (this.currChat?.roomID != chat.roomID) {
+        if (!chat.unread) {
+          chat.unread = 0;
+        }
+        chat.unread++;
+      }
+    }
   }
 
   closeChat() {
     this.currChat = undefined;
   }
+
+  fetchRooms() {
+    console.log(this.oauthService.user);
+
+    this.http.get<Chat[]>(`${environment.apiBaseUrl}/chat/fetch-rooms`).subscribe({
+      next: chats => {
+        chats.forEach(value => {
+          this.chats.set(value.roomID, value);
+        })
+        console.log(this.chats);
+      }
+    });
+  }
+
+  acceptDuel(sender: User) {
+
+  }
+
+  acceptInvite(roomInvite: {roomID: string; name: string} | undefined) {
+
+  }
+
+  sendInvite(value: { nickname: string }) {
+
+  }
+
 }

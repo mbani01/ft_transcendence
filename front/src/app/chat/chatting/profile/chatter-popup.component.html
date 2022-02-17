@@ -1,0 +1,34 @@
+<div class="container p-0">
+  <div class="row m-2">
+    <img width="48" height="48" class="rounded-circle mr-2" alt="Cinque Terre" [src]="user.img">
+    <div class="col">
+      <div class="row">
+        <span class="font-weight-bold h-50">{{user.name}}</span>
+      </div>
+      <div class="row h-50">
+        <span class="dot  "></span>
+        <span class="status mt-0">Online</span>
+      </div>
+    </div>
+
+  </div>
+  <div class="row justify-content-around m-0">
+      <button class="btn btn-info col mr-1" (click)="viewProfile()">View Profile</button>
+      <button class="btn btn-primary col" (click)="invitePlay()">Invite Play</button>
+  </div>
+  <hr class="bg-light mb-0">
+  <div class="row justify-content-around m-0">
+    <div class="row my-2 w-100 d-flex">
+      <button class="btn btn-warning m-auto" (click)="mute(hourInput.value, minuteInput.value)">Mute</button>
+      <input type="number" maxlength="6" class="form-control col-3 p-0 text-center mr-1 ml-auto input-dark" placeholder="HH"
+             value="0" (input)="validate(hourInput)" #hourInput>:
+      <input type="number" maxlength="6" class="form-control col-3 p-0 text-center ml-1 input-dark" placeholder="MM"
+             value="0" (input)="validate(minuteInput)" #minuteInput>
+<!--      <ngb-timepicker class="" [(ngModel)]="muteTime" size="small" #timepicker></ngb-timepicker>-->
+    </div>
+    <div class="row w-100">
+      <button class="btn btn-danger col" (click)="ban()">Ban</button>
+      <button class="btn btn-success col-6 ml-1" (click)="giveAdmin()">Give Admin</button>
+    </div>
+  </div>
+</div>

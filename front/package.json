@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --host 0.0.0.0",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -22,8 +22,11 @@
     "@ng-bootstrap/ng-bootstrap": "^11.0.0",
     "bootstrap": "^4.6.0",
     "bootstrap-icons": "^1.7.2",
+    "engine.io-parser": "^5.0.3",
     "jquery": "^3.6.0",
     "ngx-cookie-service": "^13.1.2",
+    "ngx-socket-io": "^4.1.0",
+    "phaser": "^3.55.2",
     "rxjs": "~7.4.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

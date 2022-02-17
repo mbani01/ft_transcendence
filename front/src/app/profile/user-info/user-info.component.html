@@ -3,19 +3,27 @@
     <img width="128" height="128" class="rounded-circle align-self-center" alt="Cinque Terre" src="{{user.img}}">
 <!--    <img width="64" height="64" class="rounded-circle align-self-center" alt="Cinque Terre" src="/assets/img.webp">-->
   </div>
-  <div class="col-4">
+  <div class="col">
     <div class="row h-50 d-flex">
       <span id="nickname" class="">{{user.name}}</span>
+      <button class="btn btn-{{isFriend ? 'warning' : 'info'}} ml-auto mt-auto mb-1" (click)="friend()">
+        <i class="bi bi-person-{{isFriend ? 'dash' : 'plus'}}-fill"></i>
+        {{isFriend ? 'Remove' : 'Add'}} Friend
+      </button>
     </div>
     <div class="row h-50">
       <span class="dot"></span>
       <span class="status">Online</span>
+      <button class="btn btn-{{isBlocked ? 'warning' : 'danger'}} ml-auto mb-auto mt-1" (click)="block()">
+        <i class="bi bi-x-octagon-fill"></i>
+        {{isBlocked ? 'Unblock' : 'Block'}}
+      </button>
     </div>
   </div>
   <div class="col">
     <div class="row h-50">
       <div class="col d-flex">
-        <span class="my-auto text-dark"><b>Matches</b>: {{userInfo.wins}} of {{userInfo.games}}</span>
+        <span class="my-auto"><b>Matches</b>: {{userInfo.wins}} of {{userInfo.games}}</span>
       </div>
       <div class="col d-flex">
         <span class="my-auto"><b>Rank</b>: {{userInfo.rankPoints | rank}} ({{userInfo.rankPoints}} RP)</span>

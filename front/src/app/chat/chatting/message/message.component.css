@@ -1,5 +1,5 @@
 .chat-message {
-  background-color: var(--light);
+  background-color: #3f4042;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -7,6 +7,43 @@
   margin: 1px;
   overflow-wrap: break-word;
   max-width: 85%;
+}
+
+.chat-duel {
+  background-color: #C79100;
+  flex-direction: row;
+}
+
+.chat-invite {
+  background-color: var(--info);
+}
+
+.chat-invite em {
+  font-size: 26px;
+}
+
+.bi-check {
+  border-radius: 360px;
+  color: #27D54F;
+  margin-left: 4px;
+  transition-duration: 200ms;
+}
+
+.bi-check:hover {
+  background-color: #27D54F;
+  color: white;
+}
+
+.bi-x {
+  border-radius: 360px;
+  color: #ff3333;
+  margin-left: 4px;
+  transition-duration: 200ms;
+}
+
+.bi-x:hover {
+  background-color: #ff3333;
+  color: white;
 }
 
 .border-top {

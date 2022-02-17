@@ -1,0 +1,15 @@
+<ul class="list-group">
+  <li class="list-group-item d-flex" *ngFor="let friend of friends | async">
+    <div class="col" [ngbPopover]="chatterPopup"
+         popoverClass="popover-dark" autoClose="outside" #p="ngbPopover" placement="left">
+      <ng-template #chatterPopup>
+        <chatter-popup [user]="friend" [popover]="p"></chatter-popup>
+      </ng-template>
+      <img class="rounded-circle my-auto" width="48" height="48" alt="Cinque Terre" [src]="friend.img">
+      <span class="ml-2">
+            {{friend.name}}
+      </span>
+    </div>
+    <button class="btn btn-outline-info" (click)="directMessage(friend)">Direct Message</button>
+  </li>
+</ul>

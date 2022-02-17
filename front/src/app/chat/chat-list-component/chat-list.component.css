@@ -1,15 +1,9 @@
-:host {
-  display: block;
-  height: 500px;
-}
-
 ul {
   height: 100%;
 }
 
 ul {
-  overflow: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 /*# sourceMappingURL=chat-list.component.css.map */
