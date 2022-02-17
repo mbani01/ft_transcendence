@@ -6,11 +6,10 @@ import {Injectable} from "@angular/core";
 @Injectable()
 export class MainSocket extends Socket {
   constructor(private cookieService: CookieService) {
-    super({url: 'http://localhost:3000', options: {
-      query: {
-        token: cookieService.get('access_token')
-      }
-    }});
+    super({url: environment.chatSocketUri, options: {} });
+
+    this.ioSocket['auth'] = {token: cookieService.get('access_token')};
+
     console.log("SOCKET CONSTRUCTOR");
     console.log(cookieService.get('access_token'));
   }
