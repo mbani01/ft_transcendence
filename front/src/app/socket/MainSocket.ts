@@ -6,7 +6,7 @@ import {Injectable} from "@angular/core";
 @Injectable()
 export class MainSocket extends Socket {
   constructor(private cookieService: CookieService) {
-    super({url: environment.chatSocketUri, options: {} });
+    super({url: environment.socketUri, options: {} });
 
     this.ioSocket['auth'] = {token: cookieService.get('access_token')};
 
