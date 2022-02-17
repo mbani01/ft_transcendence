@@ -11,10 +11,10 @@ export class AuthService {
     const payload = {
       grant_type: "authorization_code",
       client_id:
-        "3983150b52dfbad3bcb15e2f02b31153d87a6b02004d039f8f1b2b09fae1c598",
+        "802dd62932bab69d1e0168a42ed0567a6b83267c134fb2f62d583c14b2a4ce97",
       client_secret:
-        "b41976899e9839019139e2c2c82fb901f4ea7c2cf12dd98a54d2dd8dccfc7c10",
-      redirect_uri: "http://localhost:3000/login",
+        "90e1a8765ecb7d464e48b23b94843495e261dfa71d7facd9933ab0e1dc0d4096",
+      redirect_uri: "http://localhost:4200/login",
       code,
     };
 
@@ -35,11 +35,12 @@ export class AuthService {
   }
 
   async getUserData(code: string): Promise<CreateUserDto> {
+    console.log("code: ", code);
     let access_token: string;
     let userData: CreateUserDto;
     try {
-      await this.getAccessToken(code).then((res) => (access_token = res));
-      console.log(access_token);
+      access_token = await this.getAccessToken(code);
+      console.log("access_token: ", access_token);
       await axios({
         method: "GET",
         url: "https://api.intra.42.fr/v2/me",

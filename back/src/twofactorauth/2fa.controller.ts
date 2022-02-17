@@ -57,7 +57,6 @@ export class TwofactorauthController {
 
   // TODO: implement turn-off  functionality for 2fa.
 
-  @UseGuards(JwtAuthGuard)
   @Post('authenticate/:id')
   async authenticate(
     @Param('id') id: number,
