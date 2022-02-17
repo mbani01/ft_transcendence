@@ -22,4 +22,7 @@ export class User {
 
   @Column({ nullable: true })
   twoFASecret?: string;
+
+  // @Column()
+  // token: string;
 }

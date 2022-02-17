@@ -10,4 +10,7 @@ export class CreateUserDto {
 
   @IsEmail()
   email: string;
+
+  // @IsString()
+  // token: string;
 }
