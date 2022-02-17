@@ -22,9 +22,9 @@ import { ChatModule } from './chat/chat.module';
       type: 'postgres', // Since we are using PostgreSQL.
       host: 'localhost', // We are devoloping locally.
       port: 5432, // What we set in our docker-compose file.
-      username: 'postgres', // ""
-      password: 'example', // "pretty straightforward haha"
-      database: 'postgres', // db name.
+      username: 'leet_admin', // ""
+      password: 'leetask', // "pretty straightforward haha"
+      database: 'ft_tran', // db name.
       autoLoadEntities: true, // help load entities automatically.
       synchronize: true, // insures our entities are sync with the database every time we run our app.
     }),
