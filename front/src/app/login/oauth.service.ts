@@ -34,16 +34,17 @@ export class OAuthService {
       params = params.set("twoFactorAuth", _2fa);
     }
     console.log(params);
-    let obs = this.http.post<{access_token: string, user: User}>(environment.apiBaseUrl + '/auth/access_token', null, {
+    let obs = this.http.post(environment.apiBaseUrl + '/auth/access_token', null, {
       params: params
     });
     obs.subscribe({
-      next: (token) => {
-        console.log(token);
+      next: () => {
+        console.log('TOKEN');
+        console.log(this.cookieService.get('access_token'));
         this.router.navigate(['']);
-        this.access_token = token.access_token;
-        this.cookieService.set('access_token', this.access_token, undefined, '/');
-        this.user$.next(token.user);
+        // this.access_token = token.access_token;
+        // this.cookieService.set('access_token', this.access_token, undefined, '/');
+        // this.user$.next(token.user);
       },
       error: (error => {
         if (error.error['2FA']) {
