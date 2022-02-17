@@ -14,7 +14,7 @@ export enum GameStat {
 })
 export class GameService {
 
-  stat: GameStat = GameStat.MAIN;
+  stat: GameStat = GameStat.QUEUE;
 
   constructor(private socket: MainSocket, private http: HttpClient) {
     socket.on('game/joinGame', this.joinGame.bind(this));

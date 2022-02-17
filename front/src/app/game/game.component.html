@@ -4,8 +4,9 @@
   </ng-container>
   <ng-template #queueTemplate>
     <ng-container *ngIf="gameService.isQueue(); else gameTemplate">
-      <div class="m-auto bg-dark p-5">
-        <span class="font-weight-bolder">00:01</span>
+      <div class="w-25 h-25 d-flex flex-column justify-content-center align-content-center m-auto queue p-5">
+        <p class="queue-text text-center">QUEUE</p>
+        <span class="text-center">00:01</span>
       </div>
     </ng-container>
   </ng-template>

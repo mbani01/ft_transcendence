@@ -6,11 +6,13 @@ import {GameService} from "./game.service";
 
 @Component({
   selector: 'app-game',
-  templateUrl: 'game.component.html'
+  templateUrl: 'game.component.html',
+  styleUrls: ['game.component.scss']
 })
 export class GameComponent implements OnInit {
 
   gameStarting: boolean = false;
+  queueCounter: number = 0;
 
   constructor(private socket: MainSocket, public gameService: GameService) {
     // socket.on('gameStarted', g.gameStarted);
@@ -25,9 +27,10 @@ export class GameComponent implements OnInit {
   }
 
   startGame() {
-    socketListening(this.socket);
+    // socketListening(this.socket);
     // this.gameService.startG;
-    this.gameService.joinGame();
+    this.gameService.joinQueue();
+    setInterval(() => this.queueCounter++, 1000);
   }
 
 }
