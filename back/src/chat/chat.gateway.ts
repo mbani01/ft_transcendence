@@ -20,10 +20,11 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   handleConnection(client: Socket, ...args: any[]) {
+    client.emit('message', 'Welcome to Chat!');
     console.log(`client with id #${client.id} connected`)
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @SubscribeMessage('message')
   async message(@MessageBody() data: CreateMessageDto,
     @ConnectedSocket() client: Socket, @Req() req) {
