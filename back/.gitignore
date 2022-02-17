@@ -36,3 +36,4 @@ lerna-debug.log*
 
 # Environment Variables
 .envback/src/app.module.ts
+src/app.module.ts
