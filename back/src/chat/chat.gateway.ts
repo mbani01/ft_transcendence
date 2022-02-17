@@ -46,6 +46,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     };
     client.broadcast.to(room.name).emit('message', outData);
   }
+
   @UseGuards(JwtAuthGuard)
   @SubscribeMessage('join')
   async join(@ConnectedSocket() client: Socket, @MessageBody() createMemberDto: CreateMemberDto, @Req() req) {
@@ -59,6 +60,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     };
     await this._chatService.createMember(member);
     const room = await this._chatService.getRoomById(roomID);
-    client.broadcast.to(room.name).emit('join', {name: user.username});
+    client.broadcast.to(room.name).emit('join', {name: user.username, timestamp: Date.now});
   }
 }

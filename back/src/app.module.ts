@@ -22,7 +22,7 @@ import { ChatModule } from './chat/chat.module';
     SocketModule,
     TypeOrmModule.forRoot({
       type: 'postgres', // Since we are using PostgreSQL.
-      host: 'localhost', // We are devoloping locally.
+      host: 'db', // We are devoloping locally.
       port: 5432, // What we set in our docker-compose file.
       username: 'postgres', // ""
       password: 'example', // "pretty straightforward haha"
