@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { MembersEntity } from 'src/chat/entities/members.entity';
+import { RoomEntity } from 'src/chat/entities/room.entity';
+import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('Users')
 export class User {
@@ -22,4 +24,10 @@ export class User {
 
   @Column({ nullable: true })
   twoFASecret?: string;
+
+  @OneToMany(() => MembersEntity, member => member.user)
+  public memberShip!: MembersEntity[];
+
+  @OneToMany(() => MembersEntity, member => member.user)
+  public messages!: MembersEntity[];
 }

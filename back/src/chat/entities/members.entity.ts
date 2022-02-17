@@ -1,5 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "src/users/entity/user.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Roles } from "../common/chat.types";
+import { RoomEntity } from "./room.entity";
 
 @Entity('member')
 export class MembersEntity {
@@ -14,4 +16,11 @@ export class MembersEntity {
 
     @Column({ default: 'member' })
     role: Roles;
+
+    @ManyToOne(() => User, user => user.memberShip)
+    public user!: User;
+
+    @ManyToOne(() => RoomEntity, room => room.memberShip)
+    public room!: RoomEntity;
+
 }
