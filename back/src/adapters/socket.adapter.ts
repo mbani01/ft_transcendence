@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/04 09:50:56 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/17 09:42:34 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/17 15:36:18 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ export class WsAdapter extends IoAdapter {
 			try
 			{
 				
-				const token = socket.handshake.headers.token as string;
+				const token = socket.handshake.auth.token as string;
 				decoded = jwt.verify(token, JwtConstants.jwtSecret);
 				socket.user = decoded;
 			}
