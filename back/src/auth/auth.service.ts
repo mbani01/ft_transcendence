@@ -14,7 +14,7 @@ export class AuthService {
         "802dd62932bab69d1e0168a42ed0567a6b83267c134fb2f62d583c14b2a4ce97",
       client_secret:
         "90e1a8765ecb7d464e48b23b94843495e261dfa71d7facd9933ab0e1dc0d4096",
-      redirect_uri: "http://localhost:4200/login",
+      redirect_uri: "http://localhost:3000/login",
       code,
     };
 

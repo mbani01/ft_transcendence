@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/04 09:50:56 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/17 15:36:18 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/17 18:09:45 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,10 @@ export class WsAdapter extends IoAdapter {
 			let decoded;
 			try
 			{
-				
-				const token = socket.handshake.auth.token as string;
+				const token = socket.handshake.headers.cookie
+				.split('; ')
+				.find((cookie: string) => cookie.startsWith('access_token'))
+				.split('=')[1];
 				decoded = jwt.verify(token, JwtConstants.jwtSecret);
 				socket.user = decoded;
 			}
@@ -41,6 +43,7 @@ export class WsAdapter extends IoAdapter {
 			if (decoded)
 			{
 				Clients.add(socket.user.sub, socket.id);
+				console.log("Socket Connected");
 				next();
 			}
 			else

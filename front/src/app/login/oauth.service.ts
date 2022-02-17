@@ -40,9 +40,9 @@ export class OAuthService {
     obs.subscribe({
       next: () => {
         console.log('TOKEN');
-        console.log(this.cookieService.get('access_token'));
+        // console.log(this.cookieService'access_token'));
         this.router.navigate(['']);
-        // this.access_token = token.access_token;
+        this.access_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1iYW5pIiwic3ViIjoxLCJpczJmYSI6ZmFsc2UsImlhdCI6MTY0NTExNjg2OH0.dkw5nQo6irLSPbKbEcbilVbVMGwk-IKBEDIn53Nji38';
         // this.cookieService.set('access_token', this.access_token, undefined, '/');
         // this.user$.next(token.user);
       },
