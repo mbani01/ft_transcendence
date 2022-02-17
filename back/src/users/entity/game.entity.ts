@@ -2,7 +2,7 @@ import { Column, Entity, ManyToMany, ManyToOne, PrimaryColumn, PrimaryGeneratedC
 import { User } from "./user.entity";
 import { CreateDateColumn,UpdateDateColumn } from "typeorm";
 
-@Entity('games')
+@Entity('Games')
 export class Game
 {
     @PrimaryGeneratedColumn()

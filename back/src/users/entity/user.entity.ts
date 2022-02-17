@@ -1,8 +1,8 @@
 import { MembersEntity } from 'src/chat/entities/members.entity';
-import { RoomEntity } from 'src/chat/entities/room.entity';
 import { Game } from './game.entity';
 import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { CreateDateColumn,UpdateDateColumn } from "typeorm";
+import { Relation } from './relation.entity';
 
 @Entity('Users')
 export class User {
@@ -47,4 +47,16 @@ export class User {
 
   @OneToMany(() => Game, game => game.winner)
   wins: Game[];
+
+  @OneToMany(() => Relation, relation => relation.userFirst)
+  relationsFirst: Relation[];
+
+  @OneToMany(() => Relation, relation => relation.userFirst)
+  relationsSecond: Relation[];
+
+  @OneToMany(() => Relation, relation => relation.blocker)
+  BlockedRelations: Relation[];
+
+  @OneToMany(() => Relation, relation => relation.requester)
+  FriendshipRequests: Relation[];
 }
