@@ -1,0 +1,31 @@
+//.row {
+//  border: 1px dashed;
+//}
+//.col {
+//  border: 1px dashed;
+//}
+
+#nickname {
+  align-self: end;
+  margin: 0 4px;
+  font-weight: bold;
+  font-size: 24px;
+}
+.dot {
+  height: 12px;
+  width: 12px;
+  margin: 6px 4px;
+  background-color: #00D04E;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status {
+
+  color: #00D04E;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+}

@@ -1,0 +1,34 @@
+.container {
+  //border: 1px solid #55555555;
+  margin: 5px 0;
+}
+//.row {
+//  border: 1px solid;
+//}
+//
+//.col {
+//  border: 1px solid;
+//}
+
+.scores {
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.victory {
+  color: #00732f;
+}
+.defeat {
+  color: #a40000;
+}
+
+.score {
+  color: #cecece;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.player-name {
+  font-weight: bold;
+  font-size: 20px;
+}

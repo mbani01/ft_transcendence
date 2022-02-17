@@ -1,0 +1,11 @@
+.list-group-item {
+  background-color: #00000000;
+  transition-duration: 200ms;
+  cursor: pointer;
+  user-select: none;
+  font-size: 18px;
+}
+.list-group-item:hover {
+  transition-duration: 0ms;
+  background-color: #00000022;
+}

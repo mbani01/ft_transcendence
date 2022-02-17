@@ -1,0 +1,82 @@
+.chatting-container {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  //color: var(--dark);
+  //padding: 0;
+  //margin: 0;
+  color: white;
+
+}
+
+#header {
+  flex: initial;
+  //background-color: red;
+  //height: 10%;
+  //height: 48px;
+  //border-bottom: 1px solid black;
+}
+#content {
+  //background-color: green;
+  flex: 1;
+  //max-height: 80%;
+  overflow: auto;
+  overflow-x: hidden;
+  //max-width: 100%;
+
+  //display: flex;
+  //border-bottom: 1px solid black;
+
+}
+
+#prompt {
+  flex: initial;
+  margin: 2px;
+  //background-color: #3f4042;
+  //height: 48px;
+  //height: 10%;
+}
+
+.form-control {
+  background-color: #454648;
+  color: white;
+  border: none;
+}
+.form-rounded {
+  border-radius: 1rem;
+}
+
+#chat-back {
+
+  transition-duration: 200ms;
+  width: 32px;
+  height: 32px;
+  margin: 8px 4px 8px 4px;
+  padding-left: 1px;
+  padding-bottom: 1px;
+  //padding-left: 20%;
+  //position: relative; /* If you want text inside of it */
+
+  //padding-bottom: 20%;
+  //text-align: center;
+  //position: absolute;
+}
+
+#chat-back::before {
+  //text-align: center;
+  //margin-bottom: auto;
+  //margin: 8px 4px 8px 4px;
+}
+
+#chat-back:hover {
+  background-color: var(--primary);
+  color: white;
+}
+
+#chat-settings {
+  transition-duration: 200ms;
+}
+
+#chat-settings:hover {
+  color: var(--primary);
+}

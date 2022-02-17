@@ -1,0 +1,26 @@
+<div class="d-flex h-100">
+  <form *ngIf="this.oauthService.is2FAEnabled(); else loadingTemplate" class="m-auto" #twoFactorAuth="ngForm" (ngSubmit)="verify(twoFactorAuth)">
+    <div class="d-flex flex-column dark-back p-4 align-items-center">
+      <img width="128" height="128" src="/assets/key.svg" >
+      <h3 class="mb-5">Two-Factor Authentication</h3>
+      <label class="align-self-start mb-3">Enter Auth Code:</label>
+      <input type="text" class="form-control input-dark" placeholder="6-digit authentication code" maxlength="6" name="twoFactorAuth" ngModel>
+      <span *ngIf="twoFactorAuth.controls['twoFactorAuth']?.errors?.['error']" class="align-self-start mt-1 text-danger">
+        {{twoFactorAuth.controls['twoFactorAuth']!.errors!['error']}}
+      </span>
+      <button [disabled]="this.loading" class="btn btn-primary w-100 p-2 mt-3">
+        <span *ngIf="this.loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Submit
+      </button>
+    </div>
+  </form>
+
+  <ng-template #loadingTemplate>
+    <div class="m-auto">
+      <div class="spinner-border" style="width: 4rem; height: 4rem;" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
+  </ng-template>
+</div>

@@ -1,0 +1,14 @@
+a {
+  background-color: #293031;
+  width: 100%;
+  color: white;
+  border: none;
+  text-decoration: none;
+  transition-duration: 200ms;
+}
+
+a:hover {
+  background-color: #36373a;
+}
+
+/*# sourceMappingURL=chat-list-item.component.css.map */

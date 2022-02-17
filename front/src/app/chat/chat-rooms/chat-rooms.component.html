@@ -1,0 +1,47 @@
+
+<ng-template #passwordModal let-modal>
+  <join-modal [modal]="modal" (joinModal)="joinModalEvent($event)"></join-modal>
+</ng-template>
+
+<ng-template #createModal let-modal>
+  <create-modal [modal]="modal"></create-modal>
+</ng-template>
+
+<div class="container mt-5">
+  <div class="d-flex">
+    <!-- Search Form -->
+    <form class="col-5 d-flex" (ngSubmit)="searchChannel(searchForm)" #searchForm="ngForm">
+      <input type="text" placeholder="Search" class="form-control col mr-1" name="like" ngModel>
+      <button class="btn btn-info col-auto">
+        <i class="bi bi-search"></i>
+      </button>
+    </form>
+    <!-- Create Room -->
+    <button class="btn btn-success ml-auto" (click)="openCreateRoom(createModal)">Create Room</button>
+  </div>
+  <hr>
+  <!-- Channel List -->
+  <ul class="list-group">
+    <li class="list-group-item d-flex" *ngFor="let chat of chats">
+      <div class="mr-5">
+        <h3 class="mb-0">{{chat.name}}</h3>
+        <em><small class="font-weight-lighter">Created By: {{chat.owner?.name}}</small></em>
+      </div>
+      <div class="my-auto text-secondary" ngbTooltip="members" [openDelay]="500">
+        <i class="bi bi-people"></i> 125
+      </div>
+      <div class="ml-auto h-100 my-auto">
+        <i *ngIf="chat.type == chatType.PROTECTED" class="bi bi-lock-fill mr-3"
+           ngbTooltip="Password" [openDelay]="500"></i>
+        <button class="btn btn-primary" (click)="joinChannel(chat, passwordModal)">Join</button>
+      </div>
+    </li>
+  </ul>
+  <hr>
+  <!-- Pagination -->
+  <div class="d-flex  justify-content-center">
+    <ngb-pagination class="custom-pagination" [collectionSize]="pagination.collectionSize" [(page)]="pagination.page"
+                    [maxSize]="pagination.maxSize" [rotate]="true" [boundaryLinks]="true" (pageChange)="changePage()"></ngb-pagination>
+  </div>
+
+</div>
