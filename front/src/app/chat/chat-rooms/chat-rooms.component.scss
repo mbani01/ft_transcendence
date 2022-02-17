@@ -1,0 +1,19 @@
+.list-group-item {
+  //background-color: red;
+  //background: linear-gradient(90deg, #d53369 0%, #daae51 100%);
+  background-color: #00000000;
+  //color: var(--dark);
+}
+
+.container {
+}
+
+:host ::ng-deep .page-link{
+  background-color: #00000000 !important;
+  color: white;
+}
+
+:host ::ng-deep .page-item.active .page-link{
+  background-color: var(--primary) !important;
+  color: white;
+}

@@ -1,0 +1,60 @@
+<div class="row flex-column mt-3 mb-4">
+  <img [src]="user.value?.img" width="256" height="256" class="mx-auto rounded-circle">
+  <input type="file" class="file-upload" style="display: none" (change)="uploadAvatar($event)" #avatarUpload>
+  <span *ngIf="uploadStat == UploadStat.NO_UPLOAD" class="mx-auto text-secondary mt-1" role="button" (click)="avatarUpload.click()"><i class="bi bi-pencil-square"></i> Edit avatar</span>
+  <ngb-progressbar *ngIf="uploadStat != UploadStat.NO_UPLOAD" class="w-50 mx-auto mt-1"
+                   [animated]="true"
+                   [type]="uploadType()"
+                   [value]="progress!"
+                   [striped]="true">
+    {{progress}}%
+  </ngb-progressbar>
+</div>
+<form #nicknameForm="ngForm" (ngSubmit)="updateNickname(nicknameForm)">
+  <div *ngIf="!editNickname; else editNicknameTemplate" class="row mt-3 mb-4">
+    <label class="font-weight-bolder col-5">Name:</label>
+    <span class="text-light col">{{user.value?.name}}</span>
+    <span class="edit-span d-flex col">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-pencil-fill m-auto"
+           fill="currentColor" viewBox="0 0 16 16" (click)="editNickname = true">
+        <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+      </svg>
+    </span>
+  </div>
+  <ng-template #editNicknameTemplate>
+    <div class="row flex-column mt-3 mb-4 justify-content-between">
+      <div class="d-flex">
+        <label for="nickname" class="col-5 font-weight-bolder">Name:</label>
+        <div class="col p-0">
+          <ng-template #errorTip>{{nicknameForm.controls['nickname']?.errors?.['error']}}</ng-template>
+          <input type="text" class="form-control input-dark" id="nickname" name="nickname" required
+                 placeholder="Name" [ngModel]="user.value?.name" [ngbTooltip]="errorTip" triggers="manual"
+                 tooltipClass="error-tooltip" #t="ngbTooltip">
+        </div>
+      </div>
+      <div class="row mt-3 mb-3 offset-5">
+        <button class="btn btn-success mr-1 px-4 btn-rounded" [disabled]="isValidNickname(nicknameForm)">Save</button>
+        <button class="btn btn-danger ml-1 btn-rounded" (click)="editNickname = false">Cancel</button>
+      </div>
+    </div>
+  </ng-template>
+
+</form>
+
+<div class="row mt-3 mb-2">
+  <label class="col-5">Two Factor Authentication:</label>
+  <button *ngIf="!oauthService.is2FAEnabled() && !qrCode" class="btn btn-success" (click)="showQRCode()">Enable 2FA</button>
+  <button *ngIf="oauthService.is2FAEnabled()" class="btn btn-danger" (click)="remove2FA()">Remove 2FA</button>
+  <form *ngIf="qrCode" #qrCodeForm="ngForm" (ngSubmit)="verifyCode(qrCodeForm)">
+    <img [src]="qrCode">
+    <ng-template #qrCodeError>{{qrCodeForm.controls['code']?.errors?.['error']}}</ng-template>
+    <input type="text" class="form-control input-dark" maxlength="6" id="code2FA" name="code"
+       placeholder="6 Digit Code" required ngModel
+           [ngbTooltip]="qrCodeError" triggers="manual"
+           tooltipClass="error-tooltip" #codeToolTip="ngbTooltip">
+
+    <button class="btn btn-success mr-1 px-4 btn-rounded" [disabled]="click2FA">Verify</button>
+    <button type="button" class="btn btn-danger ml-1 btn-rounded" (click)="closeQRCode()">Cancel</button>
+
+  </form>
+</div>

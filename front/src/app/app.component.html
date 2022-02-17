@@ -1,0 +1,35 @@
+<!--&lt;!&ndash;<router-outlet *ngIf="router.url.startsWith('/login'); else elseBlock"></router-outlet>&ndash;&gt;-->
+<!--<div class="h-100 d-flex flex-column bg-yellow px-2">-->
+
+<!--  <div class="flex-column justify-content-center bg-purple px-2">-->
+<!--    <app-navbar *ngIf="oauthService.isAuthenticated()"></app-navbar>-->
+<!--  </div>-->
+<!--  <div class="flex-column justify-content-center bg-red text-white px-2 flex-grow-1 overflow-auto">-->
+<!--  &lt;!&ndash;  <div class="row w-100">&ndash;&gt;-->
+<!--  &lt;!&ndash;  </div>&ndash;&gt;-->
+<!--    <div id="content" class="bg-warning">-->
+<!--  &lt;!&ndash;    <div class="col-12" *ngIf="oauthService.isAuthenticated()" style="padding-top: 0;"></div>&ndash;&gt;-->
+<!--      <div class="bg-primary">-->
+<!--        <router-outlet class="bg-dark"></router-outlet>-->
+<!--      </div>-->
+
+<!--  &lt;!&ndash;    <app-chat *ngIf="oauthService.isAuthenticated()" style="width: 20%"></app-chat>&ndash;&gt;-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  <div class="flex-column justify-content-center bg-darkblue px-2">-->
+<!--    <div class="text-white p-0" style="height:50px">FOOTER</div>-->
+<!--  </div>-->
+
+<!--</div>-->
+
+<div class="container-fluid h-100">
+  <app-navbar *ngIf="oauthService.isAuthenticated()"></app-navbar>
+  <div class="row w-100 h-100 m-0">
+<!--      <div class="col-lg h-100 bg-warning"></div>-->
+<!--      <div class="col-auto h-100 bg-danger"></div>-->
+      <div class="col-lg overflow-auto p-2 h-100">
+          <router-outlet></router-outlet>
+      </div>
+      <app-chat class="col col-lg-auto p-0" *ngIf="oauthService.isAuthenticated()" style=""></app-chat>
+  </div>
+</div>
