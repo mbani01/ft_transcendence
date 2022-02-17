@@ -25,9 +25,9 @@ export class User {
   @Column({ nullable: true })
   twoFASecret?: string;
 
-  @OneToMany(() => MembersEntity, member => member.user)
-  public memberShip!: MembersEntity[];
+  // @OneToMany(() => MembersEntity, member => member.user)
+  // public memberShip!: MembersEntity[];
 
-  @OneToMany(() => MembersEntity, member => member.user)
-  public messages!: MembersEntity[];
+  // @OneToMany(() => MembersEntity, member => member.user)
+  // public messages!: MembersEntity[];
 }

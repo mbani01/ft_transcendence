@@ -8,8 +8,6 @@ import { SocketModule } from './modules/socket/socket.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { TwofactorauthModule } from './twofactorauth/2fa.module';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
 import { ChatModule } from './chat/chat.module';
 
 @Module({
@@ -22,7 +20,7 @@ import { ChatModule } from './chat/chat.module';
     SocketModule,
     TypeOrmModule.forRoot({
       type: 'postgres', // Since we are using PostgreSQL.
-      host: 'db', // We are devoloping locally.
+      host: 'localhost', // We are devoloping locally.
       port: 5432, // What we set in our docker-compose file.
       username: 'postgres', // ""
       password: 'example', // "pretty straightforward haha"

@@ -24,10 +24,10 @@ export class RoomEntity {
     @Column({ default: '' })
     password: string;
 
-    @OneToMany(() => MembersEntity, member => member.room)
-    public memberShip!: MembersEntity[];
+    // @OneToMany(() => MembersEntity, member => member.room)
+    // public memberShip!: MembersEntity[];
     
-    @OneToMany(() => MembersEntity, member => member.room)
-    public messages!: MembersEntity[];
+    // @OneToMany(() => MembersEntity, member => member.room)
+    // public messages!: MembersEntity[];
 
 }
