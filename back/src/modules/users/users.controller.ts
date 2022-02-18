@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, Req, UseGuards } from "@nestjs/common";
+import { BadRequestException, Controller, Get, Param, Query, Req, UseGuards } from "@nestjs/common";
 import { PaginationQueryDto } from "src/common/dto/pagination-query.dto";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { OutUserInfoDto } from "./dto/out-user-info.dto";
@@ -16,12 +16,12 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get("/:id")
-  async getOne(@Param("id") userId: number | string): Promise<OutUserDto> {
+  async getOne(@Param("id") userId: number | string, @Req() req): Promise<OutUserDto> {
     if (typeof userId == "number") {
       const user = await this._usersService.findById(userId);
       return { userId: user.id, username: user.username, avatar: user.avatar };
     }
-    const user = await this._usersService.findByUserName(userId);
+    const user = await this._usersService.findByUserName(req.user.username);
     return { userId: user.id, username: user.username, avatar: user.avatar };
   }
 
@@ -29,6 +29,7 @@ export class UsersController {
   @Get('me')
   getCurrentProfile(@Req() req): OutUserDto {
     const user = req.user;
+    console.log('user/me === ', user);
     return { userId: user.id, username: user.username, avatar: user.avatar };
   }
 

@@ -19,6 +19,7 @@
     "@angular/platform-browser": "~13.1.0",
     "@angular/platform-browser-dynamic": "~13.1.0",
     "@angular/router": "~13.1.0",
+    "@nestjs/core": "^8.3.1",
     "@ng-bootstrap/ng-bootstrap": "^11.0.0",
     "bootstrap": "^4.6.0",
     "bootstrap-icons": "^1.7.2",
@@ -27,6 +28,7 @@
     "ngx-cookie-service": "^13.1.2",
     "ngx-socket-io": "^4.1.0",
     "phaser": "^3.55.2",
+    "prettier": "^2.5.1",
     "rxjs": "~7.4.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

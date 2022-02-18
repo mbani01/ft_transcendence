@@ -5,6 +5,7 @@ import { UsersService } from "../users/users.service";
 import { JwtConstants } from "./constants";
 
 function getJwtFromCoockie(req): string {
+  if (!req.headers.cookie) return '';
   const token = req.headers.cookie
     .split('; ')
     .find((cookie: string) => cookie.startsWith('access_token'))

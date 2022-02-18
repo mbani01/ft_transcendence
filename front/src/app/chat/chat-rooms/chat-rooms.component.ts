@@ -21,7 +21,7 @@ export class ChatRoomsComponent {
   // @ViewChild('passwordModal') passwordModal: TemplateRef<any>;
   private like: string;
   pagination = {
-    page: 0,
+    page: 1,
     collectionSize: 0,
     maxSize: 10,
   }
@@ -73,7 +73,7 @@ export class ChatRoomsComponent {
         next: value => {
           console.log(value);
           this.chats = value.channels;
-          this.pagination.collectionSize = value.collectionSize;
+          this.pagination.collectionSize = value.channels.length;
         }
       }
     );
@@ -86,6 +86,11 @@ export class ChatRoomsComponent {
 
   changePage() {
     console.log(this.pagination.page);
+    this.httpGetChannels();
+  }
+
+  createModalEvent(chat: Chat) {
+    this.chatService.chats.set(chat.roomID, chat);
     this.httpGetChannels();
   }
 }
