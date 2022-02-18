@@ -52,6 +52,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   @SubscribeMessage('join')
   async join(@ConnectedSocket() client: CustomSocket, @MessageBody() createMemberDto: any) {
     const { roomID, password } = JSON.parse(createMemberDto);
+    console.log(roomID, password);
     const userId = Clients.getUserId(client.id);
     const member: CreateMemberColumn = {
       roomID,

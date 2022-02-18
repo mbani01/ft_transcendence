@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { WsAdapter } from './adapters/socket.adapter';
-import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const PORT = process.env.PORT || 3000;
