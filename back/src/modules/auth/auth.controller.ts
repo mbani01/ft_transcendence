@@ -6,6 +6,7 @@ import {
   Query,
   UseGuards,
   Res,
+  BadRequestException,
 } from '@nestjs/common';
 import { TwoFactorAuthService } from '../twofactorauth/2fa.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
@@ -39,11 +40,11 @@ export class AuthController {
   async authenticate(@Query() paninationQuery: any, @Res() response) {
     const { code, twoFA } = paninationQuery;
     const newUser: CreateUserDto = await this._authService.getUserData(code);
-    console.log('new user ===', newUser);
+    if (!newUser) throw new BadRequestException('Invalid User or token');
     let userExist = await this._usersService.findByUserName(newUser.username);
     if (!userExist) {
       userExist = await this._usersService.create(newUser);
-      this._authService.sendJwtAccessToken(response, userExist, false);
+      return await this._authService.sendJwtAccessToken(response, userExist, false);
     }
 
     // const isValid2FACode = this._twoFAService.is2FactorAuthCodeValid(
@@ -51,7 +52,7 @@ export class AuthController {
     //   userExist,
     // );
     // if (!isValid2FACode) return { twoFA: true, error: 'Invalid 2fa code!' };
-    this._authService.sendJwtAccessToken(response, userExist, false);
+    await this._authService.sendJwtAccessToken(response, userExist, false);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -1,4 +1,6 @@
-import { Body, Controller, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
+import { Request } from 'express';
+import { check } from 'prettier';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ChatService } from './chat.service';
 import { CreateRoomBodyDto, CreateRoomDto } from './dto/create-room.dto';
@@ -9,8 +11,7 @@ export class ChatController {
     constructor(private readonly _chaTService: ChatService) { }
 
     @Get('messages/:roomID')
-    getMessages(@Query() pgQuery: GetMessageQueryDto, @Param() { roomID }: ParamsDto): void {
-        const { before } = pgQuery;
+    async getMessages(@Param() { roomID }: ParamsDto) {
         /**
          * [
             {
@@ -20,13 +21,13 @@ export class ChatController {
             }
             ]
          */
-        return this._chaTService.getMessages(before, roomID);
+        return await this._chaTService.getMessages(roomID);
         // return `this opetion witll return the list of last 10 messages with roomId = ${roomID} and timestamp = ${before}`;
     }
 
     @UseGuards(JwtAuthGuard) // 
     @Get('fetch-rooms')
-    getCurrentUserRooms() {
+    getCurrentUserRooms(@Req() req) {
         /**
          * [
                 {
@@ -37,7 +38,8 @@ export class ChatController {
                 }
             ]
          */
-        return 'this option will return all the rooms belong to the current user';
+        return this._chaTService.fetchCurrentUserRooms(req.user);
+        // return 'this option will return all the rooms belong to the current user';
     }
 
     @UseGuards(JwtAuthGuard)
@@ -50,9 +52,9 @@ export class ChatController {
               "password"?: string
             }
          */
-        const { name, isPublic, password, isChannel } = createRoomBodyDto;
+        const { name, isPublic, password } = createRoomBodyDto;
         const channelType = this._chaTService.getChannelType(isPublic, password);
-        const roomEntity: CreateRoomDto = { name, password, channelType, ownerId: req.user.id, isChannel }
+        const roomEntity: CreateRoomDto = { name, password, channelType, ownerId: req.user.id }
         return this._chaTService.createRoom(roomEntity);
         /** Response
          * if (err) {
@@ -62,8 +64,9 @@ export class ChatController {
         // return `this option will create a ${channelType} channel named ${name}`;
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get('channels')
-    getAllRooms(@Query() pgQuery: GetAllRoomsQueryDto) {
+    async getAllRooms(@Query() pgQuery: GetAllRoomsQueryDto, @Req() req) {
         const { like, page } = pgQuery;
 
         /** returns an object with the following properties: 
@@ -83,12 +86,27 @@ export class ChatController {
             "collectionSize": number
             }
         */
-        return this._chaTService.findAllRooms();
-        // return `this action returns all the channels that match the follwing quries: like:${like}, page${page}`;
+        const rooms = await this._chaTService.findAllRooms();
+        let channels = [];
+        rooms.forEach(e => {
+            channels.push(
+                {
+                    roomID: e.roomID,
+                    name: e.name,
+                    channelType: e.channelType,
+                    owner: {
+                        uid: req.user.id,
+                        name: req.user.username,
+                        img: req.user.avatar
+                    }
+                })
+        })
+        return {channels, collectionSize: channels.length};
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get('members/:roomID')
-    getRoomUsers(@Param() roomId: ParamsDto) {
+    getRoomUsers(@Param() { roomID }: ParamsDto, @Req() req) {
         /**
          * returns the following object.
         [
@@ -99,8 +117,8 @@ export class ChatController {
             }
         ]
          */
-
-        return `return all the users in the room with id #${roomId}`;
+        return this._chaTService.findAllMembers(roomID, req.user.id);
+        // return `return all the users in the room with id #${roomId}`;
     }
 
     @Post('/:roomID/unmute/:uid')

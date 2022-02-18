@@ -11,14 +11,27 @@ import {BehaviorSubject, catchError, throwError} from "rxjs";
 })
 export class OAuthService {
 
-  private access_token: string = '';
+  private access_token: boolean = false;
   private _is2FA = false;
   // @ts-ignore
   public user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
   constructor(private http: HttpClient, private cookieService: CookieService, private router: Router) {
     console.log('OAuth Service');
-    this.access_token = cookieService.get('access_token');
+    // this.access_token =;
+    this.http.get(`${environment.apiBaseUrl}/auth/isAuthorized`).subscribe({
+      next: value => {
+        this.access_token = true;
+        console.log("Authorized");
+        this.router.navigate(['']);
+
+      },
+      error: err => {
+        this.access_token = false;
+        console.log("Not Authorized");
+        this.router.navigate(['login']);
+      }
+    })
     setTimeout(() => {
       this.fetchUser();
     })
@@ -42,7 +55,7 @@ export class OAuthService {
         console.log('TOKEN');
         // console.log(this.cookieService'access_token'));
         this.router.navigate(['']);
-        this.access_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1iYW5pIiwic3ViIjoxLCJpczJmYSI6ZmFsc2UsImlhdCI6MTY0NTExNjg2OH0.dkw5nQo6irLSPbKbEcbilVbVMGwk-IKBEDIn53Nji38';
+        this.access_token = true;
         // this.cookieService.set('access_token', this.access_token, undefined, '/');
         // this.user$.next(token.user);
       },
@@ -58,7 +71,7 @@ export class OAuthService {
   }
 
   isAuthenticated() {
-    return true;
+    return this.access_token;
   }
 
   get token() {
@@ -82,7 +95,7 @@ export class OAuthService {
 
   logout() {
     this.cookieService.delete('access_token', '/');
-    this.access_token = '';
+    this.access_token = false;
   }
 
 

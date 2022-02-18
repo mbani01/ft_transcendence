@@ -4,7 +4,7 @@
 </ng-template>
 
 <ng-template #createModal let-modal>
-  <create-modal [modal]="modal"></create-modal>
+  <create-modal [modal]="modal" (createModal)="createModalEvent($event)"></create-modal>
 </ng-template>
 
 <div class="container mt-5">

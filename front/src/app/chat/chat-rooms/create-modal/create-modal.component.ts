@@ -8,6 +8,7 @@ import {NgForm} from "@angular/forms";
 import {Socket} from "ngx-socket-io";
 import {ChatService} from "../../chat.service";
 import {MainSocket} from "../../../socket/MainSocket";
+import {Chat} from "../../shared/chat.model";
 
 @Component({
   selector: 'create-modal',
@@ -17,7 +18,7 @@ import {MainSocket} from "../../../socket/MainSocket";
 export class CreateModalComponent {
   @Input() modal: NgbActiveModal;
   @Input() room: ChatRoom;
-  // @Output() joinModal = new EventEmitter<Cr>();
+  @Output() createModal = new EventEmitter<Chat>();
 
   isPublic: boolean = false;
 
@@ -31,14 +32,19 @@ export class CreateModalComponent {
 
   createRoom(createRoom: NgForm) {
     console.log(createRoom.value);
-    this.http.post(`${environment.apiBaseUrl}/chat/channels`, createRoom.value).subscribe({
+    if (createRoom.value.isPublic && createRoom.value.password.length === 0) {
+      delete createRoom.value.password;
+    }
+    this.http.post<Chat>(`${environment.apiBaseUrl}/chat/create-channel`, createRoom.value).subscribe({
       next: value => {
         console.log('next:' + value);
+        this.createModal.emit(value);
         this.modal.close();
       },
       error: err => {
-        console.log(err.error);
-        createRoom.form.controls['name'].setErrors(err.error);
+        console.log("ERROR creating room");
+        console.log(err);
+        createRoom.form.controls['name'].setErrors({error: err.message});
       }
     });
   }

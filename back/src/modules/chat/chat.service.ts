@@ -3,11 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ChannelType } from './common/chat.types';
 import { CreateMemberColumn } from './dto/create-member.dto';
-import { CreateMessageColumnDto, CreateMessageDto } from './dto/create-message.dto';
+import { CreateMessageColumnDto } from './dto/create-message.dto';
 import { CreateRoomDto } from './dto/create-room.dto';
-import { MembersEntity } from './dto/entities/members.entity';
-import { MessageEntity } from './dto/entities/message.entity';
-import { RoomEntity } from './dto/entities/room.entity';
+import { MembersEntity } from './entities/members.entity';
+import { MessageEntity } from './entities/message.entity';
+import { RoomEntity } from './entities/room.entity';
 
 @Injectable()
 export class ChatService {
@@ -31,19 +31,19 @@ export class ChatService {
     return await this._messagesRepo.save(newMessage);
   }
 
-  async createMember(newMember: CreateMemberColumn)
-  {
+  async createMember(newMember: CreateMemberColumn) {
     let member = await this.getMemberByQuery(newMember);
-    if (member.length !== 0) throw new UnauthorizedException(`member already joined`);
+    if (member.length !== 0) return false;
     const room = await this.getRoomById(newMember.roomID);
     if (!room) throw new NotFoundException(`no such room`);
-    if (room.channelType === 'protected')
-    {
-        if (newMember.password !== room.password)
-          throw new UnauthorizedException('Wrong password');
+    if (room.channelType === 'protected') {
+      if (newMember.password !== room.password)
+        throw new UnauthorizedException('Wrong password');
     }
     delete newMember.password;
     const createdMember = this._membersRepo.create(newMember);
+    createdMember.roomId = newMember.roomID;
+    createdMember.userId = newMember.userID;
     return await this._membersRepo.save(createdMember);
   }
 
@@ -51,17 +51,36 @@ export class ChatService {
     return await this._roomsRepo.find();
   }
 
-  async getRoomById(id: number) {
-    return await this._roomsRepo.findOne({ id })
+  async getRoomById(roomID: number) {
+    return await this._roomsRepo.findOne({ roomID })
   }
 
-  async getMemberByQuery(member: CreateMemberColumn)
-  {
-    return await this._membersRepo.find({ where: {userId: member.userID, roomId: member.roomID} });
+  async getMemberByQuery(member: CreateMemberColumn) {
+    return await this._membersRepo.find({ where: { userId: member.userID, roomId: member.roomID } });
   }
 
-  getMessages(before: string, roomId: number) {
-    this._messagesRepo.find({ roomId, })
+  async getMessages(roomId: number) {
+    return await this._messagesRepo.find({ roomId, })
+  }
+
+  async findAllMembers(roomId: number, userId: number) {
+    return await this._membersRepo.find({
+      where: {
+        roomId, userId
+      }
+    });
+  }
+
+  async removeMemberFromRoom(member: any, room: any) {
+
+  }
+
+  async fetchCurrentUserRooms(user: any) {
+    return await this._roomsRepo.find({
+      where: {
+        ownerId: user.id,
+      }
+    })
   }
 
   getChannelType(isPublic: boolean, password: string): ChannelType {

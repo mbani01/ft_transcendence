@@ -35,12 +35,10 @@ export class AuthService {
   }
 
   async getUserData(code: string): Promise<CreateUserDto> {
-    console.log("code: ", code);
     let access_token: string;
     let userData: CreateUserDto;
     try {
       access_token = await this.getAccessToken(code);
-      console.log("access_token: ", access_token);
       await axios({
         method: "GET",
         url: "https://api.intra.42.fr/v2/me",
@@ -57,7 +55,6 @@ export class AuthService {
     } catch (err: any) {
       console.log(err);
     }
-    console.log(access_token);
     return userData;
   }
 
