@@ -1,9 +1,10 @@
 import { User } from "src/users/entity/user.entity";
 import { UsersController } from "src/users/users.controller";
-import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import { ChannelType } from "../common/chat.types";
 import { MembersEntity } from "./members.entity";
 import { CreateDateColumn,UpdateDateColumn } from "typeorm";
+import { userInfo } from "os";
 
 @Entity('room') // crate a table named rooms.
 export class RoomEntity {
@@ -16,8 +17,8 @@ export class RoomEntity {
     @Column({ default: false })
     isChannel: boolean;
 
-    @Column()
-    ownerId: number;
+    @ManyToOne(() => User, user => user.ownedRooms)
+    owner: User;
 
     @Column()
     channelType: ChannelType;

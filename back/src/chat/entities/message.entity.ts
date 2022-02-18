@@ -32,4 +32,7 @@ export class MessageEntity {
 
     @ManyToOne(() => RoomEntity, room => room.messages)
     public room!: RoomEntity;
+
+    @ManyToOne(() => User, user => user.challanges)
+    challangedUser: User;
 }

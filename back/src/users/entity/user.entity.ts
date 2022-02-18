@@ -3,6 +3,8 @@ import { Game } from './game.entity';
 import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { CreateDateColumn,UpdateDateColumn } from "typeorm";
 import { Relation } from './relation.entity';
+import { RoomEntity } from 'src/chat/entities/room.entity';
+import { MessageEntity } from 'src/chat/entities/message.entity';
 
 @Entity('Users')
 export class User {
@@ -36,8 +38,8 @@ export class User {
   @OneToMany(() => MembersEntity, member => member.user)
   public memberShip!: MembersEntity[];
 
-  @OneToMany(() => MembersEntity, member => member.user)
-  public messages!: MembersEntity[];
+  @OneToMany(() => MessageEntity, message => message.user)
+  public messages!: MessageEntity[];
 
   @OneToMany(() => Game, game => game.firstPlayer)
   gamesAsFirstPlayer: Game[];
@@ -51,7 +53,7 @@ export class User {
   @OneToMany(() => Relation, relation => relation.userFirst)
   relationsFirst: Relation[];
 
-  @OneToMany(() => Relation, relation => relation.userFirst)
+  @OneToMany(() => Relation, relation => relation.userSecond)
   relationsSecond: Relation[];
 
   @OneToMany(() => Relation, relation => relation.blocker)
@@ -59,4 +61,10 @@ export class User {
 
   @OneToMany(() => Relation, relation => relation.requester)
   FriendshipRequests: Relation[];
+
+  @OneToMany(() => RoomEntity, room => room.owner)
+  ownedRooms: RoomEntity[];
+
+  @OneToMany(() => MessageEntity, room => room.challangedUser)
+  challanges: MessageEntity[];
 }
