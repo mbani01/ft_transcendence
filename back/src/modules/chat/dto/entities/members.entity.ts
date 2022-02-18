@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Roles } from "../common/chat.types";
+import { Roles } from "../../common/chat.types";
 import { RoomEntity } from "./room.entity";
 
 @Entity('member')
