@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { GeneratedSecretObject } from "./interfaces/2fa.interface";
 import * as QRCode from "qrcode";
 import { authenticator } from "otplib";
-import { UsersService } from "src/users/users.service";
 import { ConfigService } from "@nestjs/config";
-import { User } from "src/users/entity/user.entity";
 import { Response } from "express";
+import { UsersService } from "../users/users.service";
+import { GeneratedSecretObject } from "./interfaces/2fa.interface";
+import { User } from "../users/entity/user.entity";
 
 @Injectable()
 export class TwoFactorAuthService {

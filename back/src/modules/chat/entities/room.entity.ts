@@ -1,5 +1,4 @@
-import { User } from "src/users/entity/user.entity";
-import { UsersController } from "src/users/users.controller";
+import { User } from "src/modules/users/entity/user.entity";
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import { ChannelType } from "../common/chat.types";
 import { MembersEntity } from "./members.entity";

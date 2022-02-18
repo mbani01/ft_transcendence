@@ -1,5 +1,5 @@
-import { MembersEntity } from 'src/chat/entities/members.entity';
-import { RoomEntity } from 'src/chat/entities/room.entity';
+import { MembersEntity } from 'src/modules/chat/entities/members.entity';
+import { RoomEntity } from 'src/modules/chat/entities/room.entity';
 import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('Users')

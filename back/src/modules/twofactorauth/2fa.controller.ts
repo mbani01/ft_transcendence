@@ -4,20 +4,18 @@ import {
   Get,
   Param,
   Post,
-  Query,
   Req,
   Res,
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
-import { TwoFactorAuthService } from './2fa.service';
 import { Response } from 'express';
 import * as QRCode from 'qrcode';
+import { AuthService } from '../auth/auth.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UsersService } from '../users/users.service';
+import { TwoFactorAuthService } from './2fa.service';
 import { TwoFACodeDto } from './dto/two-fadto.dto';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { AuthService } from 'src/auth/auth.service';
-import { User } from 'src/users/entity/user.entity';
 
 @Controller('twofa')
 export class TwofactorauthController {
