@@ -3,6 +3,8 @@ import {MainSocket} from "../socket/MainSocket";
 
 import {socketListening} from "./game";
 import {GameService} from "./game.service";
+import {HttpClient} from "@angular/common/http";
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-game',
@@ -14,23 +16,31 @@ export class GameComponent implements OnInit {
   gameStarting: boolean = false;
   queueCounter: number = 0;
 
-  constructor(private socket: MainSocket, public gameService: GameService) {
+  constructor(private socket: MainSocket, public gameService: GameService, private http: HttpClient) {
     // socket.on('gameStarted', g.gameStarted);
     // socket.emit('joinDefaultGame', { wsap: '1'});
     // socket.on("syncRound", g.syncRound);
     // socket.on('GameOver', g.gameOver);
     // socket.on('sync', g.sync);
     // socket.on('syncBall', g.syncBall);
+    console.log("FSENT");
+    this.http.get(`${environment.apiBaseUrl}/auth/test`).subscribe({
+      next: value => {
+        console.log("SENT");
+
+      }
+    });
+
   }
 
   ngOnInit() {
   }
 
   startGame() {
-    // socketListening(this.socket);
-    // this.gameService.startG;
-    this.gameService.joinQueue();
-    setInterval(() => this.queueCounter++, 1000);
+    socketListening(this.socket);
+    this.gameService.joinGame();
+    // this.gameService.joinQueue();
+    // setInterval(() => this.queueCounter++, 1000);
   }
 
 }
