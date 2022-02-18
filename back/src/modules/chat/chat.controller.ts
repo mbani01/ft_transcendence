@@ -27,7 +27,7 @@ export class ChatController {
 
     @UseGuards(JwtAuthGuard) // 
     @Get('fetch-rooms')
-    getCurrentUserRooms() {
+    getCurrentUserRooms(@Req() req) {
         /**
          * [
                 {
@@ -38,7 +38,8 @@ export class ChatController {
                 }
             ]
          */
-        return 'this option will return all the rooms belong to the current user';
+        return this._chaTService.fetchCurrentUserRooms(req.user);
+        // return 'this option will return all the rooms belong to the current user';
     }
 
     @UseGuards(JwtAuthGuard)
@@ -51,9 +52,9 @@ export class ChatController {
               "password"?: string
             }
          */
-        const { name, isPublic, password, isChannel } = createRoomBodyDto;
+        const { name, isPublic, password} = createRoomBodyDto;
         const channelType = this._chaTService.getChannelType(isPublic, password);
-        const roomEntity: CreateRoomDto = { name, password, channelType, ownerId: req.user.id, isChannel }
+        const roomEntity: CreateRoomDto = { name, password, channelType, ownerId: req.user.id}
         return this._chaTService.createRoom(roomEntity);
         /** Response
          * if (err) {
