@@ -34,9 +34,11 @@ export class CreateModalComponent {
     this.http.post(`${environment.apiBaseUrl}/chat/channels`, createRoom.value).subscribe({
       next: value => {
         console.log('next:' + value);
+        this.chatService.fetchRooms();
         this.modal.close();
       },
       error: err => {
+        console.log("ERROR creating room");
         console.log(err.error);
         createRoom.form.controls['name'].setErrors(err.error);
       }
