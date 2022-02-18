@@ -9,16 +9,16 @@ export class RoomEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({unique: true})
+    @Column({unique: true, nullable: false})
     name: string;
 
-    @Column({ default: false })
+    @Column({ default: false, nullable: false})
     isChannel: boolean;
 
-    @Column()
+    @Column({nullable: false})
     ownerId: number;
 
-    @Column()
+    @Column({nullable: false})
     channelType: ChannelType;
 
     @Column({ default: '' })

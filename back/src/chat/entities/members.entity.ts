@@ -8,13 +8,13 @@ export class MembersEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({ nullable: false })
     userId: number;
 
-    @Column()
+    @Column({ nullable: false })
     roomId: number;
 
-    @Column({ default: 'member' })
+    @Column({ default: 'member', nullable: false })
     role: Roles;
 
     // @ManyToOne(() => User, user => user.memberShip)
