@@ -70,18 +70,19 @@ export class ChatService {
 
   loadMessages(chat: Chat, before: boolean = false) {
     let obs = this.http.get<Message[]>(`${environment.apiBaseUrl}/chat/messages/${chat.roomID}`,
-      before ? {
-        params: {
-          before: new Date(chat.messages[0].timestamp).getTime()
-        }
-      } : {})
+      // before ? {
+        // params: {
+        //   before: new Date(chat.messages[0].timestamp).getTime()
+        // }
+      // } : {}
+      );
     obs.subscribe({
       next: value => {
-        if (before) {
-          chat.messages.unshift(...value);
-        } else {
+        // if (before) {
+        //   chat.messages.unshift(...value);
+        // } else {
           chat.messages = value
-        }
+        // }
       }
     });
     return obs;
@@ -147,7 +148,7 @@ export class ChatService {
 
   receiveMessage = (message: Message) => {
     console.log('receiveMessage:')
-
+    console.log(message);
     let m: Message = message;
     m.timestamp = new Date(m.timestamp);
 
