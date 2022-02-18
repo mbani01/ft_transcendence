@@ -20,7 +20,14 @@ export class AuthController {
     private readonly _authService: AuthService,
     private readonly _usersService: UsersService,
     private readonly _twoFAService: TwoFactorAuthService,
-  ) {}
+  ) { }
+
+
+  @UseGuards(JwtAuthGuard)
+  @Get('isAuthorized')
+  isAuthenticated() {
+    return true;
+  }
 
   @Get('/oauth_page')
   getOauthPage() {
