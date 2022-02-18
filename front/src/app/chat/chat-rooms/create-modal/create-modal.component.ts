@@ -17,7 +17,7 @@ import {MainSocket} from "../../../socket/MainSocket";
 export class CreateModalComponent {
   @Input() modal: NgbActiveModal;
   @Input() room: ChatRoom;
-  // @Output() joinModal = new EventEmitter<Cr>();
+  @Output() createModal = new EventEmitter<void>();
 
   isPublic: boolean = false;
 
@@ -37,13 +37,13 @@ export class CreateModalComponent {
     this.http.post(`${environment.apiBaseUrl}/chat/create-channel`, createRoom.value).subscribe({
       next: value => {
         console.log('next:' + value);
-        this.chatService.fetchRooms();
+        this.createModal.emit();
         this.modal.close();
       },
       error: err => {
         console.log("ERROR creating room");
-        console.log(err.error);
-        createRoom.form.controls['name'].setErrors(err.error);
+        console.log(err);
+        createRoom.form.controls['name'].setErrors({error: err.message});
       }
     });
   }
