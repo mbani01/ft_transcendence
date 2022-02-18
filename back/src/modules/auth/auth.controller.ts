@@ -6,6 +6,7 @@ import {
   Query,
   UseGuards,
   Res,
+  BadRequestException,
 } from '@nestjs/common';
 import { TwoFactorAuthService } from '../twofactorauth/2fa.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
@@ -39,7 +40,7 @@ export class AuthController {
   async authenticate(@Query() paninationQuery: any, @Res() response) {
     const { code, twoFA } = paninationQuery;
     const newUser: CreateUserDto = await this._authService.getUserData(code);
-    console.log('new user ===', newUser);
+    if (!newUser) throw new BadRequestException('Invalid User or token');
     let userExist = await this._usersService.findByUserName(newUser.username);
     if (!userExist) {
       userExist = await this._usersService.create(newUser);
