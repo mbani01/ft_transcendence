@@ -73,7 +73,7 @@ export class ChatRoomsComponent {
         next: value => {
           console.log(value);
           this.chats = value.channels;
-          this.pagination.collectionSize = value.collectionSize;
+          this.pagination.collectionSize = value.channels.length;
         }
       }
     );
@@ -89,7 +89,8 @@ export class ChatRoomsComponent {
     this.httpGetChannels();
   }
 
-  createModalEvent() {
+  createModalEvent(chat: Chat) {
+    this.chatService.chats.set(chat.roomID, chat);
     this.httpGetChannels();
   }
 }
