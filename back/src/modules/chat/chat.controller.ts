@@ -10,8 +10,7 @@ export class ChatController {
     constructor(private readonly _chaTService: ChatService) { }
 
     @Get('messages/:roomID')
-    getMessages(@Query() pgQuery: GetMessageQueryDto, @Param() { roomID }: ParamsDto): void {
-        const { before } = pgQuery;
+    async getMessages(@Param() { roomID }: ParamsDto) {
         /**
          * [
             {
@@ -21,7 +20,7 @@ export class ChatController {
             }
             ]
          */
-        return this._chaTService.getMessages(before, roomID);
+        return await this._chaTService.getMessages(roomID);
         // return `this opetion witll return the list of last 10 messages with roomId = ${roomID} and timestamp = ${before}`;
     }
 
@@ -52,9 +51,9 @@ export class ChatController {
               "password"?: string
             }
          */
-        const { name, isPublic, password} = createRoomBodyDto;
+        const { name, isPublic, password } = createRoomBodyDto;
         const channelType = this._chaTService.getChannelType(isPublic, password);
-        const roomEntity: CreateRoomDto = { name, password, channelType, ownerId: req.user.id}
+        const roomEntity: CreateRoomDto = { name, password, channelType, ownerId: req.user.id }
         return this._chaTService.createRoom(roomEntity);
         /** Response
          * if (err) {

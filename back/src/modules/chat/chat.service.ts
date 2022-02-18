@@ -61,8 +61,8 @@ export class ChatService {
     return await this._membersRepo.find({ where: { userId: member.userID, roomId: member.roomID } });
   }
 
-  getMessages(before: string, roomId: number) {
-    this._messagesRepo.find({ roomId, })
+  async getMessages(roomId: number) {
+    return await this._messagesRepo.find({ roomId, })
   }
 
   async findAllMembers(roomId: number, userId: number) {
