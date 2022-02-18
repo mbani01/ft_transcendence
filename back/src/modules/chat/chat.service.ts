@@ -7,9 +7,9 @@ import { ChannelType } from './common/chat.types';
 import { CreateMemberColumn } from './dto/create-member.dto';
 import { CreateMessageColumnDto, CreateMessageDto } from './dto/create-message.dto';
 import { CreateRoomDto } from './dto/create-room.dto';
-import { MembersEntity } from './dto/entities/members.entity';
-import { MessageEntity } from './dto/entities/message.entity';
-import { RoomEntity } from './dto/entities/room.entity';
+import { MembersEntity } from './entities/members.entity';
+import { MessageEntity } from './entities/message.entity';
+import { RoomEntity } from './entities/room.entity';
 
 @Injectable()
 export class ChatService {

@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
+import { check } from 'prettier';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ChatService } from './chat.service';
 import { CreateRoomBodyDto, CreateRoomDto } from './dto/create-room.dto';
@@ -63,8 +64,9 @@ export class ChatController {
         // return `this option will create a ${channelType} channel named ${name}`;
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get('channels')
-    getAllRooms(@Query() pgQuery: GetAllRoomsQueryDto) {
+    async getAllRooms(@Query() pgQuery: GetAllRoomsQueryDto, @Req() req) {
         const { like, page } = pgQuery;
 
         /** returns an object with the following properties: 
@@ -84,8 +86,22 @@ export class ChatController {
             "collectionSize": number
             }
         */
-        return this._chaTService.findAllRooms();
-        // return `this action returns all the channels that match the follwing quries: like:${like}, page${page}`;
+        const rooms = await this._chaTService.findAllRooms();
+        let channels = [];
+        rooms.forEach(e => {
+            channels.push(
+                {
+                    roomID: e.roomID,
+                    name: e.name,
+                    channelType: e.channelType,
+                    owner: {
+                        uid: req.user.id,
+                        name: req.user.username,
+                        img: req.user.avatar
+                    }
+                })
+        })
+        return {channels, collectionSize: channels.length};
     }
 
     @UseGuards(JwtAuthGuard)

@@ -1,5 +1,6 @@
 import { IsDateString } from "class-validator";
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "src/modules/users/entity/user.entity";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { RoomEntity } from "./room.entity";
 
 @Entity('message')
@@ -19,9 +20,18 @@ export class MessageEntity {
     @CreateDateColumn({ nullable: false })
     createdAt: Date;
 
-    // @ManyToOne(() => User, user => user.messages)
-    // public user!: User;
+    @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
+    public created_at: Date;
 
-    // @ManyToOne(() => RoomEntity, room => room.messages)
-    // public room!: RoomEntity;
+    @UpdateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
+    public updated_at: Date;
+
+    @ManyToOne(() => User, user => user.messages)
+    public user!: User;
+
+    @ManyToOne(() => RoomEntity, room => room.messages)
+    public room!: RoomEntity;
+
+    @ManyToOne(() => User, user => user.challanges)
+    challangedUser: User;
 }
