@@ -31,7 +31,7 @@ export class CreateModalComponent {
 
   createRoom(createRoom: NgForm) {
     console.log(createRoom.value);
-    if (createRoom.value.isPublic && createRoom.value.password.empty()) {
+    if (createRoom.value.isPublic && createRoom.value.password.length === 0) {
       delete createRoom.value.password;
     }
     this.http.post(`${environment.apiBaseUrl}/chat/create-channel`, createRoom.value).subscribe({
