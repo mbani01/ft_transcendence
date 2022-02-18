@@ -43,7 +43,6 @@ export class WsAdapter extends IoAdapter {
 			if (decoded)
 			{
 				Clients.add(socket.user.sub, socket.id);
-				console.log("Socket Connected");
 				next();
 			}
 			else

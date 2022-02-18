@@ -8,16 +8,16 @@ export class MessageEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({ nullable: false })
     userId: number;
 
-    @Column()
+    @Column({ nullable: false })
     roomId: number;
 
-    @Column({ default: '' })
+    @Column({ nullable: false })
     content: string;
 
-    @CreateDateColumn()
+    @CreateDateColumn({ nullable: false })
     createdAt: Date;
 
     // @ManyToOne(() => User, user => user.messages)
