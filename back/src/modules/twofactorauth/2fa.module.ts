@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
-import { TwoFactorAuthService } from './2fa.service';
-import { TwofactorauthController } from './2fa.controller';
-import { UsersService } from 'src/users/users.service';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from 'src/users/entity/user.entity';
-import { AuthService } from 'src/auth/auth.service';
 import { JwtModule, JwtService } from '@nestjs/jwt';
-import { JwtConstants } from 'src/auth/constants';
 import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from 'src/auth/jwt.strategy';
+import { User } from '../users/entity/user.entity';
+import { JwtConstants } from '../auth/constants';
+import { TwofactorauthController } from './2fa.controller';
+import { TwoFactorAuthService } from './2fa.service';
+import { UsersService } from '../users/users.service';
+import { AuthService } from '../auth/auth.service';
+import { JwtStrategy } from '../auth/jwt.strategy';
 
 @Module({
   imports: [PassportModule, TypeOrmModule.forFeature([User]),JwtModule.register({

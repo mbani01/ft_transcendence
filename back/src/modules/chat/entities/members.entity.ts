@@ -1,4 +1,3 @@
-import { User } from "src/users/entity/user.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Roles } from "../common/chat.types";
 import { RoomEntity } from "./room.entity";

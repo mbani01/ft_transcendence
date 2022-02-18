@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Query, Req, UseGuards } from "@nestjs/common";
-import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 import { PaginationQueryDto } from "src/common/dto/pagination-query.dto";
+import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { OutUserInfoDto } from "./dto/out-user-info.dto";
 import { OutUserDto } from "./dto/out-user.dto";
 import { UsersService } from "./users.service";

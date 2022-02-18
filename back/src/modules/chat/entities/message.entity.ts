@@ -1,5 +1,4 @@
 import { IsDateString } from "class-validator";
-import { User } from "src/users/entity/user.entity";
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import { RoomEntity } from "./room.entity";
 

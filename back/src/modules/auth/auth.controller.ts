@@ -7,10 +7,9 @@ import {
   UseGuards,
   Res,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { TwoFactorAuthService } from 'src/twofactorauth/2fa.service';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { UsersService } from 'src/users/users.service';
+import { TwoFactorAuthService } from '../twofactorauth/2fa.service';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 

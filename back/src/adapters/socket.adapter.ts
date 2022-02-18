@@ -14,7 +14,7 @@ import { IoAdapter } from '@nestjs/platform-socket.io';
 import { Socket } from 'socket.io';
 import { activeUsers } from '../modules/socket/activeUsers';
 import * as jwt from 'jsonwebtoken';
-import { JwtConstants } from 'src/auth/constants';
+import { JwtConstants } from 'src/modules/auth/constants';
 
 export interface CustomSocket extends Socket {
 	user: any;

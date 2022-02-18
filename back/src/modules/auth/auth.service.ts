@@ -1,9 +1,9 @@
 import { Injectable, Res } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import axios from "axios";
-import { CreateUserDto } from "src/users/dto/create-user.dto";
-import { User } from "src/users/entity/user.entity";
 import { Response } from "express";
+import { CreateUserDto } from "../users/dto/create-user.dto";
+import { User } from "../users/entity/user.entity";
 @Injectable()
 export class AuthService {
   constructor(private readonly _jwtService: JwtService) { }
