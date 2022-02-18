@@ -6,7 +6,7 @@ import { MembersEntity } from "./members.entity";
 @Entity('room') // crate a table named rooms.
 export class RoomEntity {
     @PrimaryGeneratedColumn()
-    id: number;
+    roomID: number;
 
     @Column({unique: true, nullable: false})
     name: string;

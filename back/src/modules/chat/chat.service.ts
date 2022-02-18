@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 import { User } from '../users/entity/user.entity';
 import { ChannelType } from './common/chat.types';
 import { CreateMemberColumn } from './dto/create-member.dto';
@@ -52,8 +53,8 @@ export class ChatService {
     return await this._roomsRepo.find();
   }
 
-  async getRoomById(id: number) {
-    return await this._roomsRepo.findOne({ id })
+  async getRoomById(roomID: number) {
+    return await this._roomsRepo.findOne({ roomID })
   }
 
   async getMemberByQuery(member: CreateMemberColumn) {
@@ -74,6 +75,14 @@ export class ChatService {
 
   async removeMemberFromRoom(member: any, room: any) {
 
+  }
+
+  async fetchCurrentUserRooms(user: any) {
+    return await this._roomsRepo.find({
+      where: {
+        ownerId: user.id,
+      }
+    })
   }
 
   getChannelType(isPublic: boolean, password: string): ChannelType {
