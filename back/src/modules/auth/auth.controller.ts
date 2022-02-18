@@ -44,7 +44,7 @@ export class AuthController {
     let userExist = await this._usersService.findByUserName(newUser.username);
     if (!userExist) {
       userExist = await this._usersService.create(newUser);
-      this._authService.sendJwtAccessToken(response, userExist, false);
+      return await this._authService.sendJwtAccessToken(response, userExist, false);
     }
 
     // const isValid2FACode = this._twoFAService.is2FactorAuthCodeValid(
@@ -52,7 +52,7 @@ export class AuthController {
     //   userExist,
     // );
     // if (!isValid2FACode) return { twoFA: true, error: 'Invalid 2fa code!' };
-    this._authService.sendJwtAccessToken(response, userExist, false);
+    await this._authService.sendJwtAccessToken(response, userExist, false);
   }
 
   @UseGuards(JwtAuthGuard)
