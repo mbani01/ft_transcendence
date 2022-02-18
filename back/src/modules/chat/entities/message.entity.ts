@@ -7,7 +7,7 @@ export class MessageEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ nullable: false })
+    @Column({ nullable: false }) // also this is the mesage sender.
     userId: number;
 
     @Column({ nullable: false })
