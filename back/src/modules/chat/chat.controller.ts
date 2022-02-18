@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Request } from 'express';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ChatService } from './chat.service';
 import { CreateRoomBodyDto, CreateRoomDto } from './dto/create-room.dto';
@@ -87,8 +88,9 @@ export class ChatController {
         // return `this action returns all the channels that match the follwing quries: like:${like}, page${page}`;
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get('members/:roomID')
-    getRoomUsers(@Param() roomId: ParamsDto) {
+    getRoomUsers(@Param() { roomID }: ParamsDto, @Req() req) {
         /**
          * returns the following object.
         [
@@ -99,8 +101,8 @@ export class ChatController {
             }
         ]
          */
-
-        return `return all the users in the room with id #${roomId}`;
+        return this._chaTService.findAllMembers(roomID, req.user.id);
+        // return `return all the users in the room with id #${roomId}`;
     }
 
     @Post('/:roomID/unmute/:uid')

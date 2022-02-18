@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { User } from '../users/entity/user.entity';
 import { ChannelType } from './common/chat.types';
 import { CreateMemberColumn } from './dto/create-member.dto';
 import { CreateMessageColumnDto, CreateMessageDto } from './dto/create-message.dto';
@@ -31,19 +32,19 @@ export class ChatService {
     return await this._messagesRepo.save(newMessage);
   }
 
-  async createMember(newMember: CreateMemberColumn)
-  {
+  async createMember(newMember: CreateMemberColumn) {
     let member = await this.getMemberByQuery(newMember);
     if (member.length !== 0) throw new UnauthorizedException(`member already joined`);
     const room = await this.getRoomById(newMember.roomID);
     if (!room) throw new NotFoundException(`no such room`);
-    if (room.channelType === 'protected')
-    {
-        if (newMember.password !== room.password)
-          throw new UnauthorizedException('Wrong password');
+    if (room.channelType === 'protected') {
+      if (newMember.password !== room.password)
+        throw new UnauthorizedException('Wrong password');
     }
     delete newMember.password;
     const createdMember = this._membersRepo.create(newMember);
+    createdMember.roomId = newMember.roomID;
+    createdMember.userId = newMember.userID;
     return await this._membersRepo.save(createdMember);
   }
 
@@ -55,13 +56,24 @@ export class ChatService {
     return await this._roomsRepo.findOne({ id })
   }
 
-  async getMemberByQuery(member: CreateMemberColumn)
-  {
-    return await this._membersRepo.find({ where: {userId: member.userID, roomId: member.roomID} });
+  async getMemberByQuery(member: CreateMemberColumn) {
+    return await this._membersRepo.find({ where: { userId: member.userID, roomId: member.roomID } });
   }
 
   getMessages(before: string, roomId: number) {
     this._messagesRepo.find({ roomId, })
+  }
+
+  async findAllMembers(roomId: number, userId: number) {
+    return await this._membersRepo.find({
+      where: {
+        roomId, userId
+      }
+    });
+  }
+
+  async removeMemberFromRoom(member: any, room: any) {
+
   }
 
   getChannelType(isPublic: boolean, password: string): ChannelType {

@@ -1,4 +1,4 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody, OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect, ConnectedSocket } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, MessageBody, OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect, ConnectedSocket, WebSocketServer } from '@nestjs/websockets';
 import { ChatService } from './chat.service';
 import { Socket } from 'socket.io'
 import { CreateMessageColumnDto, CreateMessageDto } from './dto/create-message.dto';
@@ -6,10 +6,11 @@ import { CreateMemberColumn, CreateMemberDto } from './dto/create-member.dto';
 import { Clients, CustomSocket } from 'src/adapters/socket.adapter';
 import { NotFoundException, UnauthorizedException, UsePipes, ValidationPipe } from '@nestjs/common';
 import { JsonWebTokenError } from 'jsonwebtoken';
+import { Server } from 'http';
 
 @WebSocketGateway()
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-
+  
   constructor(private readonly _chatService: ChatService) { }
 
   afterInit(server: any) {
@@ -53,15 +54,24 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   async join(@ConnectedSocket() client: CustomSocket, @MessageBody() createMemberDto: any) {
     const { roomID, password } = JSON.parse(createMemberDto);
     const userId = Clients.getUserId(client.id);
+    console.log('userId: ', userId);
     const member: CreateMemberColumn = {
       roomID,
       userID: +userId,
       password,
       role: 'member'
     };
+    // console.log('member', member);
     await this._chatService.createMember(member);
     const room = await this._chatService.getRoomById(roomID);
     client.join(room.name);
-    client.broadcast.to(room.name).emit('join', {name: client.user.username, timestamp: Date.now});
+    client.leave(room.name);
+    client.broadcast.to(room.name).emit('join', {name: client.user.username, timestamp: Date.now()});
+    return {event: 'join', data: {name: client.user.username, timestamp: Date.now()}}
+  }
+
+  @SubscribeMessage('chat-leave')
+  async leave(@ConnectedSocket() client: CustomSocket, @MessageBody() data: any) {
+
   }
 }
