@@ -5,8 +5,6 @@ import { CreateMessageColumnDto, CreateMessageDto } from './dto/create-message.d
 import { CreateMemberColumn, CreateMemberDto } from './dto/create-member.dto';
 import { Clients, CustomSocket } from 'src/adapters/socket.adapter';
 import { NotFoundException, UnauthorizedException, UsePipes, ValidationPipe } from '@nestjs/common';
-import { JsonWebTokenError } from 'jsonwebtoken';
-import { Server } from 'http';
 
 @WebSocketGateway()
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -61,9 +59,13 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       password,
       role: 'member'
     };
-    const notError = await this._chatService.createMember(member);
-    if (!notError)
-      return { data: {error: "member already joined"} };
+    try {
+       await this._chatService.createMember(member);
+    }
+    catch(e)
+    {
+      return { data: { error: e.message } };
+    }
     const room = await this._chatService.getRoomById(roomID);
     client.join(room.name);
     return { data: {name: client.user.username, timestamp: Date.now()} }

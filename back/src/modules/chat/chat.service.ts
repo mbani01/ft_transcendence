@@ -33,7 +33,7 @@ export class ChatService {
 
   async createMember(newMember: CreateMemberColumn) {
     let member = await this.getMemberByQuery(newMember);
-    if (member.length !== 0) return false;
+    if (member.length !== 0) throw new UnauthorizedException('member already joined');
     const room = await this.getRoomById(newMember.roomID);
     if (!room) throw new NotFoundException(`no such room`);
     if (room.channelType === 'protected') {
