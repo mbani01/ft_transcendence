@@ -1,6 +1,6 @@
 import { User } from "src/modules/users/entity/user.entity";
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
-import { ChannelType } from "../common/chat.types";
+import { ChannelType } from "../../common/chat.types";
 import { MembersEntity } from "./members.entity";
 
 @Entity('room') // crate a table named rooms.
