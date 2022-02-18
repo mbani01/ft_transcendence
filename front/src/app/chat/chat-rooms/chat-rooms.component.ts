@@ -21,7 +21,7 @@ export class ChatRoomsComponent {
   // @ViewChild('passwordModal') passwordModal: TemplateRef<any>;
   private like: string;
   pagination = {
-    page: 0,
+    page: 1,
     collectionSize: 0,
     maxSize: 10,
   }
@@ -86,6 +86,10 @@ export class ChatRoomsComponent {
 
   changePage() {
     console.log(this.pagination.page);
+    this.httpGetChannels();
+  }
+
+  createModalEvent() {
     this.httpGetChannels();
   }
 }
