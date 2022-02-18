@@ -9,7 +9,7 @@ import {NgbDropdown} from "@ng-bootstrap/ng-bootstrap";
 import {Socket} from "ngx-socket-io";
 import {MainSocket} from "../socket/MainSocket";
 
-
+type ChannelType = 'public' | 'protected' | 'private';
 
 @Injectable({
   providedIn: 'root'
@@ -174,7 +174,16 @@ export class ChatService {
     this.http.get<Chat[]>(`${environment.apiBaseUrl}/chat/fetch-rooms`).subscribe({
       next: chats => {
         chats.forEach(value => {
-          this.chats.set(value.roomID, value);
+          let chat: Chat = {
+            roomID: value.roomID,
+            name: value.name,
+            isChannel: value.isChannel,
+            messages: [],
+            unread: 0,
+            channelType: value.channelType,
+          }
+
+          this.chats.set(chat.roomID, chat);
         })
         console.log(this.chats);
       }

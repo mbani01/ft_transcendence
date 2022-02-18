@@ -6,6 +6,7 @@ export interface Chat {
   name: string;
   isChannel: boolean;
   users?: User | User[];
-  messages : Message[];
+  messages: Message[];
   unread: number;
+  channelType: 'public' | 'protected' | 'private';
 }
