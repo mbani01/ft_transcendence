@@ -4,6 +4,8 @@ import { Socket } from 'socket.io'
 import { CreateMessageColumnDto, CreateMessageDto } from './dto/create-message.dto';
 import { CreateMemberColumn, CreateMemberDto } from './dto/create-member.dto';
 import { Clients, CustomSocket } from 'src/adapters/socket.adapter';
+import { NotFoundException, UnauthorizedException, UsePipes, ValidationPipe } from '@nestjs/common';
+import { JsonWebTokenError } from 'jsonwebtoken';
 
 @WebSocketGateway()
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -24,16 +26,15 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   // @UseGuards(JwtAuthGuard)
-  @SubscribeMessage('hmad')
-  async message(@MessageBody() data: CreateMessageDto,
+  @SubscribeMessage('chat-message')
+  async message(@MessageBody() data: any,
     @ConnectedSocket() client: CustomSocket) {
-    // console.log("data ====", data);
-    console.log("data");
-    const { roomID: roomId, timestamp: createdAt, message: content } = data;
+    const { roomID: roomId, timestamp: createdAt, message: content } = JSON.parse(data);
     const userId = Clients.getUserId(client.id);
     const message: CreateMessageColumnDto = { roomId, createdAt, content, userId: +userId }
     await this._chatService.createMessage(message);
     const room = await this._chatService.getRoomById(roomId);
+    if (!room) throw new NotFoundException('room not found');
     const outData = {
       roomID: roomId,
       sender: {
@@ -44,13 +45,13 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       message: message.content,
       timestamp: message.createdAt,
     };
-    client.broadcast.to(room.name).emit('message', outData);
+    client.emit('chat-message', outData);
   }
 
   // @UseGuards(JwtAuthGuard)
   @SubscribeMessage('join')
-  async join(@ConnectedSocket() client: CustomSocket, @MessageBody() createMemberDto: CreateMemberDto) {
-    const { roomID, password } = createMemberDto;
+  async join(@ConnectedSocket() client: CustomSocket, @MessageBody() createMemberDto: any) {
+    const { roomID, password } = JSON.parse(createMemberDto);
     const userId = Clients.getUserId(client.id);
     const member: CreateMemberColumn = {
       roomID,
@@ -60,6 +61,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     };
     await this._chatService.createMember(member);
     const room = await this._chatService.getRoomById(roomID);
+    client.join(room.name);
     client.broadcast.to(room.name).emit('join', {name: client.user.username, timestamp: Date.now});
   }
 }
