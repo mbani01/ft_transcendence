@@ -1,6 +1,6 @@
 import { User } from "src/modules/users/entity/user.entity";
-import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
-import { ChannelType } from "../../common/chat.types";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { ChannelType } from "../common/chat.types";
 import { MembersEntity } from "./members.entity";
 
 @Entity('room') // crate a table named rooms.
@@ -23,10 +23,16 @@ export class RoomEntity {
     @Column({ default: '' })
     password: string;
 
-    // @OneToMany(() => MembersEntity, member => member.room)
-    // public memberShip!: MembersEntity[];
-    
-    // @OneToMany(() => MembersEntity, member => member.room)
-    // public messages!: MembersEntity[];
+    @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
+    public created_at: Date;
+
+    @UpdateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
+    public updated_at: Date;
+
+    @OneToMany(() => MembersEntity, member => member.room)
+    public memberShip!: MembersEntity[];
+
+    @OneToMany(() => MembersEntity, member => member.room)
+    public messages!: MembersEntity[];
 
 }
