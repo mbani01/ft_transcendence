@@ -25,8 +25,8 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('isAuthorized')
-  isAuthenticated() {
-    return true;
+  isAuthenticated(@Req() req) {
+    return req.user;
   }
 
   @Get('/oauth_page')
