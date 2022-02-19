@@ -85,10 +85,10 @@ export class ChatService {
 
   getChannelType(isPublic: boolean, password: string): ChannelType {
     console.log(password)
-    if (isPublic)
-      return "public";
-    else if (!isPublic && !!password)
-      return "protected";
-    return "private";
+    if (isPublic && password)
+      return 'protected';
+    else if (isPublic)
+      return 'public';
+    return 'private';
   }
 }
