@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Post, Query, Req, Res, UseGuards } from '
 import { Request } from 'express';
 import { check } from 'prettier';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { ChatGateway } from './chat.gateway';
 import { ChatService } from './chat.service';
 import { CreateRoomBodyDto, CreateRoomDto } from './dto/create-room.dto';
 import { GetAllRoomsQueryDto, GetMessageQueryDto, ParamsDto, UnmuteAndUnbanDto } from './dto/params.dto';
@@ -17,13 +18,16 @@ export class ChatController {
          * [
             {
                 "message": string,
-                "sender": string,
+                "sender": {
+                    "uid",
+                    "name",
+                    "img"
+                },
                 "timestamp": Date
             }
             ]
          */
         return await this._chaTService.getMessages(roomID);
-        // return `this opetion witll return the list of last 10 messages with roomId = ${roomID} and timestamp = ${before}`;
     }
 
     @UseGuards(JwtAuthGuard) // 
@@ -41,28 +45,6 @@ export class ChatController {
          */
         return this._chaTService.fetchCurrentUserRooms(req.user);
         // return 'this option will return all the rooms belong to the current user';
-    }
-
-    @UseGuards(JwtAuthGuard)
-    @Post('create-channel')
-    createChannel(@Body() createRoomBodyDto: CreateRoomBodyDto, @Req() req) {
-        /** Request
-         *  {
-              "name": string, // channel's name
-              "isPublic": boolean,
-              "password"?: string
-            }
-         */
-        const { name, isPublic, password } = createRoomBodyDto;
-        const channelType = this._chaTService.getChannelType(isPublic, password);
-        const roomEntity: CreateRoomDto = { name, password, channelType, ownerID: req.user.id }
-        return this._chaTService.createRoom(roomEntity);
-        /** Response
-         * if (err) {
-                "error": string
-            }
-         */
-        // return `this option will create a ${channelType} channel named ${name}`;
     }
 
     @UseGuards(JwtAuthGuard)

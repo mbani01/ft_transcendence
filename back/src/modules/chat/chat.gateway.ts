@@ -5,11 +5,16 @@ import { CreateMessageColumnDto, CreateMessageDto } from './dto/create-message.d
 import { CreateMemberColumn, CreateMemberDto } from './dto/create-member.dto';
 import { Clients, CustomSocket } from 'src/adapters/socket.adapter';
 import { NotFoundException, UnauthorizedException, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Server } from 'http';
+import { CreateRoomDto } from './dto/create-room.dto';
+import e from 'express';
 
 @WebSocketGateway()
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
   constructor(private readonly _chatService: ChatService) { }
+  @WebSocketServer()
+  server;
 
   afterInit(server: any) {
     console.log('Gateway Inited')
@@ -19,9 +24,38 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     console.log('a user disconnected');
   }
 
-  handleConnection(client: CustomSocket, ...args: any[]) {
-    // client.emit('message', 'Welcome to Chat!');
+  async handleConnection(client: CustomSocket, ...args: any[]) {
+    const rooms = await this._chatService.getRoomByUid(client.user.sub);
+    for (let room of rooms)
+      client.join(""+room.roomID)
     console.log(`client with id #${client.id} connected`)
+  }
+  
+  @SubscribeMessage('create-channel')
+  async createChannel(@MessageBody() createRoomBodyDto: any, @ConnectedSocket() client: CustomSocket) {
+      /** Request
+       *  {
+            "name": string, // channel's name
+            "isPublic": boolean,
+            "password"?: string
+          }
+        */
+      const { name, isPublic, password } = createRoomBodyDto;
+      if (password.length < 8)
+          return { error: "password too weak" };
+      const channelType = this._chatService.getChannelType(isPublic, password);
+      const roomEntity: CreateRoomDto = { name, password, channelType, ownerID: client.user.sub }
+      let newRoom: any;
+      try
+      {
+        newRoom = await this._chatService.createRoom(roomEntity);
+      }
+      catch(e)
+      {
+        return { error: e.message };
+      }
+      client.join(""+newRoom.roomID);
+      return newRoom;
   }
 
   // @UseGuards(JwtAuthGuard)
@@ -39,12 +73,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       sender: {
         uid: userID,
         name: client.user.username,
-        img: client.user.avatar,
+        img: client.user.img,
       },
       message: message.content,
       timestamp: message.createdAt,
     };
-    client.emit('chat-message', outData);
+    this.server.to(""+roomID).emit('chat-message', outData);
   }
 
   // @UseGuards(JwtAuthGuard)
@@ -52,7 +86,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   async join(@ConnectedSocket() client: CustomSocket, @MessageBody() createMemberDto: any) {
     const { roomID, password } = createMemberDto;
     const userID = client.user.sub;
-    console.log('userID: ', userID);
     const member: CreateMemberColumn = {
       roomID,
       userID: +userID,
@@ -66,7 +99,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       return { error: e.message };
     }
     const room = await this._chatService.getRoomById(roomID);
-    client.join(room.name);
+    client.join(""+roomID);
     return room; 
   }
 
