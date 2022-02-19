@@ -29,7 +29,7 @@ export class ChatService {
   }
 
   async createMessage(message: CreateMessageColumnDto) {
-    const newMessage = this._membersRepo.create(message);
+    const newMessage = this._messagesRepo.create(message);
     return await this._messagesRepo.save(newMessage);
   }
 
@@ -61,12 +61,35 @@ export class ChatService {
     return await this._roomsRepo.findOne({ roomID })
   }
 
+  async getRoomByUid(uid: number)
+  {
+    return await this._membersRepo.find({
+      where: {
+      userID: uid
+    }})
+  }
+
   async getMemberByQuery(userID: number, roomID: number) {
     return await this._membersRepo.find({ where: { userID, roomID } });
   }
 
   async getMessages(roomId: number) {
-    return await this._messagesRepo.find({ roomID: roomId, })
+    const res = []; // res to store inof about returned object
+    const messages = await this._messagesRepo.find({ roomID: roomId })
+    for (let message of messages)
+    {
+      const user = await this._userService.findById(message.userID);
+      res.push({
+        message: message.content,
+        sender: {
+          uid: user.id,
+          name: user.username,
+          img: user.avatar
+        },
+        timestamp: message.createdAt
+      })
+    }
+    return res;
   }
 
   async findAllMembers(roomId: number, userID: number) {
