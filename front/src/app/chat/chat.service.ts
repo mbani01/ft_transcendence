@@ -26,7 +26,7 @@ export class ChatService {
       next: value => {
         if (value) {
           console.log('Chat Service');
-          socket.on('message', this.receiveMessage);
+          socket.on('chat-message', this.receiveMessage);
           this.fetchRooms();
         }
       }
@@ -143,14 +143,14 @@ export class ChatService {
         timestamp: new Date()
       };
       console.log(m);
-      this.socket.emit('message', JSON.stringify(m));
+      this.socket.emit('chat-message', JSON.stringify(m));
     } else {
       console.log('sendMessage(): there is no chat opened');
     }
   }
 
   receiveMessage = (message: Message) => {
-    console.log('receiveMessage:')
+    console.log('receiveMessage:');
     console.log(message);
     let m: Message = message;
     m.timestamp = new Date(m.timestamp);
