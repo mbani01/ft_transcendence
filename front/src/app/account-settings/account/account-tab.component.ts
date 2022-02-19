@@ -35,10 +35,15 @@ export class AccountTabComponent {
 
 
   updateNickname(nicknameForm: NgForm) {
-    // this.http.post(`${environment.apiBaseUrl}/users/${this.}`)
-    nicknameForm.controls['nickname'].setErrors({error: 'nickname already taken'})
-    this.tooltip.open();
-    console.log(nicknameForm);
+    this.http.post(`${environment.apiBaseUrl}/update_nickname`, nicknameForm.value).subscribe({
+      next: value => {
+        this.editNickname = false;
+      },
+      error: err => {
+        nicknameForm.controls['nickname'].setErrors({error: 'nickname already taken'})
+        this.tooltip.open();
+      }
+    });
   }
 
   showQRCode() {
