@@ -5,11 +5,11 @@ import { Repository } from "typeorm";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { User } from "./entity/user.entity";
 
- @Injectable()
+@Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly _usersRepo: Repository<User>
-  ) {}
+  ) { }
 
   async create(userDto: CreateUserDto): Promise<User> {
     const user = this._usersRepo.create(userDto);
@@ -55,9 +55,16 @@ export class UsersService {
     console.log("user has enable 2fa");
   }
 
-  async set2FASecret(secret: string, userId: number) {
-    this._usersRepo.update(userId, {
+  async set2FASecret(secret: string, id: number) {
+    this._usersRepo.update(id, {
       twoFASecret: secret,
     });
+  }
+
+  async unSet2FASecret(userId: number) {
+    await this._usersRepo.update(userId, {
+      twoFASecret: null,
+    });
+    console.log('after I set the user secret: ', await this.findById(userId))
   }
 }
