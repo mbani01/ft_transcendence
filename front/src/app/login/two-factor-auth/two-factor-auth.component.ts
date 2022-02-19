@@ -1,10 +1,10 @@
-import {Component, EventEmitter, Output} from "@angular/core";
-import {NgForm} from "@angular/forms";
-import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
-import {environment} from "../../../environments/environment";
-import {ActivatedRoute, Router} from "@angular/router";
-import {OAuthService} from "../oauth.service";
-import {Observer} from "rxjs";
+import { Component, EventEmitter, Output } from "@angular/core";
+import { NgForm } from "@angular/forms";
+import { HttpClient, HttpErrorResponse, HttpParams } from "@angular/common/http";
+import { environment } from "../../../environments/environment";
+import { ActivatedRoute, Router } from "@angular/router";
+import { OAuthService } from "../oauth.service";
+import { Observer } from "rxjs";
 
 @Component({
   selector: 'two-factor-auth',
@@ -23,11 +23,13 @@ export class TwoFactorAuthComponent {
     this.code = route.snapshot.queryParams['code'];
     console.log("2FA");
 
-    this.oauthService.generateAccessToken(this.code, undefined,{
+    this.oauthService.generateAccessToken(this.code, undefined, {
       error: err => {
-        if (err.is2FA) {
+        console.log(err)
+        if (err.error["is2FA"]) {
           this.is2FA = true;
         } else {
+          console.log("not is2FA")
           this.fail.emit();
           router.navigate(['login']);
         }
@@ -39,7 +41,7 @@ export class TwoFactorAuthComponent {
     let twoFactorAuthCode = twoFactorAuth.value['twoFactorAuth'];
     console.log(twoFactorAuth);
     this.loading = true;
-    this.oauthService.generateAccessToken(this.code, twoFactorAuthCode).subscribe({
+    this.oauthService.generateAccessToken(this.code, twoFactorAuthCode, {
       next: value => {
         this.oauthService.enable2FA();
       },
