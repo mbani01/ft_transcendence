@@ -5,6 +5,7 @@ import {CookieService} from "ngx-cookie-service";
 import {Router} from "@angular/router";
 import {User} from "../shared/user";
 import {BehaviorSubject, catchError, Observer, throwError} from "rxjs";
+import {UserInfo} from "./models/UserInfo.model";
 
 @Injectable({
   providedIn: 'root'
@@ -19,13 +20,20 @@ export class OAuthService {
   constructor(private http: HttpClient, private cookieService: CookieService, private router: Router) {
     console.log('OAuth Service');
     // this.access_token =;
-    this.http.get<User>(`${environment.apiBaseUrl}/auth/isAuthorized`).subscribe({
+    this.http.get<UserInfo>(`${environment.apiBaseUrl}/auth/isAuthorized`).subscribe({
       next: value => {
+        console.log('IS_AUTH');
+        console.log(value);
         this._authorized = true;
         console.log("Authorized");
-        this.user$.next(value);
-        // this.router.navigate([window.location.pathname]);
-
+        this.user$.next({
+          uid: value.id,
+          name: value.username,
+          img: value.avatar!
+        });
+        if (value.is2FAEnabled) {
+          this.enable2FA();
+        }
       },
       error: err => {
         this._authorized = false;
@@ -36,9 +44,9 @@ export class OAuthService {
         }
       }
     })
-    setTimeout(() => {
-      this.fetchUser();
-    })
+    // setTimeout(() => {
+    //   this.fetchUser();
+    // })
   }
 
   getAuthPage() {
@@ -51,7 +59,7 @@ export class OAuthService {
       params = params.set("twoFactorAuth", _2fa);
     }
     console.log('GENERATE');
-    let obs = this.http.post(environment.apiBaseUrl + '/auth/access_token', null, {
+    let obs = this.http.post<any>(environment.apiBaseUrl + '/auth/access_token', null, {
       params: params
     });
     obs.subscribe({
@@ -60,6 +68,9 @@ export class OAuthService {
         // console.log(this.cookieService'access_token'));
         this.router.navigate(['']);
         this._authorized = true;
+        if (value.is2FA) {
+          this.enable2FA();
+        }
         // this.cookieService.set('access_token', this.access_token, undefined, '/');
         // this.user$.next(token.user);
         if (observer?.next) {

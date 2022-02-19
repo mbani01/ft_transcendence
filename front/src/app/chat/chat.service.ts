@@ -40,9 +40,9 @@ export class ChatService {
         password: password
       },  (room: any) => {
         if (!room?.error) {
-          this.chats.set(room.roomID, room);
+          this.chats.set(roomID, room);
           this.loadMessages(room);
-          this.openChat(room.roomID);
+          this.openChat(roomID);
         }
         callback(room);
       }
