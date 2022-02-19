@@ -69,7 +69,7 @@ export class AuthService {
   }
 
   async loginJWT(user: User, is2fa: boolean) {
-    const payload = { username: user.username, sub: user.id, is2fa, img: user.avatar };
+    const payload = { username: user.username, sub: user.id, img: user.avatar };
     return { access_token: await this._jwtService.signAsync(payload) };
   }
 }
