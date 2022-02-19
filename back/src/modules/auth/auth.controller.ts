@@ -7,7 +7,9 @@ import {
   UseGuards,
   Res,
   BadRequestException,
+  Delete,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { TwoFactorAuthService } from '../twofactorauth/2fa.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
@@ -37,8 +39,8 @@ export class AuthController {
   }
 
   @Post('/access_token')
-  async authenticate(@Query() paninationQuery: any, @Res() response) {
-    const { code, twoFA } = paninationQuery;
+  async authenticate(@Query() paginationQuery: any, @Res() response: Response) {
+    const { code, twoFA } = paginationQuery;
     const newUser: CreateUserDto = await this._authService.getUserData(code);
     if (!newUser) throw new BadRequestException('Invalid User or token');
     let userExist = await this._usersService.findByUserName(newUser.username);
@@ -47,6 +49,14 @@ export class AuthController {
       return await this._authService.sendJwtAccessToken(response, userExist, false);
     }
 
+    if (userExist.is2FAEnabled) {
+      console.log('response sent')
+      return response.send({
+        error: {
+          "2FA": true
+        }
+      })
+    }
     // const isValid2FACode = this._twoFAService.is2FactorAuthCodeValid(
     //   twoFA,
     //   userExist,
@@ -54,6 +64,13 @@ export class AuthController {
     // if (!isValid2FACode) return { twoFA: true, error: 'Invalid 2fa code!' };
     await this._authService.sendJwtAccessToken(response, userExist, false);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/logout')
+  logOut() {
+    document.cookie = 'access_code=; Max-Age=-99999999;'
+  }
+
 
   @UseGuards(JwtAuthGuard)
   @Get('/profile')
