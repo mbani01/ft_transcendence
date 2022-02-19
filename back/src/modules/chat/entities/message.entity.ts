@@ -9,10 +9,10 @@ export class MessageEntity {
     id: number;
 
     @Column({ nullable: false }) // also this is the mesage sender.
-    userId: number;
+    userID: number;
 
     @Column({ nullable: false })
-    roomId: number;
+    roomID: number;
 
     @Column({ nullable: false })
     content: string;

@@ -8,7 +8,7 @@ import { NotFoundException, UnauthorizedException, UsePipes, ValidationPipe } fr
 
 @WebSocketGateway()
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-  
+
   constructor(private readonly _chatService: ChatService) { }
 
   afterInit(server: any) {
@@ -28,16 +28,16 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   @SubscribeMessage('chat-message')
   async message(@MessageBody() data: any,
     @ConnectedSocket() client: CustomSocket) {
-    const { roomID: roomId, timestamp: createdAt, message: content } = JSON.parse(data);
-    const userId = Clients.getUserId(client.id);
-    const message: CreateMessageColumnDto = { roomId, createdAt, content, userId: +userId }
+    const { roomID, timestamp: createdAt, message: content } = JSON.parse(data);
+    const userID = Clients.getUserId(client.id);
+    const message: CreateMessageColumnDto = { roomID, createdAt, content, userID: +userID }
     await this._chatService.createMessage(message);
-    const room = await this._chatService.getRoomById(roomId);
+    const room = await this._chatService.getRoomById(roomID);
     if (!room) throw new NotFoundException('room not found');
     const outData = {
-      roomID: roomId,
+      roomID,
       sender: {
-        uid: userId,
+        uid: userID,
         name: client.user.username,
         img: client.user.avatar,
       },
@@ -51,29 +51,55 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   @SubscribeMessage('join')
   async join(@ConnectedSocket() client: CustomSocket, @MessageBody() createMemberDto: any) {
     const { roomID, password } = createMemberDto;
-    const userId = Clients.getUserId(client.id);
-    console.log('userId: ', userId);
+    const userID = Clients.getUserId(client.id);
+    console.log('userID: ', userID);
     const member: CreateMemberColumn = {
       roomID,
-      userID: +userId,
+      userID: +userID,
       password,
       role: 'member'
     };
     try {
-       await this._chatService.createMember(member);
+      await this._chatService.createMember(member);
     }
-    catch(e)
-    {
+    catch (e) {
       return { data: { error: e.message } };
     }
     const room = await this._chatService.getRoomById(roomID);
     client.join(room.name);
-    return { data: {name: client.user.username, timestamp: Date.now()} }
+    return { data: { name: client.user.username, timestamp: Date.now() } }
   }
 
   @SubscribeMessage('chat-leave')
   async leave(@ConnectedSocket() client: CustomSocket, @MessageBody() data: any) {
+    /**data:
+    {
+      "roomID": number | string,
+    }
+    */
 
+    const user = client.user;
+    const roomID = data.roomID;
+    try {
+      const room = await this._chatService.getRoomById(roomID);
+      await this._chatService.getMemberByQuery(user.id, roomID);
+
+    } catch (e) {
+
+    }
+
+    client.leave('roomName');
+
+    /** out:
+    {
+      "name": string,
+    }
+
+    error:
+    {
+      "error": string,
+    }
+     */
   }
 
   @SubscribeMessage('chat-room-invite')
@@ -86,19 +112,19 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
      } 
      */
 
-     /** out:
-      
-      {
-        "roomID": number | string,
-        "sender": {
-            "uid": number | string,
-            "name": string,
-            "img": string
-        }
-        "roomInvite": number | string,
-        "timestamp": Date
-      }
-      */
+    /** out:
+     
+     {
+       "roomID": number | string,
+       "sender": {
+           "uid": number | string,
+           "name": string,
+           "img": string
+       }
+       "roomInvite": number | string,
+       "timestamp": Date
+     }
+     */
   }
 
   @SubscribeMessage('chat-duel')
@@ -123,5 +149,5 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
     */
   }
-  
+
 }
