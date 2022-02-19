@@ -7,6 +7,7 @@ import { Clients, CustomSocket } from 'src/adapters/socket.adapter';
 import { NotFoundException, UnauthorizedException, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Server } from 'http';
 import { CreateRoomDto } from './dto/create-room.dto';
+import e from 'express';
 
 @WebSocketGateway()
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -25,12 +26,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   async handleConnection(client: CustomSocket, ...args: any[]) {
     const rooms = await this._chatService.getRoomByUid(client.user.sub);
-    console.log("user id:", client.user.sub);
     for (let room of rooms)
-    {
-      console.log(room.roomID);
       client.join(""+room.roomID)
-    }
     console.log(`client with id #${client.id} connected`)
   }
   
@@ -44,9 +41,19 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
           }
         */
       const { name, isPublic, password } = createRoomBodyDto;
+      if (password.length < 8)
+          return { error: "password too weak" };
       const channelType = this._chatService.getChannelType(isPublic, password);
       const roomEntity: CreateRoomDto = { name, password, channelType, ownerID: client.user.sub }
-      const newRoom = await this._chatService.createRoom(roomEntity);
+      let newRoom: any;
+      try
+      {
+        newRoom = await this._chatService.createRoom(roomEntity);
+      }
+      catch(e)
+      {
+        return { error: e.message };
+      }
       client.join(""+newRoom.roomID);
       return newRoom;
   }
@@ -71,7 +78,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       message: message.content,
       timestamp: message.createdAt,
     };
-    console.log(roomID);
     this.server.to(""+roomID).emit('chat-message', outData);
   }
 
