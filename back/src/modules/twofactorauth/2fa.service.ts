@@ -12,7 +12,7 @@ export class TwoFactorAuthService {
   constructor(
     private readonly _usersService: UsersService,
     private readonly _config: ConfigService
-  ) {}
+  ) { }
 
   async generate2FASecret(user: User): Promise<GeneratedSecretObject> {
     const secret = authenticator.generateSecret();
@@ -21,6 +21,8 @@ export class TwoFactorAuthService {
       "TRANSENDNECE",
       secret
     );
+
+    console.log('Genrated secret: ', secret);
 
     await this._usersService.set2FASecret(secret, user.id);
     return { secret, otpauthUrl };
@@ -31,8 +33,8 @@ export class TwoFactorAuthService {
     return '<img src="' + qrcodeResult + '">';
   }
 
-  is2FactorAuthCodeValid(twoFACode: string, user: User): boolean {
-    return authenticator.verify({ token: twoFACode, secret: user.twoFASecret });
+  is2FactorAuthCodeValid(twoFACode: string, userSecret: string): boolean {
+    return authenticator.verify({ token: twoFACode, secret: userSecret });
   }
 
   // async pipeOrCodeStream(stream: Response, otpauthUrl: string) {
