@@ -32,4 +32,8 @@ export class LoginComponent implements OnInit {
       error: error => console.log(error)
     });
   }
+
+  reset() {
+    this.is2FA = false;
+  }
 }
