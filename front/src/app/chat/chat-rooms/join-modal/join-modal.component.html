@@ -7,8 +7,8 @@
   </div>
   <div class="modal-body flex-column">
     <input type="password" name="password" required placeholder="Password" class="form-control bg-dark text-light" ngModel>
-    <div *ngIf="joinForm.controls['password']?.errors?.['error']" class="text-danger mt-1" role="alert">
-      {{joinForm.controls['password']?.errors?.['error']}}
+    <div *ngIf="joinForm.form.controls['password']?.errors?.['error']" class="text-danger mt-1" role="alert">
+      {{joinForm.form.controls['password']?.errors?.['error']}}
     </div>
 
   </div>
