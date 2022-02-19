@@ -44,10 +44,10 @@ export class JoinModalComponent {
     //     }
     //   });
     // if (this.room.roomID) {
-      this.chatService.joinChannel(this.room.roomID!, joinForm.value.password, (error: {error: string}) => {
+      this.chatService.joinChannel(this.room.roomID!, joinForm.value.password, (error: {data: {error: string}}) => {
         console.log(error);
-        if (error?.error) {
-          joinForm.form.controls['password'].setErrors(error);
+        if (error?.data.error) {
+          joinForm.form.controls['password'].setErrors(error.data);
         } else {
           this.modal.close('Close click');
         }
