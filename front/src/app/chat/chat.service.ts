@@ -40,6 +40,7 @@ export class ChatService {
         password: password
       },  (room: any) => {
         if (!room?.error) {
+          room.messages = [];
           console.log(room);
           // this.loadMessages(room);
           this.chats.set(roomID, room);
