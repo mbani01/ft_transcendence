@@ -41,6 +41,7 @@ export class ChatService {
       },  (room: any) => {
         console.log(room);
         if (!room?.error) {
+          room.messages = [];
           console.log(room);
           // this.loadMessages(room);
           this.chats.set(roomID, room);
