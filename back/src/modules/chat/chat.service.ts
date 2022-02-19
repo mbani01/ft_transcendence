@@ -90,7 +90,6 @@ export class ChatService {
         }})
       res.push(room[0]);
     }
-    console.log(res);
     return res;
   }
 
