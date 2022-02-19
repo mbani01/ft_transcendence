@@ -39,10 +39,12 @@ export class ChatService {
         roomID: roomID,
         password: password
       },  (room: any) => {
+        console.log(room);
         if (!room?.error) {
-          this.chats.set(room.roomID, room);
-          this.loadMessages(room);
-          this.openChat(room.roomID);
+          console.log(room);
+          // this.loadMessages(room);
+          this.chats.set(roomID, room);
+          this.openChat(roomID);
         }
         callback(room);
       }
@@ -174,6 +176,7 @@ export class ChatService {
 
     this.http.get<Chat[]>(`${environment.apiBaseUrl}/chat/fetch-rooms`).subscribe({
       next: chats => {
+        console.log(chats);
         chats.forEach(value => {
           let chat: Chat = {
             roomID: value.roomID,
