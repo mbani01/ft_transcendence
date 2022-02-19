@@ -19,10 +19,11 @@ export class OAuthService {
   constructor(private http: HttpClient, private cookieService: CookieService, private router: Router) {
     console.log('OAuth Service');
     // this.access_token =;
-    this.http.get(`${environment.apiBaseUrl}/auth/isAuthorized`).subscribe({
+    this.http.get<User>(`${environment.apiBaseUrl}/auth/isAuthorized`).subscribe({
       next: value => {
         this._authorized = true;
         console.log("Authorized");
+        this.user$.next(value);
         // this.router.navigate([window.location.pathname]);
 
       },
