@@ -41,8 +41,9 @@ export class ChatService {
       },  (room: any) => {
         console.log(room);
         if (!room?.error) {
+          console.log(room);
+          // this.loadMessages(room);
           this.chats.set(roomID, room);
-          this.loadMessages(room);
           this.openChat(roomID);
         }
         callback(room);
