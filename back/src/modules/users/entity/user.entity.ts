@@ -61,7 +61,7 @@ export class User {
   @OneToMany(() => Relation, relation => relation.requester)
   FriendshipRequests: Relation[];
 
-  @OneToMany(() => RoomEntity, room => room.ownerId)
+  @OneToMany(() => RoomEntity, room => room.ownerID)
   ownedRooms: RoomEntity[];
 
   @OneToMany(() => MessageEntity, room => room.challangedUser)

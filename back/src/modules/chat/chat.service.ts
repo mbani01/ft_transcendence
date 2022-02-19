@@ -32,7 +32,7 @@ export class ChatService {
   }
 
   async createMember(newMember: CreateMemberColumn) {
-    let member = await this.getMemberByQuery(newMember);
+    let member = await this.getMemberByQuery(newMember.userID, newMember.roomID);
     if (member.length !== 0) throw new UnauthorizedException('member already joined');
     const room = await this.getRoomById(newMember.roomID);
     if (!room) throw new NotFoundException(`no such room`);
@@ -42,9 +42,13 @@ export class ChatService {
     }
     delete newMember.password;
     const createdMember = this._membersRepo.create(newMember);
-    createdMember.roomId = newMember.roomID;
-    createdMember.userId = newMember.userID;
+    createdMember.roomID = newMember.roomID;
+    createdMember.userID = newMember.userID;
     return await this._membersRepo.save(createdMember);
+  }
+
+  async removeMemberFromRoom(roomID: number) {
+
   }
 
   async findAllRooms() {
@@ -55,30 +59,26 @@ export class ChatService {
     return await this._roomsRepo.findOne({ roomID })
   }
 
-  async getMemberByQuery(member: CreateMemberColumn) {
-    return await this._membersRepo.find({ where: { userId: member.userID, roomId: member.roomID } });
+  async getMemberByQuery(userID: number, roomID: number) {
+    return await this._membersRepo.find({ where: { userID, roomID } });
   }
 
   async getMessages(roomId: number) {
-    return await this._messagesRepo.find({ roomId, })
+    return await this._messagesRepo.find({ roomID: roomId, })
   }
 
-  async findAllMembers(roomId: number, userId: number) {
+  async findAllMembers(roomId: number, userID: number) {
     return await this._membersRepo.find({
       where: {
-        roomId, userId
+        roomID: roomId, userID: userID
       }
     });
-  }
-
-  async removeMemberFromRoom(member: any, room: any) {
-
   }
 
   async fetchCurrentUserRooms(user: any) {
     return await this._roomsRepo.find({
       where: {
-        ownerId: user.id,
+        ownerID: user.id,
       }
     })
   }
