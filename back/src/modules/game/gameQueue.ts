@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 10:52:22 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/16 11:36:22 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/19 10:49:31 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,22 @@ export class GameQueueService{
 	size: number;
 	data: Array<any>;
 	isPrivate: boolean;
+	id: string;
+	Clients :Array<string>;
 	
-	constructor(isPrivate?: boolean)
+	constructor(isPrivate?: boolean, QueueId?: string, expectedClientId?: Array<string>)
 	{
 		this.size = 0;
 		this.data = [];
 		this.isPrivate = isPrivate || false;
+		this.id = QueueId || null;
+		this.Clients = expectedClientId || [];
 	}
 
 	addUser(user)
 	{
+		if (this.isPrivate && !this.Clients.find(element=> element === user.user.id)) 
+			return ; // if an unexpected Player cauth ;)
 		this.data.push(user);
 		this.size += 1;
 	}
@@ -62,5 +68,10 @@ export class GameQueueService{
 			console.log("Removed from Queue");}
 		this.size = this.data.length;
 		return removed;
+	}
+
+	getId()
+	{
+		return this.id || null;
 	}
 }
