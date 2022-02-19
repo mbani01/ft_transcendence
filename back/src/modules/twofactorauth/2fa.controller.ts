@@ -31,7 +31,7 @@ export class TwofactorauthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('/register')
+  @Get('/register')
   async register(@Req() req, @Res() res: Response) {
     const { username } = req.user;
     console.log(req.user);
