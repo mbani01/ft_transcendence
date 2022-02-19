@@ -5,9 +5,10 @@
 export const environment = {
   production: false,
   host: 'localhost',
-  apiPort: 3000,
+  apiPort: 4200,
   socketPort: 3000,
-  get apiBaseUrl() { return `http://${this.host}:${this.apiPort}/api/v1`},
+  // get apiBaseUrl() { return `http://${this.host}:${this.apiPort}/api/v1`},
+  get apiBaseUrl() { return '/api/v1'},
   get socketUri() {return `ws://${this.host}:${this.socketPort}`},
   get chatSocketUri() {return `ws://${this.host}:${this.socketPort}/chat`},
   get gameSocketUri() {return `ws://${this.host}:${this.socketPort}/game`}
