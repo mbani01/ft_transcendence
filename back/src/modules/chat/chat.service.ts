@@ -25,7 +25,8 @@ export class ChatService {
     if (room) throw new UnauthorizedException('room already exist!');
 
     const newRoom = this._roomsRepo.create(createRoomDto);
-    return await this._roomsRepo.save(newRoom);
+    await this._roomsRepo.save(newRoom);
+    return newRoom;
   }
 
   async createMessage(message: CreateMessageColumnDto) {
