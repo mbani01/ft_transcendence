@@ -46,7 +46,7 @@ export class UsersService {
       id: userID,
       avatar: newAvatar
     });
-    await this._usersRepo.save(user);
+    return await this._usersRepo.save(user);
   }
 
   async remove(userId: number) {
