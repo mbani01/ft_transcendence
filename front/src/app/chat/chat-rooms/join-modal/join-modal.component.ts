@@ -49,7 +49,8 @@ export class JoinModalComponent {
         if (error?.error) {
           joinForm.form.controls['password'].setErrors(error);
         } else {
-          this.modal.close('Close click');
+          console.log("join success");
+          this.modal.close();
         }
       })
     // }
