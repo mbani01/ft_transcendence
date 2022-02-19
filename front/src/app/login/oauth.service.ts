@@ -11,7 +11,7 @@ import {BehaviorSubject, catchError, throwError} from "rxjs";
 })
 export class OAuthService {
 
-  private access_token: boolean = false;
+  private _authorized?: boolean;
   private _is2FA = false;
   // @ts-ignore
   public user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
@@ -21,15 +21,18 @@ export class OAuthService {
     // this.access_token =;
     this.http.get(`${environment.apiBaseUrl}/auth/isAuthorized`).subscribe({
       next: value => {
-        this.access_token = true;
+        this._authorized = true;
         console.log("Authorized");
-        this.router.navigate(['']);
+        // this.router.navigate([window.location.pathname]);
 
       },
       error: err => {
-        this.access_token = false;
+        this._authorized = false;
         console.log("Not Authorized");
-        this.router.navigate(['login']);
+        console.log(router.url);
+        if (!router.url.startsWith('/login')) {
+          this.router.navigate(['login']);
+        }
       }
     })
     setTimeout(() => {
@@ -46,7 +49,7 @@ export class OAuthService {
     if (_2fa != undefined) {
       params = params.set("twoFactorAuth", _2fa);
     }
-    console.log(params);
+    console.log('GENERATE');
     let obs = this.http.post(environment.apiBaseUrl + '/auth/access_token', null, {
       params: params
     });
@@ -55,27 +58,15 @@ export class OAuthService {
         console.log('TOKEN');
         // console.log(this.cookieService'access_token'));
         this.router.navigate(['']);
-        this.access_token = true;
+        this._authorized = true;
         // this.cookieService.set('access_token', this.access_token, undefined, '/');
         // this.user$.next(token.user);
-      },
-      error: (error => {
-        if (error.error['2FA']) {
-          this._is2FA = true;
-        }
-        console.log(error)
-      }),
-      // complete: () => this.router.navigate([''])
-    });
+      }});
     return obs;
   }
 
   isAuthenticated() {
-    return this.access_token;
-  }
-
-  get token() {
-    return this.access_token;
+    return this._authorized;
   }
 
   get user() {
@@ -95,7 +86,7 @@ export class OAuthService {
 
   logout() {
     this.cookieService.delete('access_token', '/');
-    this.access_token = false;
+    this._authorized = false;
   }
 
 
