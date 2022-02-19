@@ -35,7 +35,7 @@ export class AccountTabComponent {
 
 
   updateNickname(nicknameForm: NgForm) {
-    this.http.post(`${environment.apiBaseUrl}/update_nickname`, nicknameForm.value).subscribe({
+    this.http.post(`${environment.apiBaseUrl}/users/update_nickname`, nicknameForm.value).subscribe({
       next: value => {
         this.editNickname = false;
       },
@@ -111,7 +111,7 @@ export class AccountTabComponent {
       console.log(file);
       let formData = new FormData();
       formData.append('uploadFile', file, file.name);
-      this.http.post(`${environment.apiBaseUrl}/upload_avatar`, formData, {reportProgress: true, observe: 'events'})
+      this.http.post(`${environment.apiBaseUrl}/users/upload_avatar`, formData, {reportProgress: true, observe: 'events'})
         .subscribe({
           next: (event: any) => {
             if (event.type == HttpEventType.UploadProgress) {
