@@ -105,8 +105,12 @@ export class OAuthService {
   }
 
   logout() {
-    this.cookieService.delete('access_token', '/');
-    this._authorized = false;
+    // this.cookieService.delete('access_token', '/');
+    this.http.delete(`${environment.apiBaseUrl}/auth/logout`).subscribe({
+      next: value => {
+        this._authorized = false;
+      }
+    });
   }
 
 
