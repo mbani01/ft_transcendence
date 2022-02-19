@@ -38,7 +38,7 @@ export class UsersService {
       id: userID,
       username: newUserName
     });
-    await this._usersRepo.save(user);
+    return await this._usersRepo.save(user);
   }
 
   async updateAvatar(userID: number, newAvatar: string) {
