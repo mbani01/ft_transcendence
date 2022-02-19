@@ -4,7 +4,7 @@ import {environment} from "../../environments/environment";
 import {CookieService} from "ngx-cookie-service";
 import {Router} from "@angular/router";
 import {User} from "../shared/user";
-import {BehaviorSubject, catchError, throwError} from "rxjs";
+import {BehaviorSubject, catchError, Observer, throwError} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -44,7 +44,7 @@ export class OAuthService {
     return this.http.get<{page: string}>(environment.apiBaseUrl + '/auth/oauth_page');
   }
 
-  generateAccessToken(code: string, _2fa?: string) {
+  generateAccessToken(code: string, _2fa?: string, observer?: Partial<Observer<Object>> | undefined) {
     let params = new HttpParams().set("code", code);
     if (_2fa != undefined) {
       params = params.set("twoFactorAuth", _2fa);
@@ -54,14 +54,22 @@ export class OAuthService {
       params: params
     });
     obs.subscribe({
-      next: () => {
+      next: (value) => {
         console.log('TOKEN');
         // console.log(this.cookieService'access_token'));
         this.router.navigate(['']);
         this._authorized = true;
         // this.cookieService.set('access_token', this.access_token, undefined, '/');
         // this.user$.next(token.user);
-      }});
+        if (observer?.next) {
+          observer?.next(value);
+        }
+      },
+    error: (err) => {
+        if (observer?.error) {
+          observer?.error(err);
+        }
+    }});
     return obs;
   }
 
