@@ -38,7 +38,7 @@ export class ChatService {
     this.socket.emit('join', {
         roomID: roomID,
         password: password
-      }, (room: any) => {
+      },  (room: any) => {
         if (!room?.error) {
           this.chats.set(room.roomID, room);
           this.loadMessages(room);
