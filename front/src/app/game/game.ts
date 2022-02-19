@@ -5,6 +5,7 @@ import Phaser from 'phaser';
 
 import {MainSocket} from "../socket/MainSocket";
 
+// import * from '@azerion/phaser-web-workers/build/phaser-web-workers';
 let socket: MainSocket;
 let GameId : number;
 let isHost: number;
@@ -40,7 +41,7 @@ export function socketListening (s: MainSocket) {
         fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif'
       });
     } else {
-      console.log("win");
+      console.log("win", obj);
       ball.setVisible(false);
       game.scene.pause(scene);
       scene.add.text(game.canvas.width / 4, game.canvas.height / 3, 'game over', {
@@ -52,6 +53,7 @@ export function socketListening (s: MainSocket) {
 
   socket.on("gameStarted", (obj: any) => {
     game = new Phaser.Game(config);
+    // game.plugins.install("worker", PhaserWebWorkers.Plugin);
 
     GameId = obj.GameId;
     isHost = obj.isHost;
@@ -63,12 +65,14 @@ export function socketListening (s: MainSocket) {
 
   socket.on('sync', (obj: any) => {
     // console.log(obj);
-    if (obj.hasOwnProperty('down')) {
-      // console.log(P)
-      other_player.body.setVelocityY(+PLAYER_SPEED);
-    } else if (obj.hasOwnProperty('up')) {
-      other_player.body.setVelocityY(-PLAYER_SPEED);
-    }
+    // if (obj.hasOwnProperty('down')) {
+    //   // console.log(P)
+    //   other_player.body.setVelocityY(+PLAYER_SPEED);
+    // } else if (obj.hasOwnProperty('up')) {
+    //   other_player.body.setVelocityY(-PLAYER_SPEED);
+    // }
+
+    other_player.setPosition(obj.player.x, obj.player.y);
   });
 
   socket.on('syncBall', (obj: any) => {
@@ -105,8 +109,11 @@ export function socketListening (s: MainSocket) {
 }
 /*            hello world!          */
 
-var config = {
+var config : Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
+    // init: function (this : Phaser.Scene){
+    //     this.game.plugins.start(PhaserWebWorkers.Plugin);
+    // },
     scale: {
         mode: 3,
         parent: 'phaser',
@@ -124,8 +131,8 @@ var config = {
     scene: {
         preload: preload,
         create: create,
-        update: update
-    }
+        update: update,
+    },
 };
 
 let game : Phaser.Game;
@@ -145,17 +152,16 @@ let clock : Phaser.Time.Clock;
 let player1_collider : Phaser.Physics.Arcade.Collider ;
 let player2_collider : Phaser.Physics.Arcade.Collider ;
 
-let PLAYER_SPEED: number = 1000;
+let PLAYER_SPEED: number = 20;
 let BALL_SPEED: number = 200;
 let BALL_DIAMETER : number = 50;
-let PLAYER_WIDTH : number = 3;
+let PLAYER_WIDTH : number = 6;
 let PLAYER_HEIGHT : number = 200;
-
-
 
 
 function preload (this: Phaser.Scene) : void
 {
+    scene = this;
 
     this.load.image("bar", "assets/bar.png");
     this.load.image("powerUp", "assets/pokeball.png");
@@ -165,8 +171,6 @@ function preload (this: Phaser.Scene) : void
 
 let keyA : Phaser.Input.Keyboard.Key;
 let keyS : Phaser.Input.Keyboard.Key;
-
-
 
 function start_game(this: Phaser.Scene) : void
 {
@@ -188,7 +192,6 @@ function onHidden() : void
     console.log("hidden");
 }
 
-
 function onFocus() : void
 {
     socket.emit('focusLose', { GameId: GameId, isHost: isHost, focus: true });
@@ -201,15 +204,14 @@ function create (this: Phaser.Scene) : void
     // game.events.addListener('blur', onHidden);
     // game.events.addListener('focus', onFocus);
     // game.events.off('hidden', game.events., game);
-    scene = this;
     clock = this.time;
     let line : Phaser.GameObjects.Line = this.add.line(this.sys.canvas.width / 2, this.sys.canvas.height / 2, 0, 0, 0, this.sys.canvas.height, 0xffffff).setLineWidth(5);
     let mid_circle : Phaser.GameObjects.Arc = this.add.circle(this.sys.canvas.width / 2, this.sys.canvas.height / 2, 100, 0).setStrokeStyle(10, 0xffffff);
     let left_circle : Phaser.GameObjects.Arc = this.add.circle(-700 / 2, this.sys.canvas.height / 2, 700, 0).setStrokeStyle(10, 0xffffff);
     let right_circle : Phaser.GameObjects.Arc = this.add.circle(this.sys.canvas.width + 700 / 2, this.sys.canvas.height / 2, 700, 0).setStrokeStyle(10, 0xffffff);
-    player1 = this.physics.add.sprite(this.sys.canvas.width * 1 / 100, this.sys.canvas.height / 2, "bar");
+    player1 = this.physics.add.sprite(this.sys.canvas.width * 3 / 100, this.sys.canvas.height / 2, "bar");
     player1.setDisplaySize(PLAYER_WIDTH, PLAYER_HEIGHT);
-    player2 = this.physics.add.sprite(this.sys.canvas.width * 99 / 100, this.sys.canvas.height / 2, "bar");
+    player2 = this.physics.add.sprite(this.sys.canvas.width * 97 / 100, this.sys.canvas.height / 2, "bar");
     player2.setDisplaySize(PLAYER_WIDTH, PLAYER_HEIGHT);
     if (!isDefaultGame){
         powerUpBall = this.physics.add.sprite(this.sys.canvas.width / 2, this.sys.canvas.height / 2, "powerUp");
@@ -246,7 +248,7 @@ function create (this: Phaser.Scene) : void
             ball.setAcceleration(0);
             if (right)
             {
-                scene.sound.play("bip");
+                // scene.sound.play("bip");
                 player1_score_obj.setText('' + ++player1_score);
                 socket.emit('syncRound', { GameId: GameId, player1_score: player1_score, player2_score: player2_score});
                 ball.body.velocity.setTo(0, 0);
@@ -255,7 +257,7 @@ function create (this: Phaser.Scene) : void
             }
             else if (left)
             {
-                scene.sound.play("bip");
+                // scene.sound.play("bip");
                 player2_score_obj.setText('' + ++player2_score);
                 socket.emit('syncRound', { GameId: GameId, player1_score: player1_score, player2_score: player2_score});
                 ball.body.velocity.setTo(0, 0);
@@ -264,7 +266,7 @@ function create (this: Phaser.Scene) : void
             }
             else if (down || up)
             {
-                scene.sound.play("bip");
+                // scene.sound.play("bip");
             }
         }
     }, ball);
@@ -291,21 +293,6 @@ function create (this: Phaser.Scene) : void
 
     if (!isDefaultGame)
         this.time.delayedCall(5000, showPowerUp, [], this);
-    scene.time.addEvent({
-        delay: 500,                // ms
-        callback: function (){
-            let x = ball.body.velocity.x;
-            let y = ball.body.velocity.y;
-            if (x != 0 && y != 0)
-            {
-                // ball.setAcceleration(100);
-                // ball.body.setVelocity(x + 1000, y + 1000);
-            }
-        },
-        //args: [],
-        loop: true
-    });
-
 }
 
 function HandleHit(this: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody)
@@ -356,10 +343,8 @@ function showPowerUp(this: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody)
 
 function update(this: Phaser.Scene) : void
 {
-    let cursors : Phaser.Types.Input.Keyboard.CursorKeys = this.input.keyboard.createCursorKeys();
+    let cursors : Phaser.Types.Input.Keyboard.CursorKeys = scene.input.keyboard.createCursorKeys();
 
-    // first player movement
-    // console.log(ball.x);
     if (isHost)
         socket.emit('syncBall', {"GameId":GameId, isVisible : false, isHost: isHost, ball: { x: ball.x, y: ball.y }});
     if (isHost && !isDefaultGame){
@@ -372,14 +357,14 @@ function update(this: Phaser.Scene) : void
     }
     if (cursors.down.isDown && !cursors.up.isDown )
     {
-        local_player.body.setVelocityY(+PLAYER_SPEED);
-        socket.emit('sync', {"GameId":GameId, "down": "1", isHost: isHost});
-
+        local_player.setPosition(local_player.x, local_player.y + PLAYER_SPEED);
+        socket.emit('sync', {"GameId":GameId, player: {x: local_player.x, y: local_player.y}, isHost: isHost});
+        
     }
     else if (cursors.up.isDown && !cursors.down.isDown)
     {
-        local_player.body.setVelocityY(-PLAYER_SPEED);
-        socket.emit('sync', {"GameId":GameId, "up": "1", isHost: isHost});
+        local_player.setPosition(local_player.x, local_player.y - PLAYER_SPEED);
+        socket.emit('sync', {"GameId":GameId, player: {x: local_player.x, y: local_player.y}, isHost: isHost});
     }
 
 }
