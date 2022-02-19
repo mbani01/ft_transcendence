@@ -43,10 +43,11 @@ export class TwoFactorAuthComponent {
     this.loading = true;
     this.oauthService.generateAccessToken(this.code, twoFactorAuthCode, {
       next: value => {
+        this.loading = false;
         this.oauthService.enable2FA();
       },
       error: (err: HttpErrorResponse) => {
-        twoFactorAuth.controls['twoFactorAuth'].setErrors(err.error);
+        twoFactorAuth.controls['twoFactorAuth'].setErrors({error: err.error.message});
         this.loading = false;
       }
     });

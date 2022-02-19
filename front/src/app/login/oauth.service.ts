@@ -66,17 +66,17 @@ export class OAuthService {
       next: (value) => {
         console.log('TOKEN');
         // console.log(this.cookieService'access_token'));
-        if (value.success) {
-          this.router.navigate(['']);
-          this._authorized = true;
-          if (value.is2FA) {
-            this.enable2FA();
-          }
-        } else if (value.is2FA) {
-          this._authorized = false;
+        // if (value.success) {
+        this.router.navigate(['']);
+        this._authorized = true;
+        if (value.is2FA) {
+          this.enable2FA();
         }
+        // } else if (value.is2FA) {
+        //   this._authorized = false;
+        // }
         // this.cookieService.set('access_token', this.access_token, undefined, '/');
-        // this.user$.next(token.user);
+        this.user$.next(value);
         if (observer?.next) {
           observer?.next(value);
         }
@@ -114,7 +114,9 @@ export class OAuthService {
     // this.cookieService.delete('access_token', '/');
     this.http.delete(`${environment.apiBaseUrl}/auth/logout`).subscribe({
       next: value => {
+        this.router.navigate(['login']);
         this._authorized = false;
+
       }
     });
   }
