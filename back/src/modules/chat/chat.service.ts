@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { UsersService } from '../users/users.service';
 import { ChannelType } from './common/chat.types';
 import { CreateMemberColumn } from './dto/create-member.dto';
 import { CreateMessageColumnDto } from './dto/create-message.dto';
@@ -14,7 +15,8 @@ export class ChatService {
 
   constructor(@InjectRepository(RoomEntity) private readonly _roomsRepo: Repository<RoomEntity>,
     @InjectRepository(MessageEntity) private readonly _messagesRepo: Repository<MessageEntity>,
-    @InjectRepository(MembersEntity) private readonly _membersRepo: Repository<MembersEntity>,) { }
+    @InjectRepository(MembersEntity) private readonly _membersRepo: Repository<MembersEntity>,
+    private readonly _userService: UsersService) { }
 
 
   async createRoom(createRoomDto: CreateRoomDto) {
@@ -68,15 +70,20 @@ export class ChatService {
   }
 
   async findAllMembers(roomId: number, userID: number) {
-    return await this._membersRepo.find({
+    const res = []; // res to store users info
+    const members = await this._membersRepo.find({
       where: {
-        roomID: roomId, userID: userID
+        roomID: roomId
       }
     });
+    for (let member of members)
+      res.push(await this._userService.findById(member.userID));
+    console.log(res);
+    return res;
   }
 
   async fetchCurrentUserRooms(user: any) {
-    const res = [];
+    const res = []; // res to store rooms info
     const members = await this._membersRepo.find({
       where: {
         userID: user.id
@@ -94,7 +101,6 @@ export class ChatService {
   }
 
   getChannelType(isPublic: boolean, password: string): ChannelType {
-    console.log(password)
     if (isPublic && password)
       return 'protected';
     else if (isPublic)
