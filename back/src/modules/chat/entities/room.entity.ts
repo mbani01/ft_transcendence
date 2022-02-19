@@ -11,7 +11,7 @@ export class RoomEntity {
     @Column({unique: true, nullable: false})
     name: string;
 
-    @Column({ default: false, nullable: false})
+    @Column({ default: true, nullable: false})
     isChannel: boolean;
 
     @Column({nullable: false})
