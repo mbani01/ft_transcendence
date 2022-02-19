@@ -33,14 +33,20 @@ export class UsersService {
     });
   }
 
-  async update(userId: number, updateUserDto: any) {
+  async updateUserName(userID: number, newUserName: string) {
     const user = await this._usersRepo.preload({
-      id: userId,
-      ...updateUserDto,
+      id: userID,
+      username: newUserName
     });
-    if (!user)
-      throw new NotFoundException(`user with id #${userId} not found!`);
-    return this._usersRepo.save(user);
+    await this._usersRepo.save(user);
+  }
+
+  async updateAvatar(userID: number, newAvatar: string) {
+    const user = await this._usersRepo.preload({
+      id: userID,
+      avatar: newAvatar
+    });
+    await this._usersRepo.save(user);
   }
 
   async remove(userId: number) {

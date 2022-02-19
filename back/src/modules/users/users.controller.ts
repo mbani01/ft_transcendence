@@ -1,8 +1,9 @@
-import { BadRequestException, Controller, Get, Param, Query, Req, UseGuards } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, Param, Post, Query, Req, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { PaginationQueryDto } from "src/common/dto/pagination-query.dto";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { OutUserInfoDto } from "./dto/out-user-info.dto";
 import { OutUserDto } from "./dto/out-user.dto";
+import { UpdateUserNameDto } from "./dto/update-body.dto";
 import { UsersService } from "./users.service";
 
 @Controller("users")
@@ -25,12 +26,20 @@ export class UsersController {
     return { uid: user.id, name: user.username, img: user.avatar };
   }
 
+  @Post('/update_nickname')
   @UseGuards(JwtAuthGuard)
-  @Get('me')
-  getCurrentProfile(@Req() req): OutUserDto {
-    const user = req.user;
-    console.log('user/me === ', user);
-    return { uid: user.id, name: user.username, img: user.avatar };
+  updateUserName(@Body('name') newUserName: string, @Req() req) {
+    try {
+      this._usersService.updateUserName(req.user.id, newUserName);
+    } catch (e) {
+      throw new UnauthorizedException('nickname already taken');
+    }
+  }
+
+  @Post('/update_avatar')
+  @UseGuards(JwtAuthGuard)
+  updateAvatar(@Body('img') newUserName: string, @Req() req) {
+    this._usersService.updateAvatar(req.user.id, newUserName);
   }
 
   /*
