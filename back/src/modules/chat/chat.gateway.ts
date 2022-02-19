@@ -75,4 +75,53 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   async leave(@ConnectedSocket() client: CustomSocket, @MessageBody() data: any) {
 
   }
+
+  @SubscribeMessage('chat-room-invite')
+  async roomInvite(@ConnectedSocket() client: CustomSocket, @MessageBody() data: any) {
+    /** data:
+     {
+         "uid": number | string,
+         "roomID": string,
+         "timestamp": Date
+     } 
+     */
+
+     /** out:
+      
+      {
+        "roomID": number | string,
+        "sender": {
+            "uid": number | string,
+            "name": string,
+            "img": string
+        }
+        "roomInvite": number | string,
+        "timestamp": Date
+      }
+      */
+  }
+
+  @SubscribeMessage('chat-duel')
+  async duel(@ConnectedSocket() client: CustomSocket, @MessageBody() data: any) {
+    /**
+    {
+      "uid": number | string,
+      "timestamp": Date
+    }
+     */
+
+    /** out:
+    {
+      "roomID": number | string,
+      "sender": {
+          "uid": number | string,
+          "name": string,
+          "img": string
+      }
+      "duel": boolean,
+      "timestamp": Date
+    }
+    */
+  }
+  
 }
