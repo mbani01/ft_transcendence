@@ -28,18 +28,20 @@ export class UsersController {
 
   @Post('/update_nickname')
   @UseGuards(JwtAuthGuard)
-  updateUserName(@Body('name') newUserName: string, @Req() req) {
+  async updateUserName(@Body('nickname') newUserName: string, @Req() req) {
     try {
-      this._usersService.updateUserName(req.user.id, newUserName);
+      const res = await this._usersService.updateUserName(req.user.id, newUserName);
+      console.log("updated user: ", res);
     } catch (e) {
       throw new UnauthorizedException('nickname already taken');
     }
   }
 
-  @Post('/update_avatar')
+  @Post('/upload_avatar')
   @UseGuards(JwtAuthGuard)
-  updateAvatar(@Body('img') newUserName: string, @Req() req) {
-    this._usersService.updateAvatar(req.user.id, newUserName);
+  async updateAvatar(@Body() newAvatar: any, @Req() req) {
+    console.log("new avatar: ", newAvatar);
+    await this._usersService.updateAvatar(req.user.id, newAvatar);
   }
 
   /*
