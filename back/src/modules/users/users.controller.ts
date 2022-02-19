@@ -19,10 +19,10 @@ export class UsersController {
   async getOne(@Param("id") userId: number | string, @Req() req): Promise<OutUserDto> {
     if (typeof userId == "number") {
       const user = await this._usersService.findById(userId);
-      return { userId: user.id, username: user.username, avatar: user.avatar };
+      return { uid: user.id, name: user.username, img: user.avatar };
     }
     const user = await this._usersService.findByUserName(req.user.username);
-    return { userId: user.id, username: user.username, avatar: user.avatar };
+    return { uid: user.id, name: user.username, img: user.avatar };
   }
 
   @UseGuards(JwtAuthGuard)
@@ -30,7 +30,7 @@ export class UsersController {
   getCurrentProfile(@Req() req): OutUserDto {
     const user = req.user;
     console.log('user/me === ', user);
-    return { userId: user.id, username: user.username, avatar: user.avatar };
+    return { uid: user.id, name: user.username, img: user.avatar };
   }
 
   /*
