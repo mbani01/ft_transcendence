@@ -63,11 +63,14 @@ export class AccountTabComponent {
         if (value) {
           this.oauthService.enable2FA();
           this.closeQRCode();
-        } else {
-          qrCodeForm.controls['code'].setErrors({error: "Wrong Code"});
-          console.log(qrCodeForm);
-          this.codeToolTip.open();
         }
+      },
+      error: err => {
+        qrCodeForm.controls['code'].setErrors({error: err.error.message});
+        this.click2FA = false;
+        console.log(qrCodeForm);
+        this.codeToolTip.open();
+
       }
     });
   }
