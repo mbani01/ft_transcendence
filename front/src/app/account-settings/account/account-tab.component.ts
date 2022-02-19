@@ -35,10 +35,15 @@ export class AccountTabComponent {
 
 
   updateNickname(nicknameForm: NgForm) {
-    // this.http.post(`${environment.apiBaseUrl}/users/${this.}`)
-    nicknameForm.controls['nickname'].setErrors({error: 'nickname already taken'})
-    this.tooltip.open();
-    console.log(nicknameForm);
+    this.http.post(`${environment.apiBaseUrl}/users/${this.user.value.uid}/update_nickname`, nicknameForm.value).subscribe({
+      next: value => {
+        this.editNickname = false;
+      },
+      error: err => {
+        nicknameForm.controls['nickname'].setErrors({error: 'nickname already taken'})
+        this.tooltip.open();
+      }
+    });
   }
 
   showQRCode() {
@@ -106,7 +111,7 @@ export class AccountTabComponent {
       console.log(file);
       let formData = new FormData();
       formData.append('uploadFile', file, file.name);
-      this.http.post(`${environment.apiBaseUrl}/upload_avatar`, formData, {reportProgress: true, observe: 'events'})
+      this.http.post(`${environment.apiBaseUrl}/users/${this.user.value.uid}/upload_avatar`, formData, {reportProgress: true, observe: 'events'})
         .subscribe({
           next: (event: any) => {
             if (event.type == HttpEventType.UploadProgress) {
