@@ -17,7 +17,7 @@ export class CreateRoomBodyDto {
 }
 
 export class CreateRoomDto {
-    ownerId: number;
+    ownerID: number;
     name: string;
     channelType: ChannelType;
     password: string;

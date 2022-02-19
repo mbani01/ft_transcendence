@@ -15,7 +15,7 @@ export class RoomEntity {
     isChannel: boolean;
 
     @Column({nullable: false})
-    ownerId: number;
+    ownerID: number;
 
     @Column({nullable: false})
     channelType: ChannelType;

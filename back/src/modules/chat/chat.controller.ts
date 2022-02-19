@@ -54,7 +54,7 @@ export class ChatController {
          */
         const { name, isPublic, password } = createRoomBodyDto;
         const channelType = this._chaTService.getChannelType(isPublic, password);
-        const roomEntity: CreateRoomDto = { name, password, channelType, ownerId: req.user.id }
+        const roomEntity: CreateRoomDto = { name, password, channelType, ownerID: req.user.id }
         return this._chaTService.createRoom(roomEntity);
         /** Response
          * if (err) {

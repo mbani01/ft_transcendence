@@ -15,9 +15,9 @@ export class CreateMessageDto {
 }
 
 export class CreateMessageColumnDto {
-    userId: number;
+    userID: number;
 
-    roomId: number;
+    roomID: number;
 
     content: string;
 
