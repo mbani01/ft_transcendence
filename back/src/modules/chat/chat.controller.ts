@@ -48,28 +48,6 @@ export class ChatController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Post('create-channel')
-    createChannel(@Body() createRoomBodyDto: CreateRoomBodyDto, @Req() req) {
-        /** Request
-         *  {
-              "name": string, // channel's name
-              "isPublic": boolean,
-              "password"?: string
-            }
-         */
-        const { name, isPublic, password } = createRoomBodyDto;
-        const channelType = this._chaTService.getChannelType(isPublic, password);
-        const roomEntity: CreateRoomDto = { name, password, channelType, ownerID: req.user.id }
-        return this._chaTService.createRoom(roomEntity);
-        /** Response
-         * if (err) {
-                "error": string
-            }
-         */
-        // return `this option will create a ${channelType} channel named ${name}`;
-    }
-
-    @UseGuards(JwtAuthGuard)
     @Get('channels')
     async getAllRooms(@Query() pgQuery: GetAllRoomsQueryDto, @Req() req) {
         const { like, page } = pgQuery;

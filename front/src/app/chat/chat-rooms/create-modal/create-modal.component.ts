@@ -36,6 +36,7 @@ export class CreateModalComponent {
       delete createRoom.value.password;
     }
     this.socket.emit('create-channel', createRoom.value, (value: any) => {
+      console.log(value);
       if (!value.error) {
         console.log('next:' + value);
         this.createModal.emit(value);
