@@ -4,6 +4,7 @@ import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {ActivatedRoute, Router} from "@angular/router";
 import {OAuthService} from "../oauth.service";
+import {Observer} from "rxjs";
 
 @Component({
   selector: 'two-factor-auth',
@@ -21,7 +22,8 @@ export class TwoFactorAuthComponent {
   constructor(private http: HttpClient, private route: ActivatedRoute, public oauthService: OAuthService, private router: Router) {
     this.code = route.snapshot.queryParams['code'];
     console.log("2FA");
-    this.oauthService.generateAccessToken(this.code).subscribe({
+
+    this.oauthService.generateAccessToken(this.code, undefined,{
       error: err => {
         if (err.error['2FA']) {
           this.is2FA = true;

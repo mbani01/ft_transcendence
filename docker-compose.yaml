@@ -1,14 +1,14 @@
 version: '3'
-
+#
 services:
-  front-service:
-    build:
-      context: .
-      dockerfile: ./devOps/front.Dockerfile
-    volumes:
-      - ./front:/front
-    ports:
-      - 4200:4200
+#  front-service:
+#    build:
+#      context: .
+#      dockerfile: ./devOps/front.Dockerfile
+#    volumes:
+#      - ./front:/front
+#    ports:
+#      - 4200:4200
   db:
     image: postgres
     restart: always
@@ -17,13 +17,13 @@ services:
     ports:
       - 5432:5432
     
-  back-service:
-    build:
-      context: .
-      dockerfile: ./devOps/back.Dockerfile
-    volumes:
-      - ./back:/back
-    ports:
-      - 3000:3000
-    depends_on:
-      - db
+#  back-service:
+#    build:
+#      context: .
+#      dockerfile: ./devOps/back.Dockerfile
+#    volumes:
+#      - ./back:/back
+#    ports:
+#      - 3000:3000
+#    depends_on:
+#      - db
