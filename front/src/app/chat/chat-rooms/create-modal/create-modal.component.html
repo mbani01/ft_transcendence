@@ -10,9 +10,9 @@
       <label class="col-4 my-auto">Room Name: </label>
       <div class="col p-0">
         <input type="text" name="name" required placeholder="Name" class="form-control bg-dark text-light" ngModel>
-        <div *ngIf="createForm.controls['name']?.errors?.['error']" class="text-danger ml-1 mt-1" role="alert">
-          {{createForm.controls['name']?.errors?.['error']}}
-        </div>
+<!--        <div *ngIf="createForm.controls['name']?.errors?.['error']" class="text-danger ml-1 mt-1" role="alert">-->
+<!--          {{createForm.controls['name']?.errors?.['error']}}-->
+<!--        </div>-->
       </div>
     </div>
     <div class="row">
@@ -27,6 +27,9 @@
           <label class="custom-control-label" for="customRadio2">Public</label>
         </div>
         <input *ngIf="isPublic" type="password" name="password" placeholder="Password" class="form-control bg-dark text-light col mt-2" ngModel>
+        <div *ngIf="createForm.errors?.['error']" class="text-danger ml-1 mt-1" role="alert">
+          {{createForm.errors?.['error']}}
+        </div>
 
       </div>
     </div>
