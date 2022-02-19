@@ -55,9 +55,7 @@ export class AccountTabComponent {
 
   verifyCode(qrCodeForm: NgForm) {
     this.click2FA = true;
-    this.http.post<boolean>(`${environment.apiBaseUrl}/twofa/turnon`, {
-      digits: qrCodeForm.value
-    }).subscribe({
+    this.http.post<boolean>(`${environment.apiBaseUrl}/twofa/turnon`, qrCodeForm.value).subscribe({
       next: value => {
         this.click2FA = false;
         if (value) {
