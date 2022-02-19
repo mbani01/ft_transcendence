@@ -174,6 +174,7 @@ export class ChatService {
 
     this.http.get<Chat[]>(`${environment.apiBaseUrl}/chat/fetch-rooms`).subscribe({
       next: chats => {
+        console.log(chats);
         chats.forEach(value => {
           let chat: Chat = {
             roomID: value.roomID,
