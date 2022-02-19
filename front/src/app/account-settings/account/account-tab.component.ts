@@ -42,9 +42,9 @@ export class AccountTabComponent {
   }
 
   showQRCode() {
-    this.http.get<string>(`${environment.apiBaseUrl}/twofa/register`).subscribe({
+    this.http.get<{qrcode: string}>(`${environment.apiBaseUrl}/twofa/register`).subscribe({
       next: value => {
-        this.qrCode = value;
+        this.qrCode = value.qrcode;
       }
     });
   }
@@ -55,8 +55,8 @@ export class AccountTabComponent {
 
   verifyCode(qrCodeForm: NgForm) {
     this.click2FA = true;
-    this.http.get<boolean>(`${environment.apiBaseUrl}/twofa/turnon`, {
-      params: qrCodeForm.value
+    this.http.post<boolean>(`${environment.apiBaseUrl}/twofa/turnon`, {
+      digits: qrCodeForm.value
     }).subscribe({
       next: value => {
         this.click2FA = false;

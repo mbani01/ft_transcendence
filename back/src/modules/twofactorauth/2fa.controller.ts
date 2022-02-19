@@ -23,7 +23,7 @@ export class TwofactorauthController {
     private readonly _usersService: UsersService,
     private readonly _twoFAService: TwoFactorAuthService,
     private readonly _authService: AuthService,
-  ) {}
+  ) { }
 
   @Get()
   test() {
@@ -39,7 +39,7 @@ export class TwofactorauthController {
     const user = await this._usersService.findByUserName(username);
     if (!user) throw new UnauthorizedException();
     const { otpauthUrl } = await this._twoFAService.generate2FASecret(user);
-    await QRCode.toDataURL(otpauthUrl).then((result) => res.send(result));
+    await QRCode.toDataURL(otpauthUrl).then((result) => res.send(JSON.stringify({ qrcode: result })));
   }
 
   @UseGuards(JwtAuthGuard)

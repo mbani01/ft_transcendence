@@ -15,11 +15,11 @@ export class AccountSettingsComponent {
   active: string;
 
   constructor(private http: HttpClient, private oauthService: OAuthService) {
-    this.http.get<User>(`${environment.apiBaseUrl}/users/me`).subscribe({
-      next: (user) => {
-        oauthService.user$.next(user);
-      }
-    });
+    // this.http.get<User>(`${environment.apiBaseUrl}/users/me`).subscribe({
+    //   next: (user) => {
+    //     oauthService.user$.next(user);
+    //   }
+    // });
   }
 
 }
