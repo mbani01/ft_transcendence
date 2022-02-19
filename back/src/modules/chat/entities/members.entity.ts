@@ -9,10 +9,10 @@ export class MembersEntity {
     id: number;
 
     @Column({ nullable: false })
-    userId: number;
+    userID: number;
 
     @Column({ nullable: false })
-    roomId: number;
+    roomID: number;
 
     @Column({ default: 'member', nullable: false })
     role: Roles;
