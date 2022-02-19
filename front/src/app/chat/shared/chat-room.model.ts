@@ -1,6 +1,6 @@
 import {User} from "../../shared/user";
 
-export type ChatType = 'public' | 'private' | 'protected';
+export type ChatType = 'private' | 'public' | 'protected';
 export interface ChatRoom {
   roomID?: string,
   name?: string

@@ -15,7 +15,6 @@ import {NgForm} from "@angular/forms";
 })
 export class ChatRoomsComponent {
   chats: ChatRoom[];
-  chatType = ChatType;
   selectedChat: ChatRoom;
 
   // @ViewChild('passwordModal') passwordModal: TemplateRef<any>;
@@ -41,7 +40,7 @@ export class ChatRoomsComponent {
   }
 
   joinChannel(chat: ChatRoom, content: TemplateRef<any>) {
-    if (chat.type == ChatType.PROTECTED) {
+    if (chat.type == "protected") {
       this.openPasswordModal(chat, content);
     } else {
       this.chatService.joinChannel(chat.roomID!, '', (room: Chat) => {
