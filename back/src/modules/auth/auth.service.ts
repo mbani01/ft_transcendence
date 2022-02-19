@@ -65,7 +65,11 @@ export class AuthService {
         httpOnly: true,
         domain: "localhost", // your domain here!
       })
-      .send({ success: true });
+      .send({
+        uid: user.id,
+        name: user.username,
+        img: user.avatar
+      });
   }
 
   async loginJWT(user: User, is2fa: boolean) {
