@@ -23,9 +23,17 @@ export class ChatSettingsComponent {
   // nickname: any;
 
   constructor(private http: HttpClient, private chatService: ChatService) {
-    this.http.get<User[]>(`${environment.apiBaseUrl}/chat/${this.chatService.currChat!.roomID}/members`).subscribe({
+    this.http.get<{
+      id: number,
+      username: string,
+      avatar: string
+    }[]>(`${environment.apiBaseUrl}/chat/${this.chatService.currChat!.roomID}/members`).subscribe({
       next: members => {
-        this.members.next(members);
+        this.members.next(members.map(value => ({
+          uid: value.id,
+          name: value.username,
+          img: value.avatar
+        } as User)));
       }
     });
   }
