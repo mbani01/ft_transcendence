@@ -2,9 +2,9 @@ import { IsNumber, IsString } from "class-validator";
 
 export class OutUserDto {
     @IsNumber()
-    userId: number;
+    uid: number;
     @IsString()
-    username: string;
+    name: string;
     @IsString()
-    avatar: string;
+    img: string;
 }
