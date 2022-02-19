@@ -44,7 +44,9 @@ export class CreateModalComponent {
       error: err => {
         console.log("ERROR creating room");
         console.log(err);
-        createRoom.form.setErrors({error: err.error.message[0]});
+        createRoom.form.setErrors({
+          error: Array.isArray(err.error.message) ? err.error.message[0] : err.error.message
+        });
       }
     });
   }
