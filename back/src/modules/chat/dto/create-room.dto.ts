@@ -11,7 +11,6 @@ export class CreateRoomBodyDto {
 
     @IsString()
     @IsOptional()
-    @MinLength(8, {message: 'password too weak: should be more then 8 characters'})
     @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: 'password too weak' })
     password: string
 }

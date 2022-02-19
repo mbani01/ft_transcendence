@@ -87,6 +87,7 @@ export class ChatController {
             }
         */
         const rooms = await this._chaTService.findAllRooms();
+        console.log(rooms);
         let channels = [];
         rooms.forEach(e => {
             channels.push(
