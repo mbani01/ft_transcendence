@@ -8,6 +8,7 @@ import {
   Res,
   BadRequestException,
   Delete,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { TwoFactorAuthService } from '../twofactorauth/2fa.service';
@@ -24,6 +25,7 @@ export class AuthController {
     private readonly _twoFAService: TwoFactorAuthService,
   ) { }
 
+  private mappedAccessCodeWithUser = new Map();
 
   @UseGuards(JwtAuthGuard)
   @Get('isAuthorized')
@@ -40,35 +42,44 @@ export class AuthController {
 
   @Post('/access_token')
   async authenticate(@Query() paginationQuery: any, @Res() response: Response) {
-    const { code, twoFA } = paginationQuery;
-    const newUser: CreateUserDto = await this._authService.getUserData(code);
-    if (!newUser) throw new BadRequestException('Invalid User or token');
-    let userExist = await this._usersService.findByUserName(newUser.username);
-    if (!userExist) {
-      userExist = await this._usersService.create(newUser);
-      return await this._authService.sendJwtAccessToken(response, userExist, false);
+    const { code, twoFactorAuth } = paginationQuery;
+    console.log(code);
+    let userExist;
+    if (!this.mappedAccessCodeWithUser.has(code)) {
+      const newUser: CreateUserDto = await this._authService.getUserData(code);
+      if (!newUser) throw new BadRequestException('Invalid User or token');
+      userExist = await this._usersService.findByUserName(newUser.username);
+      if (!userExist) {
+        userExist = await this._usersService.create(newUser);
+        return await this._authService.sendJwtAccessToken(response, userExist, false);
+      }
+
+      if (userExist && userExist.is2FAEnabled && !this.mappedAccessCodeWithUser.has(code)) {
+        this.mappedAccessCodeWithUser.set(code, userExist);
+        console.log(this.mappedAccessCodeWithUser);
+        throw new UnauthorizedException({ "is2FA": true });
+      }
     }
 
-    if (userExist.is2FAEnabled) {
-      console.log('response sent')
-      return response.send({
-        error: {
-          "2FA": true
-        }
-      })
+
+    if (this.mappedAccessCodeWithUser.has(code)) {
+      userExist = this.mappedAccessCodeWithUser.get(code);
+      const isValid2FACode = this._twoFAService.is2FactorAuthCodeValid(
+        twoFactorAuth,
+        userExist.twoFASecret,
+      );
+      if (!isValid2FACode) throw new UnauthorizedException('Invalid 2fa code!');
+      this.mappedAccessCodeWithUser.delete(code);
     }
-    // const isValid2FACode = this._twoFAService.is2FactorAuthCodeValid(
-    //   twoFA,
-    //   userExist,
-    // );
-    // if (!isValid2FACode) return { twoFA: true, error: 'Invalid 2fa code!' };
-    await this._authService.sendJwtAccessToken(response, userExist, false);
+    console.log('Yes code is valid');
+    await this._authService.sendJwtAccessToken(response, userExist, true);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete('/logout')
-  logOut() {
-    document.cookie = 'access_code=; Max-Age=-99999999;'
+  logOut(@Res() res) {
+    res.clearCookie('access_token');
+    res.end();
   }
 
 
