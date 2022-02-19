@@ -35,5 +35,3 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 # Environment Variables
-.envback/src/app.module.ts
-src/app.module.ts
