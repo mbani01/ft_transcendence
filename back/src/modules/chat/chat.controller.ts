@@ -10,6 +10,7 @@ import { GetAllRoomsQueryDto, GetMessageQueryDto, ParamsDto, UnmuteAndUnbanDto }
 export class ChatController {
     constructor(private readonly _chaTService: ChatService) { }
 
+    @UseGuards(JwtAuthGuard)
     @Get('messages/:roomID')
     async getMessages(@Param() { roomID }: ParamsDto) {
         /**
@@ -87,7 +88,6 @@ export class ChatController {
             }
         */
         const rooms = await this._chaTService.findAllRooms();
-        console.log(rooms);
         let channels = [];
         rooms.forEach(e => {
             channels.push(
@@ -106,7 +106,7 @@ export class ChatController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get('members/:roomID')
+    @Get(':roomID/members')
     getRoomUsers(@Param() { roomID }: ParamsDto, @Req() req) {
         /**
          * returns the following object.
