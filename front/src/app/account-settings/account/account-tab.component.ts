@@ -55,19 +55,20 @@ export class AccountTabComponent {
 
   verifyCode(qrCodeForm: NgForm) {
     this.click2FA = true;
-    this.http.post<boolean>(`${environment.apiBaseUrl}/twofa/turnon`, {
-      digits: qrCodeForm.value
-    }).subscribe({
+    this.http.post<boolean>(`${environment.apiBaseUrl}/twofa/turnon`, qrCodeForm.value).subscribe({
       next: value => {
         this.click2FA = false;
         if (value) {
           this.oauthService.enable2FA();
           this.closeQRCode();
-        } else {
-          qrCodeForm.controls['code'].setErrors({error: "Wrong Code"});
-          console.log(qrCodeForm);
-          this.codeToolTip.open();
         }
+      },
+      error: err => {
+        qrCodeForm.controls['code'].setErrors({error: err.error.message});
+        this.click2FA = false;
+        console.log(qrCodeForm);
+        this.codeToolTip.open();
+
       }
     });
   }
