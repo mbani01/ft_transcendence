@@ -8,8 +8,6 @@ export class CreateMemberDto{
 
     @IsString()
     @IsOptional()
-    @MinLength(8)
-    @MaxLength(15)
     @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: 'password too weak' })
     password: string
 }
