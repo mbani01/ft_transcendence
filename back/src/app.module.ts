@@ -15,7 +15,7 @@ import { join } from 'path';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join("/Users/mosan/Documents/ft_transcendence/front/dist/ft_transcendence/"),
+      rootPath: join("/Users/mamoussa/Desktop/ft_transcendence/front/src/index.html"),
     }),
     ConfigModule.forRoot({ isGlobal: true }),
     GameModule,
