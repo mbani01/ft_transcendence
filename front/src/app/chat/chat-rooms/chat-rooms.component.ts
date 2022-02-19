@@ -89,6 +89,7 @@ export class ChatRoomsComponent {
   }
 
   createModalEvent(chat: Chat) {
+    chat.messages = [];
     this.chatService.chats.set(chat.roomID, chat);
     this.httpGetChannels();
   }
