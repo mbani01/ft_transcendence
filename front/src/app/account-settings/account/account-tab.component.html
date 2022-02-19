@@ -27,7 +27,7 @@
         <label for="nickname" class="col-5 font-weight-bolder">Name:</label>
         <div class="col p-0">
           <ng-template #errorTip>{{nicknameForm.controls['nickname']?.errors?.['error']}}</ng-template>
-          <input type="text" class="form-control input-dark" id="nickname" name="nickname" required
+          <input type="text" class="form-control input-dark col-6" id="nickname" name="nickname" required
                  placeholder="Name" [ngModel]="user.value?.name" [ngbTooltip]="errorTip" triggers="manual"
                  tooltipClass="error-tooltip" #t="ngbTooltip">
         </div>
@@ -46,7 +46,7 @@
   <button *ngIf="!oauthService.is2FAEnabled() && !qrCode" class="btn btn-success" (click)="showQRCode()">Enable 2FA</button>
   <button *ngIf="oauthService.is2FAEnabled()" class="btn btn-danger" (click)="remove2FA()">Remove 2FA</button>
   <form *ngIf="qrCode" #qrCodeForm="ngForm" (ngSubmit)="verifyCode(qrCodeForm)">
-    <img [src]="qrCode">
+    <img width="180" [src]="qrCode">
     <ng-template #qrCodeError>{{qrCodeForm.controls['code']?.errors?.['error']}}</ng-template>
     <input type="text" class="form-control input-dark" maxlength="6" id="code2FA" name="code"
        placeholder="6 Digit Code" required ngModel
