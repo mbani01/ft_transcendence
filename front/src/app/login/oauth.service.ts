@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpParams} from "@angular/common/http";
-import {environment} from "../../environments/environment";
-import {CookieService} from "ngx-cookie-service";
-import {Router} from "@angular/router";
-import {User} from "../shared/user";
-import {BehaviorSubject, catchError, Observer, throwError} from "rxjs";
-import {UserInfo} from "./models/UserInfo.model";
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { environment } from "../../environments/environment";
+import { CookieService } from "ngx-cookie-service";
+import { Router } from "@angular/router";
+import { User } from "../shared/user";
+import { BehaviorSubject, catchError, Observer, throwError } from "rxjs";
+import { UserInfo } from "./models/UserInfo.model";
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +50,7 @@ export class OAuthService {
   }
 
   getAuthPage() {
-    return this.http.get<{page: string}>(environment.apiBaseUrl + '/auth/oauth_page');
+    return this.http.get<{ page: string }>(environment.apiBaseUrl + '/auth/oauth_page');
   }
 
   generateAccessToken(code: string, _2fa?: string, observer?: Partial<Observer<Object>> | undefined) {
@@ -66,22 +66,28 @@ export class OAuthService {
       next: (value) => {
         console.log('TOKEN');
         // console.log(this.cookieService'access_token'));
+        // if (value.success) {
         this.router.navigate(['']);
         this._authorized = true;
         if (value.is2FA) {
           this.enable2FA();
         }
+        // } else if (value.is2FA) {
+        //   this._authorized = false;
+        // }
         // this.cookieService.set('access_token', this.access_token, undefined, '/');
-        // this.user$.next(token.user);
+        this.user$.next(value);
         if (observer?.next) {
           observer?.next(value);
         }
       },
-    error: (err) => {
+      error: (err) => {
         if (observer?.error) {
+          console.log("error observer");
           observer?.error(err);
         }
-    }});
+      }
+    });
     return obs;
   }
 
@@ -108,7 +114,9 @@ export class OAuthService {
     // this.cookieService.delete('access_token', '/');
     this.http.delete(`${environment.apiBaseUrl}/auth/logout`).subscribe({
       next: value => {
+        this.router.navigate(['login']);
         this._authorized = false;
+
       }
     });
   }

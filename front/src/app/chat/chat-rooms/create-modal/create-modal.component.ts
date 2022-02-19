@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {NgbActiveModal, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ChatRoom} from "../../shared/chat-room.model";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {environment} from "../../../../environments/environment";
 import {OAuthService} from "../../../login/oauth.service";
 import {NgForm} from "@angular/forms";
@@ -35,20 +35,20 @@ export class CreateModalComponent {
     if (createRoom.value.isPublic && createRoom.value.password.length === 0) {
       delete createRoom.value.password;
     }
-    this.http.post<Chat>(`${environment.apiBaseUrl}/chat/create-channel`, createRoom.value).subscribe({
-      next: value => {
+    this.socket.emit('create-channel', createRoom.value, (value: any) => {
+      if (!value.error) {
         console.log('next:' + value);
         this.createModal.emit(value);
         this.modal.close();
-      },
-      error: err => {
+      } else {
         console.log("ERROR creating room");
-        console.log(err);
+        console.log(value);
         createRoom.form.setErrors({
-          error: Array.isArray(err.error.message) ? err.error.message[0] : err.error.message
+          error: Array.isArray(value.error.message) ? value.error.message[0] : value.error.message
         });
       }
     });
+    // this.http.post<Chat>(`${environment.apiBaseUrl}/chat/create-channel`, createRoom.value).subscribe();
   }
 
 }
