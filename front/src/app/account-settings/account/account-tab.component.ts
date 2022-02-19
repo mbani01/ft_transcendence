@@ -38,6 +38,7 @@ export class AccountTabComponent {
     this.http.post(`${environment.apiBaseUrl}/users/update_nickname`, nicknameForm.value).subscribe({
       next: value => {
         this.editNickname = false;
+        this.user.value.name = nicknameForm.value.nickname;
       },
       error: err => {
         nicknameForm.controls['nickname'].setErrors({error: 'nickname already taken'})
@@ -118,6 +119,7 @@ export class AccountTabComponent {
               this.progress = Math.round(100 * event.loaded / event.total);
             } else if (event instanceof HttpRequest) {
               console.log('File is completely loaded!');
+              console.log(event);
             }
           },
           error: err => {
