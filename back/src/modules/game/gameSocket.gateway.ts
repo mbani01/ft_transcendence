@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/19 10:33:38 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/19 19:06:59 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,12 @@ export class gameSocketGateway
 
 	joinGameRoom(gameId, Players)
 	{
-		Players.forEach(socket=> socket.join(gameId));
+		Players.forEach(socket => socket.join(gameId));
 	}
 
 	async startGame(GameQueue: GameQueueService, isDefault: boolean)
 	{
 		const Players = GameQueue.getPlayers();
-		if (Players[0] == Players[1])
-			return ;
 		const game = new Game(true, Players, isDefault);
 		this.Games.push(game);
 		const gameInfos = game.getInfos();
@@ -62,7 +60,9 @@ export class gameSocketGateway
 	@SubscribeMessage('joinDefaultGame')
 	joinQueue(@ConnectedSocket() socket: any)
 	{
-		this.DefautQueue.addUser(socket);
+		Clients.add(socket.user.sub, socket.id);
+		if (!this.DefautQueue.addUser(socket))
+			return ;
 		if (this.DefautQueue.isfull())
 			this.startGame(this.DefautQueue, true);
 		// const sockets = await this.server.fetchSockets();
@@ -77,7 +77,8 @@ export class gameSocketGateway
 	@SubscribeMessage('joinCustomGame')
 	joinCustomGame(@ConnectedSocket() socket: any)
 	{
-		this.CustomQueue.addUser(socket);
+		if (!this.CustomQueue.addUser(socket))
+			return ;
 		if (this.CustomQueue.isfull())
 			this.startGame(this.CustomQueue, false);
 	}
@@ -103,42 +104,40 @@ export class gameSocketGateway
 		if (data.GameId && this.isPlayer(socket, String(data.GameId)))
 			socket.to(String(data.GameId)).emit('syncBall', data);
 	}
-
-	// @SubscribeMessage('leaveGame')
-	// leaveGame(@ConnectedSocket() socket: any, @MessageBody() data :any)
-	// {
-	// 	/* Game is Over should :
-	// 	 	- leave room for both players && watchers
-	// 		- save score for both players
-	// 		- delete game 
-	// 	*/
-	// 	if (!data.GameId && this.isPlayer(socket, String(data.GameId)))
-	// 	{
-			
-	// 	}
-	// }
 	
-	@SubscribeMessage('GameInvitation')
-	privateGame(@ConnectedSocket() socket: any, @MessageBody() data :any)
+	@SubscribeMessage('SendGameInvitation')
+	async privateGame(@ConnectedSocket() socket: any, @MessageBody() data :any)
 	{
-		if(!data || !data.receiverId || data.receiverId == socket.user.id)
+		if(!data || !data.hasOwnProperty('receiverId') || !data.hasOwnProperty('isDefaultGame'))
 			return ;
 			//check if user is active
-		// if (!Clients.isActiveUser())
-		// 	return {active: false};
+		if (!Clients.isActiveUser(socket.user.sub))
+			return {active: false};
 			// create a private queue with a unique id and add host
-		const QueueId = String(socket.user.id) + '#' + String(Date.now());
+		const QueueId = String(socket.user.sub) + '#' + String(Date.now());
 		const Queue = new GameQueueService(true, QueueId);
-		Queue.addUser(socket);
+		if (!Queue.addUser(socket))
+			return ;
 		this.PrivateQueues.push(Queue);
 			// Get receiver socket and send invitation event
-		this.server.fetchSockets(element=> {
-			if (element.user.id === data.receiverId)
-			{
-				this.server.to(element).emit('invited', QueueId);
-			}
+		const sockets = await this.server.fetchSockets()
+		sockets.forEach(element=> {
+			console.log(element.user.sub + " " + data.receiverId)
+		if (element.user.sub === parseInt(data.receiverId))
+		{
+			console.log("inv Sent");
+			this.server.to(element.id).emit('invitedToGame', {QueueId: QueueId, isDefaultGame: data.isDefaultGame});
+		}
 		}); // invitation sent
 		
+	}
+	
+	@SubscribeMessage('GameInvitationReceived')
+	InvitationReceived(@ConnectedSocket() socket: any, @MessageBody() data :any)
+	{
+		if (!data || !data.hasOwnProperty('QueueId') || !data.hasOwnProperty('isDefaultGame'))
+			return ;
+		// if ()
 	}
 	
 	@SubscribeMessage('syncRound')
