@@ -29,7 +29,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   async message(@MessageBody() data: any,
     @ConnectedSocket() client: CustomSocket) {
     const { roomID, timestamp: createdAt, message: content } = JSON.parse(data);
-    const userID = Clients.getUserId(client.id);
+    const userID = client.user.sub;
     const message: CreateMessageColumnDto = { roomID, createdAt, content, userID: +userID }
     await this._chatService.createMessage(message);
     const room = await this._chatService.getRoomById(roomID);
@@ -51,7 +51,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   @SubscribeMessage('join')
   async join(@ConnectedSocket() client: CustomSocket, @MessageBody() createMemberDto: any) {
     const { roomID, password } = createMemberDto;
-    const userID = Clients.getUserId(client.id);
+    const userID = client.user.sub;
     console.log('userID: ', userID);
     const member: CreateMemberColumn = {
       roomID,
