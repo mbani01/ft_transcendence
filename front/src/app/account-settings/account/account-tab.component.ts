@@ -74,8 +74,11 @@ export class AccountTabComponent {
   }
 
   remove2FA() {
-    this.http.get<string>(`${environment.apiBaseUrl}/twofa/turnoff`);
-    this.oauthService.disable2FA();
+    this.http.get<string>(`${environment.apiBaseUrl}/twofa/turnoff`).subscribe({
+      next: value => {
+        this.oauthService.disable2FA();
+      }
+    });
   }
 
   isValidNickname(nicknameForm: NgForm) {

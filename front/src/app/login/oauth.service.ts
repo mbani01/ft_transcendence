@@ -5,6 +5,7 @@ import {CookieService} from "ngx-cookie-service";
 import {Router} from "@angular/router";
 import {User} from "../shared/user";
 import {BehaviorSubject, catchError, Observer, throwError} from "rxjs";
+import {UserInfo} from "./models/UserInfo.model";
 
 @Injectable({
   providedIn: 'root'
@@ -19,14 +20,20 @@ export class OAuthService {
   constructor(private http: HttpClient, private cookieService: CookieService, private router: Router) {
     console.log('OAuth Service');
     // this.access_token =;
-    this.http.get<User>(`${environment.apiBaseUrl}/auth/isAuthorized`).subscribe({
+    this.http.get<UserInfo>(`${environment.apiBaseUrl}/auth/isAuthorized`).subscribe({
       next: value => {
+        console.log('IS_AUTH');
+        console.log(value);
         this._authorized = true;
         console.log("Authorized");
-        // this.user$.next(value);
-        // this.router.navigate([window.location.pathname]);
-        this.fetchUser();
-
+        this.user$.next({
+          uid: value.id,
+          name: value.username,
+          img: value.avatar!
+        });
+        if (value.is2FAEnabled) {
+          this.enable2FA();
+        }
       },
       error: err => {
         this._authorized = false;
@@ -98,8 +105,12 @@ export class OAuthService {
   }
 
   logout() {
-    this.cookieService.delete('access_token', '/');
-    this._authorized = false;
+    // this.cookieService.delete('access_token', '/');
+    this.http.delete(`${environment.apiBaseUrl}/auth/logout`).subscribe({
+      next: value => {
+        this._authorized = false;
+      }
+    });
   }
 
 

@@ -20,7 +20,7 @@ export class ChattingComponent {
   // settings = false;
 
   constructor(public chatService: ChatService) {
-    console.log('h1');
+    console.log(this.chatService.currChat);
     if (this.chatService.currChat?.messages.length == 0 && this.chatService.currChat.roomID != '0') {
       this.loading = true;
       this.chatService.loadMessages(this.chatService.currChat).subscribe({
