@@ -39,6 +39,7 @@ export class ChatService {
         roomID: roomID,
         password: password
       },  (room: any) => {
+        console.log(room);
         if (!room?.error) {
           room.messages = [];
           console.log(room);
