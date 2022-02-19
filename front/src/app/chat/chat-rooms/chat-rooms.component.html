@@ -33,7 +33,11 @@
       <div class="ml-auto h-100 my-auto">
         <i *ngIf="chat.type == 'protected'" class="bi bi-lock-fill mr-3"
            ngbTooltip="Password" [openDelay]="500"></i>
-        <button class="btn btn-primary" (click)="joinChannel(chat, passwordModal)">Join</button>
+        <button *ngIf="chatService.chats.get(chat.roomID!) === undefined; else alreadyJoined" class="btn btn-primary" (click)="joinChannel(chat, passwordModal)">Join</button>
+        <ng-template #alreadyJoined>
+          <button class="btn btn-outline-primary" disabled>Joined</button>
+        </ng-template>
+
       </div>
     </li>
   </ul>

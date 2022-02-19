@@ -49,10 +49,9 @@ export class UsersService {
   }
 
   async enable2FactorAuth(userId: number) {
-    const user = await this._usersRepo.update(userId, {
+    await this._usersRepo.update(userId, {
       is2FAEnabled: true,
     });
-    console.log("user has enable 2fa");
   }
 
   async set2FASecret(secret: string, id: number) {
@@ -64,6 +63,7 @@ export class UsersService {
   async unSet2FASecret(userId: number) {
     await this._usersRepo.update(userId, {
       twoFASecret: null,
+      is2FAEnabled: false,
     });
     console.log('after I set the user secret: ', await this.findById(userId))
   }

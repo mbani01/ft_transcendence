@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -54,6 +55,13 @@ export class TwofactorauthController {
   }
 
   // TODO: implement turn-off  functionality for 2fa.
+  @UseGuards(JwtAuthGuard)
+  @Get('turnoff')
+  turnOff2FA(@Req() req) {
+    const user = req.user;
+    if (!user.is2FAEnabled) throw new BadRequestException('2-Factor-Authentication is not enabled!');
+    this._usersService.unSet2FASecret(user.id);
+  }
 
   @Post('authenticate/:id')
   async authenticate(

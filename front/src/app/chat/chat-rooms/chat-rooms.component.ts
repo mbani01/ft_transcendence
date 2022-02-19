@@ -26,7 +26,7 @@ export class ChatRoomsComponent {
   }
   page: number = 1;
 
-  constructor(private http: HttpClient, private ngbModal: NgbModal, private chatService: ChatService) {
+  constructor(private http: HttpClient, private ngbModal: NgbModal, public chatService: ChatService) {
     this.httpGetChannels();
   }
 
