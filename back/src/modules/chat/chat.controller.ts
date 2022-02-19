@@ -17,13 +17,16 @@ export class ChatController {
          * [
             {
                 "message": string,
-                "sender": string,
+                "sender": {
+                    "uid",
+                    "name",
+                    "img"
+                },
                 "timestamp": Date
             }
             ]
          */
         return await this._chaTService.getMessages(roomID);
-        // return `this opetion witll return the list of last 10 messages with roomId = ${roomID} and timestamp = ${before}`;
     }
 
     @UseGuards(JwtAuthGuard) // 
