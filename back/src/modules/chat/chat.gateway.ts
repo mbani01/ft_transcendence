@@ -6,6 +6,7 @@ import { CreateMemberColumn, CreateMemberDto } from './dto/create-member.dto';
 import { Clients, CustomSocket } from 'src/adapters/socket.adapter';
 import { NotFoundException, UnauthorizedException, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Server } from 'http';
+import { CreateRoomDto } from './dto/create-room.dto';
 
 @WebSocketGateway()
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -31,6 +32,23 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       client.join(""+room.roomID)
     }
     console.log(`client with id #${client.id} connected`)
+  }
+  
+  @SubscribeMessage('create-channel')
+  async createChannel(@MessageBody() createRoomBodyDto: any, @ConnectedSocket() client: CustomSocket) {
+      /** Request
+       *  {
+            "name": string, // channel's name
+            "isPublic": boolean,
+            "password"?: string
+          }
+        */
+      const { name, isPublic, password } = createRoomBodyDto;
+      const channelType = this._chatService.getChannelType(isPublic, password);
+      const roomEntity: CreateRoomDto = { name, password, channelType, ownerID: client.user.sub }
+      const newRoom = await this._chatService.createRoom(roomEntity);
+      client.join(""+newRoom.roomID);
+      return newRoom;
   }
 
   // @UseGuards(JwtAuthGuard)
