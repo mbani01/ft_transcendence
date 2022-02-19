@@ -43,9 +43,7 @@ export class CreateModalComponent {
       } else {
         console.log("ERROR creating room");
         console.log(value);
-        createRoom.form.setErrors({
-          error: Array.isArray(value.error.message) ? value.error.message[0] : value.error.message
-        });
+        createRoom.form.setErrors(value);
       }
     });
     // this.http.post<Chat>(`${environment.apiBaseUrl}/chat/create-channel`, createRoom.value).subscribe();
