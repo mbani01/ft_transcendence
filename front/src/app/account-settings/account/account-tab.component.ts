@@ -42,9 +42,9 @@ export class AccountTabComponent {
   }
 
   showQRCode() {
-    this.http.get<string>(`${environment.apiBaseUrl}/twofa/register`).subscribe({
+    this.http.get<{qrcode: string}>(`${environment.apiBaseUrl}/twofa/register`).subscribe({
       next: value => {
-        this.qrCode = value;
+        this.qrCode = value.qrcode;
       }
     });
   }
