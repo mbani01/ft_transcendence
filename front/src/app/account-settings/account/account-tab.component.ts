@@ -35,9 +35,10 @@ export class AccountTabComponent {
 
 
   updateNickname(nicknameForm: NgForm) {
-    this.http.post(`${environment.apiBaseUrl}/users/${this.user.value.uid}/update_nickname`, nicknameForm.value).subscribe({
+    this.http.post(`${environment.apiBaseUrl}/users/update_nickname`, nicknameForm.value).subscribe({
       next: value => {
         this.editNickname = false;
+        this.user.value.name = nicknameForm.value.nickname;
       },
       error: err => {
         nicknameForm.controls['nickname'].setErrors({error: 'nickname already taken'})
@@ -111,13 +112,14 @@ export class AccountTabComponent {
       console.log(file);
       let formData = new FormData();
       formData.append('uploadFile', file, file.name);
-      this.http.post(`${environment.apiBaseUrl}/users/${this.user.value.uid}/upload_avatar`, formData, {reportProgress: true, observe: 'events'})
+      this.http.post(`${environment.apiBaseUrl}/users/upload_avatar`, formData, {reportProgress: true, observe: 'events'})
         .subscribe({
           next: (event: any) => {
             if (event.type == HttpEventType.UploadProgress) {
               this.progress = Math.round(100 * event.loaded / event.total);
             } else if (event instanceof HttpRequest) {
               console.log('File is completely loaded!');
+              console.log(event);
             }
           },
           error: err => {
