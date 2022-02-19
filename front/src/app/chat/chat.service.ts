@@ -38,13 +38,14 @@ export class ChatService {
     this.socket.emit('join', {
         roomID: roomID,
         password: password
-      }, (room: any) => {
-        if (!room?.error) {
-          this.chats.set(room.roomID, room);
-          this.loadMessages(room);
-          this.openChat(room.roomID);
-        }
-        callback(room);
+      }, function (room: any) {
+        console.log(room);
+        // if (!room?.error) {
+        //   this.chats.set(room.roomID, room);
+        //   this.loadMessages(room);
+        //   this.openChat(room.roomID);
+        // }
+        // callback(room);
       }
     );
   }

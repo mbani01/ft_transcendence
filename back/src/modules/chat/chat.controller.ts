@@ -93,7 +93,7 @@ export class ChatController {
                 {
                     roomID: e.roomID,
                     name: e.name,
-                    channelType: e.channelType,
+                    type: e.channelType,
                     owner: {
                         uid: req.user.id,
                         name: req.user.username,
