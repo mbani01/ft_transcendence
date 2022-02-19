@@ -25,7 +25,7 @@ export class TwoFactorAuthComponent {
 
     this.oauthService.generateAccessToken(this.code, undefined,{
       error: err => {
-        if (err.error['2FA']) {
+        if (err.is2FA) {
           this.is2FA = true;
         } else {
           this.fail.emit();
