@@ -4,8 +4,3 @@ export class UpdateUserNameDto {
     @IsString()
     name: string;
 }
-
-export class UpdateUserAvatarDto {
-    @IsString()
-    img: string;
-}
