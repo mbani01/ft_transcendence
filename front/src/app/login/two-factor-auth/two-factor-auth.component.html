@@ -1,5 +1,5 @@
 <div class="d-flex h-100">
-  <form *ngIf="this.oauthService.is2FAEnabled(); else loadingTemplate" class="m-auto" #twoFactorAuth="ngForm" (ngSubmit)="verify(twoFactorAuth)">
+  <form *ngIf="this.is2FA; else loadingTemplate" class="m-auto" #twoFactorAuth="ngForm" (ngSubmit)="verify(twoFactorAuth)">
     <div class="d-flex flex-column dark-back p-4 align-items-center">
       <img width="128" height="128" src="/assets/key.svg" >
       <h3 class="mb-5">Two-Factor Authentication</h3>

@@ -23,13 +23,6 @@ export class GameComponent implements OnInit {
     // socket.on('GameOver', g.gameOver);
     // socket.on('sync', g.sync);
     // socket.on('syncBall', g.syncBall);
-    console.log("FSENT");
-    this.http.get(`${environment.apiBaseUrl}/auth/test`).subscribe({
-      next: value => {
-        console.log("SENT");
-
-      }
-    });
 
   }
 
