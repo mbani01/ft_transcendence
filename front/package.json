@@ -25,6 +25,7 @@
     "bootstrap-icons": "^1.7.2",
     "engine.io-parser": "^5.0.3",
     "jquery": "^3.6.0",
+    "jwt-decode": "^3.1.2",
     "ngx-cookie-service": "^13.1.2",
     "ngx-socket-io": "^4.1.0",
     "phaser": "^3.55.2",
