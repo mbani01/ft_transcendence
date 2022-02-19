@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/17 09:44:02 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/19 10:33:38 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,9 +118,26 @@ export class gameSocketGateway
 	// 	}
 	// }
 	
-	@SubscribeMessage('createPrivateGame')
+	@SubscribeMessage('GameInvitation')
 	privateGame(@ConnectedSocket() socket: any, @MessageBody() data :any)
 	{
+		if(!data || !data.receiverId || data.receiverId == socket.user.id)
+			return ;
+			//check if user is active
+		// if (!Clients.isActiveUser())
+		// 	return {active: false};
+			// create a private queue with a unique id and add host
+		const QueueId = String(socket.user.id) + '#' + String(Date.now());
+		const Queue = new GameQueueService(true, QueueId);
+		Queue.addUser(socket);
+		this.PrivateQueues.push(Queue);
+			// Get receiver socket and send invitation event
+		this.server.fetchSockets(element=> {
+			if (element.user.id === data.receiverId)
+			{
+				this.server.to(element).emit('invited', QueueId);
+			}
+		}); // invitation sent
 		
 	}
 	
