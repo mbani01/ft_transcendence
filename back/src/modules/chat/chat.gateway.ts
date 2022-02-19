@@ -67,7 +67,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     }
     const room = await this._chatService.getRoomById(roomID);
     client.join(room.name);
-    return { name: client.user.username, timestamp: Date.now() }; 
+    return room; 
   }
 
   @SubscribeMessage('chat-leave')

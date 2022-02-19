@@ -76,11 +76,22 @@ export class ChatService {
   }
 
   async fetchCurrentUserRooms(user: any) {
-    return await this._roomsRepo.find({
+    const res = [];
+    const members = await this._membersRepo.find({
       where: {
-        ownerID: user.id,
+        userID: user.id
       }
-    })
+    });
+    for (let member of members)
+    {
+      const room = await this._roomsRepo.find({
+        where: {
+          roomID: member.roomID
+        }})
+      res.push(room[0]);
+    }
+    console.log(res);
+    return res;
   }
 
   getChannelType(isPublic: boolean, password: string): ChannelType {
