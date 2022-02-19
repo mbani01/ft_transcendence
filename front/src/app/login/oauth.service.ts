@@ -23,8 +23,9 @@ export class OAuthService {
       next: value => {
         this._authorized = true;
         console.log("Authorized");
-        this.user$.next(value);
+        // this.user$.next(value);
         // this.router.navigate([window.location.pathname]);
+        this.fetchUser();
 
       },
       error: err => {
@@ -36,9 +37,9 @@ export class OAuthService {
         }
       }
     })
-    setTimeout(() => {
-      this.fetchUser();
-    })
+    // setTimeout(() => {
+    //   this.fetchUser();
+    // })
   }
 
   getAuthPage() {
@@ -51,7 +52,7 @@ export class OAuthService {
       params = params.set("twoFactorAuth", _2fa);
     }
     console.log('GENERATE');
-    let obs = this.http.post(environment.apiBaseUrl + '/auth/access_token', null, {
+    let obs = this.http.post<any>(environment.apiBaseUrl + '/auth/access_token', null, {
       params: params
     });
     obs.subscribe({
@@ -60,6 +61,9 @@ export class OAuthService {
         // console.log(this.cookieService'access_token'));
         this.router.navigate(['']);
         this._authorized = true;
+        if (value.is2FA) {
+          this.enable2FA();
+        }
         // this.cookieService.set('access_token', this.access_token, undefined, '/');
         // this.user$.next(token.user);
         if (observer?.next) {
