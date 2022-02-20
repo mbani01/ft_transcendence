@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
 import { ChannelType } from './common/chat.types';
+import { CreateDMDto } from './dto/create-dm.dto';
 import { CreateMemberColumn } from './dto/create-member.dto';
 import { CreateMessageColumnDto } from './dto/create-message.dto';
 import { CreateRoomDto } from './dto/create-room.dto';
@@ -50,8 +51,8 @@ export class ChatService {
     return await this._membersRepo.save(createdMember);
   }
 
-  async removeMemberFromRoom(roomID: number) {
-
+  async removeMemberFromRoom(roomID: number, userID: number) {
+    return await this._membersRepo.delete({ roomID, userID });
   }
 
   async findAllRooms() {
@@ -62,12 +63,12 @@ export class ChatService {
     return await this._roomsRepo.findOne({ roomID })
   }
 
-  async getRoomByUid(uid: number)
-  {
+  async getRoomByUid(uid: number) {
     return await this._membersRepo.find({
       where: {
-      userID: uid
-    }})
+        userID: uid
+      }
+    })
   }
 
   async getMemberByQuery(userID: number, roomID: number) {
@@ -77,8 +78,7 @@ export class ChatService {
   async getMessages(roomId: number) {
     const res = []; // res to store inof about returned object
     const messages = await this._messagesRepo.find({ roomID: roomId })
-    for (let message of messages)
-    {
+    for (let message of messages) {
       const user = await this._userService.findById(message.userID);
       res.push({
         message: message.content,
@@ -113,16 +113,42 @@ export class ChatService {
         userID: user.id
       }
     });
-    for (let member of members)
-    {
+    for (let member of members) {
       const room = await this._roomsRepo.find({
         where: {
           roomID: member.roomID
-        }})
+        }
+      })
       res.push(room[0]);
     }
     return res;
   }
+
+
+
+  async createDM(dm: CreateDMDto, data: any) {
+    // Create a DM.
+    const newDM = this._roomsRepo.create(dm);
+    await this._roomsRepo.save(newDM);
+
+    // Create the Members that going to join the dm.
+    await this.createMember({ userID: data.userID1, roomID: newDM.roomID, password: newDM.password, role: 'member' });
+    await this.createMember({ userID: data.userID2, roomID: newDM.roomID, password: newDM.password, role: 'member' });
+    return newDM;
+  }
+
+  async fetchCurrentUserDMs(userID1: number, userID2: number) {
+    return await this._roomsRepo.find({where: {isChannel: false, name: `DM${userID1}${userID2}`}})
+  }
+
+  /**
+       userID: number;
+    roomID: number;
+    password: string;
+    role: Roles;
+   */
+
+
 
   getChannelType(isPublic: boolean, password: string): ChannelType {
     if (isPublic && password)
