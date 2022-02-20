@@ -15,7 +15,7 @@ export class NavbarComponent implements OnInit {
 
   users: Observable<User[]>;
   loading: boolean = true;
-  constructor(private http: HttpClient, private oauthService: OAuthService, private router: Router) { }
+  constructor(private http: HttpClient, public oauthService: OAuthService, private router: Router) { }
 
   ngOnInit(): void {
 
