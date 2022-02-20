@@ -76,6 +76,6 @@ export class Game{
 	updateScore(score: score)
 	{
 		this.score = score;
-		console.log("current Score : " + this.score);
+		// console.log("current Score : " + this.score);
 	}
 }
