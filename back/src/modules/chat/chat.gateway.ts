@@ -1,20 +1,20 @@
 import { WebSocketGateway, SubscribeMessage, MessageBody, OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect, ConnectedSocket, WebSocketServer } from '@nestjs/websockets';
 import { ChatService } from './chat.service';
-import { Socket } from 'socket.io'
+import { Server } from 'socket.io'
 import { CreateMessageColumnDto, CreateMessageDto } from './dto/create-message.dto';
 import { CreateMemberColumn, CreateMemberDto } from './dto/create-member.dto';
 import { Clients, CustomSocket } from 'src/adapters/socket.adapter';
 import { NotFoundException, UnauthorizedException, UsePipes, ValidationPipe } from '@nestjs/common';
-import { Server } from 'http';
 import { CreateRoomDto } from './dto/create-room.dto';
 import e from 'express';
+import { RoomEntity } from './entities/room.entity';
 
 @WebSocketGateway()
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
   constructor(private readonly _chatService: ChatService) { }
   @WebSocketServer()
-  server;
+  private server: Server;
 
   afterInit(server: any) {
     console.log('Gateway Inited')
@@ -27,35 +27,40 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   async handleConnection(client: CustomSocket, ...args: any[]) {
     const rooms = await this._chatService.getRoomByUid(client.user.sub);
     for (let room of rooms)
-      client.join(""+room.roomID)
+      client.join("" + room.roomID)
     console.log(`client with id #${client.id} connected`)
   }
-  
+
   @SubscribeMessage('create-channel')
   async createChannel(@MessageBody() createRoomBodyDto: any, @ConnectedSocket() client: CustomSocket) {
-      /** Request
-       *  {
-            "name": string, // channel's name
-            "isPublic": boolean,
-            "password"?: string
-          }
-        */
-      const { name, isPublic, password } = createRoomBodyDto;
-      if (password?.length < 8)
-          return { error: "password too weak" };
-      const channelType = this._chatService.getChannelType(isPublic, password);
-      const roomEntity: CreateRoomDto = { name, password, channelType, ownerID: client.user.sub }
-      let newRoom: any;
-      try
-      {
-        newRoom = await this._chatService.createRoom(roomEntity);
+    /** Request
+     *  {
+          "name": string, // channel's name
+          "isPublic": boolean,
+          "password"?: string
+        }
+      */
+    const { name, isPublic, password } = createRoomBodyDto;
+    if (password?.length < 8)
+      return { error: "password too weak" };
+    const channelType = this._chatService.getChannelType(isPublic, password);
+    const roomEntity: CreateRoomDto = { name, password, channelType, ownerID: client.user.sub }
+    let newRoom: any;
+    try {
+      newRoom = await this._chatService.createRoom(roomEntity);
+      await this._chatService.createMember({
+        roomID: newRoom.roomID,
+        userID: client.user.sub,
+        password: newRoom.password,
+        role: 'member'
       }
-      catch(e)
-      {
-        return { error: e.message };
-      }
-      client.join(""+newRoom.roomID);
-      return newRoom;
+      )
+    }
+    catch (e) {
+      return { error: e.message };
+    }
+    client.join("" + newRoom.roomID);
+    return newRoom;
   }
 
   // @UseGuards(JwtAuthGuard)
@@ -78,7 +83,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       message: message.content,
       timestamp: message.createdAt,
     };
-    this.server.to(""+roomID).emit('chat-message', outData);
+    this.server.to("" + roomID).emit('chat-message', outData);
   }
 
   // @UseGuards(JwtAuthGuard)
@@ -99,8 +104,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       return { error: e.message };
     }
     const room = await this._chatService.getRoomById(roomID);
-    client.join(""+roomID);
-    return room; 
+    client.join("" + roomID);
+    return room;
   }
 
   @SubscribeMessage('chat-leave')
@@ -114,20 +119,23 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const user = client.user;
     const roomID = data.roomID;
     try {
-      const room = await this._chatService.getRoomById(roomID);
-      await this._chatService.getMemberByQuery(user.id, roomID);
-
+      const members = await this._chatService.removeMemberFromRoom(roomID, user.id);
+      this.server.to(String(roomID)).emit('chat-leave', { name: user.username });
+      console.log('deleted members: \n')
+      console.log(members);
+      console.log('----------------------------------------------------------------');
     } catch (e) {
-
+      console.log(e);
+      return { error: e.message };
     }
 
-    client.leave('roomName');
+    client.leave(String(roomID));
 
     /** out:
     {
       "name": string,
     }
-
+  
     error:
     {
       "error": string,
@@ -144,6 +152,25 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
          "timestamp": Date
      } 
      */
+
+    const { uid: userID, roomID, timestamp: createdAt } = data;
+    try {
+      const room = await this._chatService.getRoomById(roomID);
+      this._chatService.createMember({
+        roomID,
+        userID: +userID,
+        password: room.password,
+        role: 'member'
+      });
+    } catch (e) {
+      console.log(e);
+      return { error: e.message };
+    }
+
+    client.join(String(roomID));
+    return {}
+
+
 
     /** out:
      
@@ -181,6 +208,28 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       "timestamp": Date
     }
     */
+  }
+
+
+  @SubscribeMessage('chat-conversation')
+  async DM(@ConnectedSocket() client: CustomSocket, @MessageBody() data: any) {
+    const { userID1, userID2 } = JSON.parse(data);
+    let newDM: RoomEntity;
+    try {
+      newDM = await this._chatService.createDM({ isChannel: false, channelType: 'private', name: `DM${userID1}${userID2}` }, { userID1, userID2 });
+    } catch (e) {
+      return { error: e.message };
+    }
+
+    const res = await this.server.fetchSockets();
+    const otherUserClient = res.find(clt => clt.id === Clients.getSocketId(userID2));
+    if (otherUserClient === undefined) {
+      console.log('user is off-line');
+    } else {
+      client.join(String(newDM.roomID));
+      otherUserClient.join(String(newDM.roomID));
+    }
+    return newDM;
   }
 
 }
