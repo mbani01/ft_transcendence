@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/20 18:23:30 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/20 19:56:50 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,6 +218,11 @@ export class gameSocketGateway
 			socket.to(String(data.GameId)).emit('syncPowerUp', data);
 	}
 	
+	@SubscribeMessage('LiveGamesRequest')
+	sendLiveGames(@ConnectedSocket() socket: any)
+	{
+		this.LiveGames();
+	}
 
 	LiveGames()
 	{
