@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/20 13:45:27 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/20 18:23:30 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ export class gameSocketGateway
 	
 	async startGame(GameQueue: GameQueueService, isDefault: boolean)
 	{
-		console.log("Game Started !");
 		const Players = GameQueue.getPlayers();
 		const game = new Game(true, Players, isDefault);
 		this.Games.push(game);
@@ -43,6 +42,7 @@ export class gameSocketGateway
 		this.joinGameRoom(gameInfos.GameId, Players);
 		this.server.to(Players[0].id).emit('gameStarted', {GameId: gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: true});
 		this.server.to(Players[1].id).emit('gameStarted', {GameId:gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: false});
+		this.LiveGames()
 	}
 	
 	@SubscribeMessage('watchGame')
@@ -158,10 +158,10 @@ export class gameSocketGateway
     syncRound(@ConnectedSocket() socket: any, @MessageBody() data :any)
     {
 		if (!data.GameId || isNaN(data.player1_score) || isNaN(data.player2_score))
-			return;
+		return;
         if (this.isPlayer(socket, String(data.GameId)))
 		{
-            socket.to(String(data.GameId)).emit('syncRound', data);
+			socket.to(String(data.GameId)).emit('syncRound', data);
 			const currentGame = this.Games.find(element=> element.getGameId() === String(data.GameId));
 			currentGame.updateScore({player1: data.player1_score, player2: data.player2_score});
 			if (data.player1_score >= 10 || data.player2_score >= 10)
@@ -170,6 +170,7 @@ export class gameSocketGateway
 				this.GameOver(game);
 			}
 		}
+		this.LiveGames();
     }
     
     @SubscribeMessage('focusLose')
@@ -187,15 +188,17 @@ export class gameSocketGateway
 			if (disconnectedPlayer !== undefined) // A Player disconnected
 			{
 				this.server.to(gameInfos.GameId).emit('GameOver', {GameId: gameInfos.GameId, Players: gameInfos.Players, 
-				disconnectedPlayer: disconnectedPlayer.user});
-			}
-			else
-			{
-				const winner = game.getWinner();
-				this.server.to(gameInfos.GameId).emit('GameOver', {GameId: gameInfos.GameId, Players: gameInfos.Players, 
-					Winner: winner});
-			}
-			this.server.socketsLeave(gameInfos.GameId); // make all players/watcher leave the room
+					disconnectedPlayer: disconnectedPlayer.user});
+				}
+				else
+				{
+					const winner = game.getWinner();
+					this.server.to(gameInfos.GameId).emit('GameOver', {GameId: gameInfos.GameId, Players: gameInfos.Players, 
+						Winner: winner});
+				}
+				this.Games = this.Games.filter(element => element.getGameId() !== gameInfos.GameId);
+				this.server.socketsLeave(gameInfos.GameId); // make all players/watcher leave the room
+				this.LiveGames();
 		}
 	}
 
@@ -215,4 +218,12 @@ export class gameSocketGateway
 			socket.to(String(data.GameId)).emit('syncPowerUp', data);
 	}
 	
+
+	LiveGames()
+	{
+		const res = [];
+		for(let i in this.Games)
+			res.push(this.Games[i].getInfos(true));
+		this.server.emit('LiveGames', res);
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 12:00:29 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/20 17:52:59 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/20 18:18:32 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,12 @@ export class Game{
 		return Player === Player[0];
 	}
 
-	getInfos()
+	getInfos(isLive: boolean = false)
 	{
-		return {GameId: this.GameId, ball: this.ball, Players: [this.Players[0].user, this.Players[1].user], score: this.score};
+		if (isLive)
+			return {GameId: this.GameId, Players: [this.Players[0].user, this.Players[1].user], score: this.score}
+		else
+			return {GameId: this.GameId, ball: this.ball, Players: [this.Players[0].user, this.Players[1].user], score: this.score};
 	}
 	getWinner()
 	{
@@ -76,6 +79,5 @@ export class Game{
 	updateScore(score: score)
 	{
 		this.score = score;
-		// console.log("current Score : " + this.score);
 	}
 }
