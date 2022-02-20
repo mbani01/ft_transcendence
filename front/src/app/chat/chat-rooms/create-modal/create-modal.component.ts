@@ -32,7 +32,7 @@ export class CreateModalComponent {
 
   createRoom(createRoom: NgForm) {
     console.log(createRoom.value);
-    if (createRoom.value.isPublic && createRoom.value.password.length === 0) {
+    if (createRoom.value.isPublic && createRoom.value.password?.length === 0) {
       delete createRoom.value.password;
     }
     this.socket.emit('create-channel', createRoom.value, (value: any) => {
