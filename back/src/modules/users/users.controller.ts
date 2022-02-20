@@ -1,10 +1,13 @@
-import { BadRequestException, Body, Controller, Get, Param, Post, Query, Req, UnauthorizedException, UseGuards } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, Param, Post, Query, Req, Res, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { join } from "path";
 import { PaginationQueryDto } from "src/common/dto/pagination-query.dto";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { OutUserInfoDto } from "./dto/out-user-info.dto";
 import { OutUserDto } from "./dto/out-user.dto";
 import { UpdateUserNameDto } from "./dto/update-body.dto";
 import { UsersService } from "./users.service";
+import * as fs from 'fs';
 
 @Controller("users")
 export class UsersController {
@@ -39,9 +42,18 @@ export class UsersController {
 
   @Post('/upload_avatar')
   @UseGuards(JwtAuthGuard)
-  async updateAvatar(@Body() newAvatar: any, @Req() req) {
-    console.log("new avatar: ", newAvatar);
-    await this._usersService.updateAvatar(req.user.id, newAvatar);
+  @UseInterceptors(FileInterceptor('file'))
+  async updateAvatar(@UploadedFile() file: Express.Multer.File, @Req() req, @Res() res) {
+    // console.log(__dirname)
+    // const f = fs.writeFile(`/Users/mosan/Documents/last/back/src/assets/avatars/${req.user.id}`, file.buffer, { flag: 'w+' });
+    const avatarPath = `/Users/mosan/Documents/last/back/src/assets/avatars/${req.user.id}.png`;
+    try {
+      fs.writeFileSync(avatarPath, file.buffer, { flag: 'w+' });
+    } catch (e) {
+      console.log(e);
+    }
+    const user = await this._usersService.updateAvatar(req.user.id, avatarPath);
+    res.send(user.avatar);
   }
 
   /*
