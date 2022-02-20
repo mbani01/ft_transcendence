@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 10:52:22 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/19 19:01:07 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/20 10:17:50 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,16 @@ export class GameQueueService{
 	isPrivate: boolean;
 	id: string;
 	PrivateClients :Array<string>;
+	isDefaultGame ?: boolean;
 	
-	constructor(isPrivate?: boolean, QueueId?: string, expectedClientId?: Array<string>)
+	constructor(isPrivate?: boolean, QueueId?: string, expectedClientId?: Array<string>, isDefaultGame ?: boolean)
 	{
 		this.size = 0;
 		this.Players = [];
 		this.isPrivate = isPrivate || false;
 		this.id = QueueId || null;
 		this.PrivateClients = expectedClientId || [];
+		this.isDefaultGame = isDefaultGame;
 	}
 
 	addUser(user)
@@ -41,6 +43,11 @@ export class GameQueueService{
 		return true;
 	}
 	
+	isDefault()
+	{
+		return this.isDefaultGame;
+	}
+
 	clearQueue()
 	{
 		this.Players.length = 0;
