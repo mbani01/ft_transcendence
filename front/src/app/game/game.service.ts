@@ -2,10 +2,12 @@ import {Socket} from "ngx-socket-io";
 import {HttpClient} from "@angular/common/http";
 import {MainSocket} from "../socket/MainSocket";
 import {Injectable} from "@angular/core";
+import {socketListening, gameOver, startGame} from "./game";
 
 export enum GameStat {
   MAIN,
-  QUEUE,
+  NORMAL_QUEUE,
+  CUSTOM_QUEUE,
   GAME
 }
 
@@ -17,22 +19,41 @@ export class GameService {
   stat: GameStat = GameStat.MAIN;
 
   constructor(private socket: MainSocket, private http: HttpClient) {
-    socket.on('game/joinGame', this.joinGame.bind(this));
+    socket.on('gameStarted', this.joinGame.bind(this));
+    socket.on('GameOver', this.gameOver.bind(this));
+
   }
 
-  joinQueue() {
-    this.socket.emit("game/joinQueue");
-    this.stat = GameStat.QUEUE;
+  joinNormalQueue() {
+    console.log('sendNormalQueueEvent')
+    this.socket.emit("joinDefaultGame");
+    this.stat = GameStat.NORMAL_QUEUE;
+  }
+
+  joinPowerUpQueue() {
+    console.log('sendCustomQueueEvent')
+    this.socket.emit("joinCustomGame");
+    this.stat = GameStat.CUSTOM_QUEUE;
   }
 
   leaveQueue() {
-    this.socket.emit("game/leaveQueue");
+    console.log('leaveQueue');
+    this.socket.emit("leaveQueue", {isNormal: this.stat == GameStat.NORMAL_QUEUE});
+    this.stat = GameStat.MAIN;
   }
 
-  joinGame() {
+  joinGame(gameInfo: any) {
     // setInterval(() => {
-    this.socket.emit('game/ready');
+    // this.socket.emit('game/ready');
+
     this.stat = GameStat.GAME;
+    console.log('joinGame');
+
+    setTimeout(() => {
+      startGame(gameInfo);
+      socketListening(this.socket);
+    }, 1000);
+    // socketListening(this.socket);
     // }, 5000)
   }
 
@@ -40,6 +61,10 @@ export class GameService {
     this.stat = GameStat.MAIN;
   }
 
+
+  gameOver(obj: any) {
+    gameOver(obj);
+  }
   spectateGame(roomID: string) {
     this.socket.emit('game/watch', roomID, this.spectateGameCallback);
   }
@@ -53,7 +78,7 @@ export class GameService {
   }
 
   isQueue() {
-    return this.stat == GameStat.QUEUE;
+    return this.stat == GameStat.NORMAL_QUEUE || this.stat == GameStat.CUSTOM_QUEUE;
   }
 
   isGame() {

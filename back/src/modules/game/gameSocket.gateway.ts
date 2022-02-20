@@ -33,6 +33,7 @@ export class gameSocketGateway
 	
 	async startGame(GameQueue: GameQueueService, isDefault: boolean)
 	{
+		console.log("Game Started !");
 		const Players = GameQueue.getPlayers();
 		const game = new Game(true, Players, isDefault);
 		this.Games.push(game);
@@ -59,6 +60,7 @@ export class gameSocketGateway
 	@SubscribeMessage('joinDefaultGame')
 	joinQueue(@ConnectedSocket() socket: any)
 	{
+		console.log("Player joined");
 		if (!this.DefautQueue.addUser(socket))
 			return ;
 		if (this.DefautQueue.isfull())
@@ -75,14 +77,14 @@ export class gameSocketGateway
 	}
 	
 	@SubscribeMessage('leaveQueue')
-	leaveQueue(@ConnectedSocket() socket: any, data: any)
+	leaveQueue(@ConnectedSocket() socket: any, @MessageBody() data: any)
 	{
 		if (!data || !data.hasOwnProperty('isNormal'))
 			return ;
 		if(data.isNormal)
 			this.DefautQueue.clearQueue();
 		else
-			this.CustomQueue.clearQueue();	
+			this.CustomQueue.clearQueue();
 	}
 	
 	isPlayer(socket: any, GameId: string)
