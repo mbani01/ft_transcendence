@@ -3,12 +3,10 @@ import { Request, Response } from 'express';
 
 @Controller('game')
 export class GameController {
-	@Get('all')
+	@Get('query')
 	getallgame(@Req() request: Request, @Res() res: Response){
-		console.log(request.params);
-		const arr :Array<number> = [];
-		arr.push(5);
-		res.status(501).send("Hello world");
+		// hmoumani write your queries here !
+		
 	}
 
 }
