@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/04 09:50:56 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/17 18:09:45 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/20 10:29:57 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ export class WsAdapter extends IoAdapter {
 				.split('=')[1];
 				decoded = jwt.verify(token, JwtConstants.jwtSecret);
 				socket.user = decoded;
+				console.log(socket.user);
 			}
 			catch (error)
 			{

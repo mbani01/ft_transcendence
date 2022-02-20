@@ -6,15 +6,14 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/19 19:06:59 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/20 13:45:27 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { ConnectedSocket, SubscribeMessage, WebSocketGateway, WebSocketServer, MessageBody } from "@nestjs/websockets";
 import { Game } from "./game";
 import {GameQueueService} from "./gameQueue"
-import { Clients } from '../../adapters/socket.adapter'
-
+import { Clients } from '../../adapters/socket.adapter';
 
 @WebSocketGateway({ cors: true })
 export class gameSocketGateway
@@ -31,7 +30,7 @@ export class gameSocketGateway
 	{
 		Players.forEach(socket => socket.join(gameId));
 	}
-
+	
 	async startGame(GameQueue: GameQueueService, isDefault: boolean)
 	{
 		const Players = GameQueue.getPlayers();
@@ -60,18 +59,10 @@ export class gameSocketGateway
 	@SubscribeMessage('joinDefaultGame')
 	joinQueue(@ConnectedSocket() socket: any)
 	{
-		Clients.add(socket.user.sub, socket.id);
 		if (!this.DefautQueue.addUser(socket))
 			return ;
 		if (this.DefautQueue.isfull())
 			this.startGame(this.DefautQueue, true);
-		// const sockets = await this.server.fetchSockets();
-		// sockets.forEach(socket => {
-		// 	socket.join('test');
-		// 	console.log(socket.user);
-		// });
-		// client.to("test").emit("test", "hello world");
-		// console.log(client.user);
 	}
 
 	@SubscribeMessage('joinCustomGame')
@@ -81,6 +72,17 @@ export class gameSocketGateway
 			return ;
 		if (this.CustomQueue.isfull())
 			this.startGame(this.CustomQueue, false);
+	}
+	
+	@SubscribeMessage('leaveQueue')
+	leaveQueue(@ConnectedSocket() socket: any, data: any)
+	{
+		if (!data || !data.hasOwnProperty('isNormal'))
+			return ;
+		if(data.isNormal)
+			this.DefautQueue.clearQueue();
+		else
+			this.CustomQueue.clearQueue();	
 	}
 	
 	isPlayer(socket: any, GameId: string)
@@ -111,33 +113,43 @@ export class gameSocketGateway
 		if(!data || !data.hasOwnProperty('receiverId') || !data.hasOwnProperty('isDefaultGame'))
 			return ;
 			//check if user is active
-		if (!Clients.isActiveUser(socket.user.sub))
+		if (!Clients.isActiveUser(data.receiverId))
 			return {active: false};
 			// create a private queue with a unique id and add host
-		const QueueId = String(socket.user.sub) + '#' + String(Date.now());
-		const Queue = new GameQueueService(true, QueueId);
+		const QueueId = String(socket.user.sub) + "_" + String(data.receiverId) + '#' + String(Date.now());
+		const expectedPlayers =  [socket.user.sub, data.receiverId];
+		const Queue = new GameQueueService(true, QueueId, expectedPlayers, data.isDefaultGame); // Create a new Queue
 		if (!Queue.addUser(socket))
 			return ;
 		this.PrivateQueues.push(Queue);
 			// Get receiver socket and send invitation event
 		const sockets = await this.server.fetchSockets()
 		sockets.forEach(element=> {
-			console.log(element.user.sub + " " + data.receiverId)
 		if (element.user.sub === parseInt(data.receiverId))
-		{
-			console.log("inv Sent");
-			this.server.to(element.id).emit('invitedToGame', {QueueId: QueueId, isDefaultGame: data.isDefaultGame});
-		}
-		}); // invitation sent
-		
+			this.server.to(element.id).emit('invitedToGame', {InvitationId: QueueId}); // Invitation sent
+		});
 	}
 	
 	@SubscribeMessage('GameInvitationReceived')
 	InvitationReceived(@ConnectedSocket() socket: any, @MessageBody() data :any)
 	{
-		if (!data || !data.hasOwnProperty('QueueId') || !data.hasOwnProperty('isDefaultGame'))
+		if (!data || !data.hasOwnProperty('InvitationId') || !data.hasOwnProperty('isAccepted'))
 			return ;
-		// if ()
+		const queue = this.PrivateQueues.find(element => element.getId() === String(data.InvitationId));
+		if (queue === undefined)
+			return {'Error': "Invalid or expired invitation"};
+		if (data.isAccepted === true) // Invitation Accepted
+		{
+			queue.addUser(socket);
+			if (queue.isfull())
+				this.startGame(queue, queue.isDefault());
+		}
+		else if (data.isAccepted === false) // Invitation Rejected
+		{
+			const host = queue.getPlayers();
+			this.server.to(host[0].id).emit("invitationRejected", {"InvitationId": data.InvitationId});
+		}
+		this.PrivateQueues = this.PrivateQueues.filter(element => element.getId() !== String(data.InvitationId)); // Delete Queue
 	}
 	
 	@SubscribeMessage('syncRound')
