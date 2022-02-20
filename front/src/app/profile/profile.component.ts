@@ -40,7 +40,7 @@ export class ProfileComponent implements OnInit {
   }
 
   loadUserInfo(user: string) {
-    this.http.get<UserInfo>(`${environment.apiBaseUrl}/userInfo/${user}`).subscribe({
+    this.http.get<UserInfo>(`${environment.apiBaseUrl}/users/user-info/${user}`).subscribe({
       next: userInfo => {
         this.userInfo = userInfo;
       },
@@ -62,7 +62,7 @@ export class ProfileComponent implements OnInit {
   }
 
   loadMatchHistory(user: string) {
-    this.http.get<MatchHistory[]>(`${environment.apiBaseUrl}/matchHistory/${user}`).subscribe({
+    this.http.get<MatchHistory[]>(`${environment.apiBaseUrl}/users/match-history/${user}`).subscribe({
       next: matchHistory => {
         this.matchHistory = matchHistory;
       },
