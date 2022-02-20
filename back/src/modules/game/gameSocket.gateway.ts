@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/19 19:06:59 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/20 10:32:29 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@ import { ConnectedSocket, SubscribeMessage, WebSocketGateway, WebSocketServer, M
 import { Game } from "./game";
 import {GameQueueService} from "./gameQueue"
 import { Clients } from '../../adapters/socket.adapter'
+import { start } from "repl";
 
 
 @WebSocketGateway({ cors: true })
@@ -31,7 +32,7 @@ export class gameSocketGateway
 	{
 		Players.forEach(socket => socket.join(gameId));
 	}
-
+	
 	async startGame(GameQueue: GameQueueService, isDefault: boolean)
 	{
 		const Players = GameQueue.getPlayers();
@@ -60,18 +61,10 @@ export class gameSocketGateway
 	@SubscribeMessage('joinDefaultGame')
 	joinQueue(@ConnectedSocket() socket: any)
 	{
-		Clients.add(socket.user.sub, socket.id);
 		if (!this.DefautQueue.addUser(socket))
 			return ;
 		if (this.DefautQueue.isfull())
 			this.startGame(this.DefautQueue, true);
-		// const sockets = await this.server.fetchSockets();
-		// sockets.forEach(socket => {
-		// 	socket.join('test');
-		// 	console.log(socket.user);
-		// });
-		// client.to("test").emit("test", "hello world");
-		// console.log(client.user);
 	}
 
 	@SubscribeMessage('joinCustomGame')
@@ -111,33 +104,39 @@ export class gameSocketGateway
 		if(!data || !data.hasOwnProperty('receiverId') || !data.hasOwnProperty('isDefaultGame'))
 			return ;
 			//check if user is active
-		if (!Clients.isActiveUser(socket.user.sub))
+		if (!Clients.isActiveUser(data.receiverId))
 			return {active: false};
 			// create a private queue with a unique id and add host
-		const QueueId = String(socket.user.sub) + '#' + String(Date.now());
-		const Queue = new GameQueueService(true, QueueId);
+			console.log("active user");
+		const QueueId = String(socket.user.sub) + "_" + String(data.receiverId) + '#' + String(Date.now());
+		const expectedPlayers =  [socket.user.sub, data.receiverId];
+		const Queue = new GameQueueService(true, QueueId, expectedPlayers, data.isDefaultGame); // Create a new Queue
 		if (!Queue.addUser(socket))
 			return ;
 		this.PrivateQueues.push(Queue);
 			// Get receiver socket and send invitation event
 		const sockets = await this.server.fetchSockets()
 		sockets.forEach(element=> {
-			console.log(element.user.sub + " " + data.receiverId)
 		if (element.user.sub === parseInt(data.receiverId))
-		{
-			console.log("inv Sent");
-			this.server.to(element.id).emit('invitedToGame', {QueueId: QueueId, isDefaultGame: data.isDefaultGame});
-		}
-		}); // invitation sent
-		
+			this.server.to(element.id).emit('invitedToGame', {InvitationId: QueueId}); // Invitation sent
+		});
 	}
 	
 	@SubscribeMessage('GameInvitationReceived')
 	InvitationReceived(@ConnectedSocket() socket: any, @MessageBody() data :any)
 	{
-		if (!data || !data.hasOwnProperty('QueueId') || !data.hasOwnProperty('isDefaultGame'))
+		if (!data || !data.hasOwnProperty('InvitationId') || !data.hasOwnProperty('isAccepted'))
 			return ;
-		// if ()
+		const queue = this.PrivateQueues.find(element => element.getId() === String(data.InvitationId));
+		if (queue === undefined)
+			return {'Error': "Invalid or expired invitation"};
+		if (data.isAccepted)
+		{
+			queue.addUser(socket);
+			if (queue.isfull())
+				this.startGame(queue, queue.isDefault());
+			this.PrivateQueues = this.PrivateQueues.filter(element => element.getId() !== String(data.InvitationId)); // Delete Queue
+		}
 	}
 	
 	@SubscribeMessage('syncRound')
