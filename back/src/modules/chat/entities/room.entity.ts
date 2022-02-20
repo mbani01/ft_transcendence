@@ -8,13 +8,13 @@ export class RoomEntity {
     @PrimaryGeneratedColumn()
     roomID: number;
 
-    @Column({unique: true, nullable: false})
+    @Column({unique: true})
     name: string;
 
-    @Column({ default: true, nullable: false})
+    @Column({ default: true})
     isChannel: boolean;
 
-    @Column({nullable: false})
+    @Column({nullable: true})
     ownerID: number;
 
     @Column({nullable: false})
