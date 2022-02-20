@@ -41,7 +41,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
           }
         */
       const { name, isPublic, password } = createRoomBodyDto;
-      if (password.length < 8)
+      if (password?.length < 8)
           return { error: "password too weak" };
       const channelType = this._chatService.getChannelType(isPublic, password);
       const roomEntity: CreateRoomDto = { name, password, channelType, ownerID: client.user.sub }
