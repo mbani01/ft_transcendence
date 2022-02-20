@@ -3,12 +3,15 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { PaginationQueryDto } from "src/common/dto/pagination-query.dto";
 import { Repository } from "typeorm";
 import { CreateUserDto } from "./dto/create-user.dto";
+import { Relation } from "./entity/relation.entity";
 import { User } from "./entity/user.entity";
+import { ICreateRelation } from "./interfaces/create-relation.interface";
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User) private readonly _usersRepo: Repository<User>
+    @InjectRepository(User) private readonly _usersRepo: Repository<User>,
+    @InjectRepository(Relation) private readonly _relationsRepo: Repository<Relation>,
   ) { }
 
   async create(userDto: CreateUserDto): Promise<User> {
@@ -73,4 +76,29 @@ export class UsersService {
     });
     console.log('after I set the user secret: ', await this.findById(userId))
   }
+
+
+  async createRelation(createRelation: ICreateRelation) {
+    const newRelation = this._relationsRepo.create(createRelation);
+    return await this._relationsRepo.save(newRelation);
+  }
 }
+
+
+/**
+    @Column({ default: false })
+    isFriends: boolean;
+
+    @ManyToOne(() => User, user => user.relationsFirst)
+    userFirst: User;
+
+    @ManyToOne(() => User, user => user.relationsSecond)
+    userSecond: User;
+    
+    @ManyToOne(() => User, user => user.BlockedRelations)
+    blocker: User;
+
+    @ManyToOne(() => User, user => user.FriendshipRequests)
+    requester: User;
+
+ */

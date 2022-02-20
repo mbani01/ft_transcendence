@@ -7,7 +7,7 @@ export class Relation
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ default: false })
+    @Column({ default: false , nullable: false})
     isFriends: boolean;
 
     @ManyToOne(() => User, user => user.relationsFirst)

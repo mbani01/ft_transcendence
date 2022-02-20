@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Post, Query, Req, Res, UseGuards } from '
 import { Request } from 'express';
 import { check } from 'prettier';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UsersService } from '../users/users.service';
 import { ChatGateway } from './chat.gateway';
 import { ChatService } from './chat.service';
 import { CreateRoomBodyDto, CreateRoomDto } from './dto/create-room.dto';
@@ -9,7 +10,9 @@ import { GetAllRoomsQueryDto, GetMessageQueryDto, ParamsDto, UnmuteAndUnbanDto }
 
 @Controller('chat')
 export class ChatController {
-    constructor(private readonly _chaTService: ChatService) { }
+    constructor(private readonly _chaTService: ChatService,
+        private readonly _usersService: UsersService
+    ) { }
 
     @UseGuards(JwtAuthGuard)
     @Get('messages/:roomID')
@@ -146,6 +149,13 @@ export class ChatController {
             }
         }
         return { channels, collectionSize: channels.length };
+    }
+
+    @UseGuards(JwtAuthGuard)
+    async addFriend(@Param('uid') otherUserId: number, @Req() req: any) {
+        const user = req.user;
+        const otherUser = await this._usersService.findById(otherUserId);
+        await this._usersService.createRelation({userFirst: user, userSecond: otherUser, requester: user, blocker: null, isFriends: true });
     }
 
     @UseGuards(JwtAuthGuard)

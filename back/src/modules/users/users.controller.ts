@@ -67,8 +67,24 @@ export class UsersController {
   */
   @UseGuards(JwtAuthGuard)
   @Get("/user-info/:uid")
-  async getUserInfo(@Param("uid") userId: string): Promise<OutUserInfoDto> {
-    return { games: 0, wins: 0, rankPoints: 0, totalScore: 0 };
+  async getUserInfo(@Param("uid") userID: number, @Req() req): Promise<OutUserInfoDto> {
+    /**
+     {
+        "name": string
+        "img": string,
+        "status": ONLINE | OFFLINE | IN_GAME,
+        "isFriend": boolean,
+        "isBlocked": boolean,
+        "games": number,
+        "wins": number,
+        "rank": string,
+        "totalScore": number
+      }
+     */
+
+    const user = req.user
+    const otherUser = await this._usersService.findById(userID);
+    return { games: 0, wins: 0, rankPoints: 0, totalScore: 0, status: 'on-line', img: user.img, name: user.username, isFriend: true, isBlocked: false };
   }
 
 

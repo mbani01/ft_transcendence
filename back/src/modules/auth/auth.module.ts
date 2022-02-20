@@ -10,11 +10,12 @@ import { UsersModule } from "src/modules/users/users.module";
 import { JwtStrategy } from "./jwt.strategy";
 import { PassportModule } from "@nestjs/passport";
 import { TwoFactorAuthService } from "src/modules/twofactorauth/2fa.service";
+import { Relation } from "../users/entity/relation.entity";
 @Module({
   imports: [
     UsersModule,
     PassportModule,
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Relation]),
     JwtModule.register({
       secret: JwtConstants.jwtSecret,
       // signOptions: { expiresIn: 60 },
