@@ -1,4 +1,4 @@
-<div class="chat-settings mt-3">
+<div class="chat-settings mt-3 h-100">
   <form #roomNameForm="ngForm" (ngSubmit)="saveName(roomNameForm)">
     <div class="row w-100 pl-2 mb-2">
       <label for="chatName" class="col-4 m-auto">Name:</label>
@@ -98,6 +98,6 @@
       </li>
     </ul>
     <div [ngbNavOutlet]="nav" class="ml-4"></div>
-
+    <button class="btn btn-outline-danger">Leave Channel</button>
   </div>
 </div>

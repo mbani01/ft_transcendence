@@ -1,10 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {MainSocket} from "../socket/MainSocket";
-
-import {socketListening} from "./game";
 import {GameService} from "./game.service";
 import {HttpClient} from "@angular/common/http";
-import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-game',
@@ -15,25 +12,35 @@ export class GameComponent implements OnInit {
 
   gameStarting: boolean = false;
   queueCounter: number = 0;
+  private queueInterval: any;
 
   constructor(private socket: MainSocket, public gameService: GameService, private http: HttpClient) {
-    // socket.on('gameStarted', g.gameStarted);
-    // socket.emit('joinDefaultGame', { wsap: '1'});
-    // socket.on("syncRound", g.syncRound);
-    // socket.on('GameOver', g.gameOver);
-    // socket.on('sync', g.sync);
-    // socket.on('syncBall', g.syncBall);
 
   }
 
   ngOnInit() {
   }
 
-  startGame() {
-    socketListening(this.socket);
-    this.gameService.joinGame();
-    // this.gameService.joinQueue();
-    // setInterval(() => this.queueCounter++, 1000);
+  normalGame() {
+    console.log('clickNormalQueueEvent')
+
+    this.gameService.joinNormalQueue();
   }
 
+  powerUpsGame() {
+    console.log('clickCustomQueueEvent')
+    this.gameService.joinPowerUpQueue();
+  }
+
+  startTimer() {
+    // let queueInterval = setInterval(() => this.queueCounter++, 1000);
+  }
+
+  cancelQueue() {
+    this.gameService.leaveQueue();
+  }
+
+  liveGames() {
+
+  }
 }
