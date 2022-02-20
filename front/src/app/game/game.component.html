@@ -2,9 +2,9 @@
 <!--  MAIN MENU -->
   <ng-container *ngIf="gameService.isMain(); else queueTemplate">
 <!--    <button class="btn btn-primary m-auto" (click)="startGame()">Play Now</button>-->
-    <img class="game-type mr-1" src="assets/normal.png" alt="Normal Game" (click)="normalGame()">
+    <img class="game-type" src="assets/normal.png" alt="Normal Game" (click)="normalGame()">
     <img class="game-type" src="assets/powerups.png" alt="Power Ups" (click)="powerUpsGame()">
-    <img class="game-type" src="assets/live.png" alt="Power Ups" (click)="liveGames()">
+    <img class="game-type" src="assets/live.png" alt="Power Ups" (click)="showLiveGames()">
   </ng-container>
 <!--  QUEUE -->
   <ng-template #queueTemplate>
@@ -18,6 +18,27 @@
   </ng-template>
 <!--  GAME -->
   <ng-template #gameTemplate>
+    <ng-container *ngIf="gameService.isGame(); else liveTemplate">
       <div id="phaser" style="overflow: hidden; width: 100%; height: 100%;"></div>
+    </ng-container>
+  </ng-template>
+  <ng-template #liveTemplate>
+    <div id="live-games" style="overflow-y:scroll;">
+      <ul class="list-group">
+        <p *ngIf="gameService.liveGames.length === 0" class="mx-auto mt-3" style="color: #888b91">There is no games right now</p>
+        <li class="list-group-item" *ngFor="let game of gameService.liveGames">
+          <div class="row">
+            <div class="col d-flex">
+              <img src="/assets/img.webp" class="avatar">
+              <span class="player-name">{{game.Players[0].username}}</span>
+              <p class="m-auto">Vs</p>
+              <span class="player-name">{{game.Players[1].username}}</span>
+              <img src="/assets/img.webp" class="avatar">
+            </div>
+            <button class="btn btn-secondary " (click)="watchGame(game)">Watch</button>
+          </div>
+        </li>
+      </ul>
+    </div>
   </ng-template>
 </div>

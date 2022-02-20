@@ -8,7 +8,8 @@ export enum GameStat {
   MAIN,
   NORMAL_QUEUE,
   CUSTOM_QUEUE,
-  GAME
+  GAME,
+  LIVE_GAMES
 }
 
 @Injectable({
@@ -17,6 +18,7 @@ export enum GameStat {
 export class GameService {
 
   stat: GameStat = GameStat.MAIN;
+  liveGames: any[] = [];
 
   constructor(private socket: MainSocket, private http: HttpClient) {
     socket.on('gameStarted', this.joinGame.bind(this));
@@ -52,7 +54,7 @@ export class GameService {
     setTimeout(() => {
       startGame(gameInfo);
       socketListening(this.socket);
-    }, 1000);
+    });
     // socketListening(this.socket);
     // }, 5000)
   }
@@ -85,4 +87,25 @@ export class GameService {
     return this.stat == GameStat.GAME;
   }
 
+  watchGame(gameID: string) {
+    this.socket.emit('watchGame', {
+      GameId: gameID
+    }, (obj: any) => {
+      console.log(obj);
+    });
+
+    setTimeout(() => {
+      startGame({GameId: gameID, ball: { x: -600, y: -600 }, isDefaultGame: true});
+    });
+    this.stat = GameStat.GAME
+  }
+
+  getLiveGames() {
+    this.stat = GameStat.LIVE_GAMES;
+
+    this.socket.on('LiveGames', (games: any[]) => {
+      this.liveGames = games;
+    })
+    this.socket.emit('LiveGamesRequest');
+  }
 }
