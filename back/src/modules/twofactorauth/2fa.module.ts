@@ -10,9 +10,10 @@ import { TwoFactorAuthService } from './2fa.service';
 import { UsersService } from '../users/users.service';
 import { AuthService } from '../auth/auth.service';
 import { JwtStrategy } from '../auth/jwt.strategy';
+import { Relation } from '../users/entity/relation.entity';
 
 @Module({
-  imports: [PassportModule, TypeOrmModule.forFeature([User]),JwtModule.register({
+  imports: [PassportModule, TypeOrmModule.forFeature([User, Relation]),JwtModule.register({
     secret: JwtConstants.jwtSecret,
     signOptions: { expiresIn: 60 },
   }),],

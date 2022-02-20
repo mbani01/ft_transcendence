@@ -1,16 +1,24 @@
-import { IsNumber } from "class-validator";
+import { IsNumber, IsString } from "class-validator";
+
+type STATUS = 'on-line' | 'off-line' | 'in-game'
 
 export class OutUserInfoDto {
-    @IsNumber()
     games: number;
 
-    @IsNumber()
     wins: number;
 
-    @IsNumber()
     rankPoints: number;
 
-    @IsNumber()
     totalScore: number;
+
+    name: string;
+
+    img: string;
+
+    status: STATUS;
+
+    isFriend: boolean;
+
+    isBlocked: boolean;
 }
 
