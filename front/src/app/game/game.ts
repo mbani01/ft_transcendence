@@ -40,8 +40,8 @@ export function gameOver(obj: any) {
 			fontFamily: "'Press Start 2P', cursive"
 		});
 	}
-	
-	
+
+
   } else {
 	console.log("win", obj);
 	ball.setVisible(false);
@@ -68,6 +68,10 @@ export function gameOver(obj: any) {
   }
 }
 
+export function setSocket(s: MainSocket) {
+  socket = s;
+}
+
 export function startGame(obj: any) {
 
 	game = new Phaser.Game(config);
@@ -81,9 +85,9 @@ export function startGame(obj: any) {
 	// console.log(obj);
 
 }
-export function socketListening (s: MainSocket) {
+export function socketListening () {
   console.log("Listening Socket");
-  socket = s;
+
   socket.on("connect", () => {
 	console.log("Connnnected");
 	// console.log(socket.id); // x8WIv7-mJelg7on_ALbx
@@ -345,6 +349,8 @@ function create (this: Phaser.Scene) : void
 
 	if (!isDefaultGame)
 	this.time.delayedCall(5000, showPowerUp, [], this);
+
+  socketListening();
 }
 
 function HandleHit(this: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody)
