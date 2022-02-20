@@ -13,6 +13,41 @@ let isDefaultGame : boolean;
 let ball_position : {x: number, y: number};
 // const socket = io("https://server-domain.com");
 
+
+export function gameOver(obj: any) {
+  if (obj.hasOwnProperty('disconnectedPlayer')) {
+    console.log("disco");
+    ball.setVisible(false);
+    game.scene.pause(scene);
+    scene.add.text(game.canvas.width / 4, game.canvas.height / 3, 'other Player Disconnected', {
+      fontSize: '100px',
+      fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif'
+    });
+  } else {
+    console.log("win", obj);
+    ball.setVisible(false);
+    game.scene.pause(scene);
+    scene.add.text(game.canvas.width / 4, game.canvas.height / 3, 'game over', {
+      fontSize: '100px',
+      fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif'
+    });
+  }
+}
+
+
+export function startGame(obj: any) {
+
+  game = new Phaser.Game(config);
+  // game.plugins.install("worker", PhaserWebWorkers.Plugin);
+
+  GameId = obj.GameId;
+  isHost = obj.isHost;
+  ball_position = obj.ball;
+  console.log("joined");
+  isDefaultGame = obj.isDefaultGame;
+  // console.log(obj);
+}
+
 export function socketListening (s: MainSocket) {
   console.log("Listening Socket");
   socket = s;
@@ -21,7 +56,7 @@ export function socketListening (s: MainSocket) {
     // console.log(socket.id); // x8WIv7-mJelg7on_ALbx
   });
 
-  socket.emit('joinDefaultGame', {wsap: '1'});
+  // socket.emit('joinDefaultGame', {wsap: '1'});
 
 
   socket.on("syncRound", (obj: any) => {
@@ -29,38 +64,6 @@ export function socketListening (s: MainSocket) {
     player1_score_obj.setText('' + obj.player1_score);
     player2_score_obj.setText('' + obj.player2_score);
 
-  });
-
-  socket.on("GameOver", (obj: any) => {
-    if (obj.hasOwnProperty('disconnectedPlayer')) {
-      console.log("disco");
-      ball.setVisible(false);
-      game.scene.pause(scene);
-      scene.add.text(game.canvas.width / 4, game.canvas.height / 3, 'other Player Disconnected', {
-        fontSize: '100px',
-        fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif'
-      });
-    } else {
-      console.log("win", obj);
-      ball.setVisible(false);
-      game.scene.pause(scene);
-      scene.add.text(game.canvas.width / 4, game.canvas.height / 3, 'game over', {
-        fontSize: '100px',
-        fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif'
-      });
-    }
-  });
-
-  socket.on("gameStarted", (obj: any) => {
-    game = new Phaser.Game(config);
-    // game.plugins.install("worker", PhaserWebWorkers.Plugin);
-
-    GameId = obj.GameId;
-    isHost = obj.isHost;
-    ball_position = obj.ball;
-    console.log("joined");
-    isDefaultGame = obj.isDefaultGame;
-    // console.log(obj);
   });
 
   socket.on('sync', (obj: any) => {
@@ -359,7 +362,7 @@ function update(this: Phaser.Scene) : void
     {
         local_player.setPosition(local_player.x, local_player.y + PLAYER_SPEED);
         socket.emit('sync', {"GameId":GameId, player: {x: local_player.x, y: local_player.y}, isHost: isHost});
-        
+
     }
     else if (cursors.up.isDown && !cursors.down.isDown)
     {
