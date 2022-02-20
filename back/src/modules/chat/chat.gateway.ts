@@ -223,12 +223,9 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     const res = await this.server.fetchSockets();
     const otherUserClient = res.find(clt => clt.id === Clients.getSocketId(userID2));
-    if (otherUserClient === undefined) {
-      console.log('user is off-line');
-    } else {
-      client.join(String(newDM.roomID));
+    if (otherUserClient) 
       otherUserClient.join(String(newDM.roomID));
-    }
+    client.join(String(newDM.roomID));
     return newDM;
   }
 
