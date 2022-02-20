@@ -13,3 +13,28 @@
   max-width: 256px;
   max-height: 256px;
 }
+
+#live-games {
+  margin: auto;
+  background-color: #2b3031;
+  width: 75%;
+  height: 75%;
+  border-radius: 2rem;
+}
+
+.list-group-item {
+  background-color: #2b3031;
+  color: white;
+}
+
+.player-name {
+  margin: auto;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.avatar {
+  border-radius: 360px;
+  width: 48px;
+  height: 48px;
+}

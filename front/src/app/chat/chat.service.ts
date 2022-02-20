@@ -57,17 +57,14 @@ export class ChatService {
     if (roomID) {
       this.currChat = this.chats.get(roomID) as Chat;
     } else {
-      this.http.post<Chat>(`${environment.apiBaseUrl}/chat/
-    conversation`, {
+      this.socket.emit('chat-conversation', {
         user: user.uid
-      }).subscribe(
-        {
-          next: chat => {
-            this.currChat = chat;
-            this.chats.set(chat.roomID, chat);
-          }
+      }, (chat: Chat) => {
+        if (chat) {
+          this.currChat = chat;
+          this.chats.set(chat.roomID, chat);
         }
-      );
+      })
     }
   }
 

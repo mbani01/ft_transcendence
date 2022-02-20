@@ -22,13 +22,10 @@ export class GameComponent implements OnInit {
   }
 
   normalGame() {
-    console.log('clickNormalQueueEvent')
-
     this.gameService.joinNormalQueue();
   }
 
   powerUpsGame() {
-    console.log('clickCustomQueueEvent')
     this.gameService.joinPowerUpQueue();
   }
 
@@ -40,7 +37,11 @@ export class GameComponent implements OnInit {
     this.gameService.leaveQueue();
   }
 
-  liveGames() {
+  showLiveGames() {
+    this.gameService.getLiveGames();
+  }
 
+  watchGame(game: { GameId: string }) {
+    this.gameService.watchGame(game.GameId);
   }
 }
