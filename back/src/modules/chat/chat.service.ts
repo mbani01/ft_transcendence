@@ -126,14 +126,14 @@ export class ChatService {
 
 
 
-  async createDM(dm: CreateDMDto, data: any) {
+  async createDM(dm: CreateDMDto, usersIDs: any) {
     // Create a DM.
     const newDM = this._roomsRepo.create(dm);
     await this._roomsRepo.save(newDM);
 
     // Create the Members that going to join the dm.
-    await this.createMember({ userID: data.userID1, roomID: newDM.roomID, password: newDM.password, role: 'member' });
-    await this.createMember({ userID: data.userID2, roomID: newDM.roomID, password: newDM.password, role: 'member' });
+    await this.createMember({ userID: usersIDs.userID1, roomID: newDM.roomID, password: newDM.password, role: 'member' });
+    await this.createMember({ userID: usersIDs.userID2, roomID: newDM.roomID, password: newDM.password, role: 'member' });
     return newDM;
   }
 
