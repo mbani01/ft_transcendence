@@ -6,16 +6,14 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/20 10:32:29 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/20 11:32:14 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { ConnectedSocket, SubscribeMessage, WebSocketGateway, WebSocketServer, MessageBody } from "@nestjs/websockets";
 import { Game } from "./game";
 import {GameQueueService} from "./gameQueue"
-import { Clients } from '../../adapters/socket.adapter'
-import { start } from "repl";
-
+import { Clients } from '../../adapters/socket.adapter';
 
 @WebSocketGateway({ cors: true })
 export class gameSocketGateway
@@ -107,7 +105,6 @@ export class gameSocketGateway
 		if (!Clients.isActiveUser(data.receiverId))
 			return {active: false};
 			// create a private queue with a unique id and add host
-			console.log("active user");
 		const QueueId = String(socket.user.sub) + "_" + String(data.receiverId) + '#' + String(Date.now());
 		const expectedPlayers =  [socket.user.sub, data.receiverId];
 		const Queue = new GameQueueService(true, QueueId, expectedPlayers, data.isDefaultGame); // Create a new Queue
@@ -130,13 +127,18 @@ export class gameSocketGateway
 		const queue = this.PrivateQueues.find(element => element.getId() === String(data.InvitationId));
 		if (queue === undefined)
 			return {'Error': "Invalid or expired invitation"};
-		if (data.isAccepted)
+		if (data.isAccepted === true) // Invitation Accepted
 		{
 			queue.addUser(socket);
 			if (queue.isfull())
 				this.startGame(queue, queue.isDefault());
-			this.PrivateQueues = this.PrivateQueues.filter(element => element.getId() !== String(data.InvitationId)); // Delete Queue
 		}
+		else if (data.isAccepted === false) // Invitation Rejected
+		{
+			const host = queue.getPlayers();
+			this.server.to(host[0].id).emit("invitationRejected", {"InvitationId": data.InvitationId});
+		}
+		this.PrivateQueues = this.PrivateQueues.filter(element => element.getId() !== String(data.InvitationId)); // Delete Queue
 	}
 	
 	@SubscribeMessage('syncRound')
