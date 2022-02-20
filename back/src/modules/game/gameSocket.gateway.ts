@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/20 11:32:14 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/20 13:45:27 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,17 @@ export class gameSocketGateway
 			return ;
 		if (this.CustomQueue.isfull())
 			this.startGame(this.CustomQueue, false);
+	}
+	
+	@SubscribeMessage('leaveQueue')
+	leaveQueue(@ConnectedSocket() socket: any, data: any)
+	{
+		if (!data || !data.hasOwnProperty('isNormal'))
+			return ;
+		if(data.isNormal)
+			this.DefautQueue.clearQueue();
+		else
+			this.CustomQueue.clearQueue();	
 	}
 	
 	isPlayer(socket: any, GameId: string)
