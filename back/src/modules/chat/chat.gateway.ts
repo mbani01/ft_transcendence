@@ -213,22 +213,19 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   @SubscribeMessage('chat-conversation')
   async DM(@ConnectedSocket() client: CustomSocket, @MessageBody() data: any) {
-    const { userID1, userID2 } = JSON.parse(data);
+    const { userID2 } = JSON.parse(data);
     let newDM: RoomEntity;
     try {
-      newDM = await this._chatService.createDM({ isChannel: false, channelType: 'private', name: `DM${userID1}${userID2}` }, { userID1, userID2 });
+      newDM = await this._chatService.createDM({ isChannel: false, channelType: 'private', name: `DM${client.user.sub}${userID2}` }, { userID1: client.user.sub ,userID2 });
     } catch (e) {
       return { error: e.message };
     }
 
     const res = await this.server.fetchSockets();
     const otherUserClient = res.find(clt => clt.id === Clients.getSocketId(userID2));
-    if (otherUserClient === undefined) {
-      console.log('user is off-line');
-    } else {
-      client.join(String(newDM.roomID));
+    if (otherUserClient) 
       otherUserClient.join(String(newDM.roomID));
-    }
+    client.join(String(newDM.roomID));
     return newDM;
   }
 
