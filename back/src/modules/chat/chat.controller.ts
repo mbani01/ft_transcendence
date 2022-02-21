@@ -152,10 +152,16 @@ export class ChatController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @Post('/add_friend')
     async addFriend(@Param('uid') otherUserId: number, @Req() req: any) {
-        const user = req.user;
-        const otherUser = await this._usersService.findById(otherUserId);
-        await this._usersService.createRelation({userFirst: user, userSecond: otherUser, requester: user, blocker: null, isFriends: true });
+        try {
+            const user = req.user;
+            const otherUser = await this._usersService.findById(otherUserId);
+            await this._usersService.createRelation({ userFirst: user, userSecond: otherUser, requester: user, blocker: null, isFriends: false });
+        } catch (e) {
+            return { error: e.message };
+        }
+        return { userID: otherUserId };
     }
 
     @UseGuards(JwtAuthGuard)

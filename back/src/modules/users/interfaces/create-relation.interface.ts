@@ -7,8 +7,15 @@ export interface ICreateRelation {
     userFirst: User; // Current User.
 
     userSecond: User; // User who gonna have a relation with current User.
-    
+
     blocker: User; // the ID of the user to commit a block.
 
-   requester: User; // ID of the user to request friendship.
+    requester: User; // ID of the user to request friendship.
+}
+
+
+export interface IUpdateRelation {
+    isFriends: boolean;
+    userFirst: User;
+    userSecond: User;
 }

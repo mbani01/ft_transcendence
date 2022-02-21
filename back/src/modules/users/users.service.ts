@@ -5,7 +5,7 @@ import { Repository } from "typeorm";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { Relation } from "./entity/relation.entity";
 import { User } from "./entity/user.entity";
-import { ICreateRelation } from "./interfaces/create-relation.interface";
+import { ICreateRelation, IUpdateRelation } from "./interfaces/create-relation.interface";
 
 @Injectable()
 export class UsersService {
@@ -81,6 +81,19 @@ export class UsersService {
   async createRelation(createRelation: ICreateRelation) {
     const newRelation = this._relationsRepo.create(createRelation);
     return await this._relationsRepo.save(newRelation);
+  }
+
+
+  async updateRelation(updateRelation: IUpdateRelation) {
+    const relation = await this._relationsRepo.find({
+      where: {
+        userFirst: updateRelation.userFirst,
+        userSecond: updateRelation.userSecond,
+      }
+    })
+    this._relationsRepo.update(relation[0].id, {
+      isFriends: updateRelation.isFriends,
+    })
   }
 }
 
