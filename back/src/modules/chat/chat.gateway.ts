@@ -119,7 +119,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const user = client.user;
     const roomID = data.roomID;
     try {
-      const members = await this._chatService.removeMemberFromRoom(roomID, user.id);
+      const members = await this._chatService.removeMemberFromRoom(roomID, user.sub);
       this.server.to(String(roomID)).emit('chat-leave', { name: user.username });
       console.log('deleted members: \n')
       console.log(members);
@@ -141,6 +141,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       "error": string,
     }
      */
+    return { roomID };
   }
 
   @SubscribeMessage('chat-room-invite')
@@ -216,14 +217,14 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const { userID2 } = JSON.parse(data);
     let newDM: RoomEntity;
     try {
-      newDM = await this._chatService.createDM({ isChannel: false, channelType: 'private', name: `DM${client.user.sub}${userID2}` }, { userID1: client.user.sub ,userID2 });
+      newDM = await this._chatService.createDM({ isChannel: false, channelType: 'private', name: `DM${client.user.sub}${userID2}` }, { userID1: client.user.sub, userID2 });
     } catch (e) {
       return { error: e.message };
     }
 
     const res = await this.server.fetchSockets();
     const otherUserClient = res.find(clt => clt.id === Clients.getSocketId(userID2));
-    if (otherUserClient) 
+    if (otherUserClient)
       otherUserClient.join(String(newDM.roomID));
     client.join(String(newDM.roomID));
     return newDM;
