@@ -47,8 +47,14 @@
   </form>
 
   <hr>
-  <div class="flex-column justify-content-center">
+  <div class="d-flex">
+    <button class="btn {{leaveConfirm ? 'btn-danger' : 'btn-outline-danger'}} mx-auto" (click)="leaveChannel()">Leave Channel</button>
+  </div>
+  <hr>
+
+  <div class="">
 <!--    <h4 class="text-center">Members</h4>-->
+
     <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-pills" orientation="horizontal">
       <li ngbNavItem="members" class="col">
         <a ngbNavLink class="members-nav">Members</a>
@@ -97,7 +103,6 @@
         </ng-template>
       </li>
     </ul>
-    <div [ngbNavOutlet]="nav" class="ml-4"></div>
-    <button class="btn btn-outline-danger">Leave Channel</button>
+    <div [ngbNavOutlet]="nav" class="ml-4" style="flex: 2;"></div>
   </div>
 </div>

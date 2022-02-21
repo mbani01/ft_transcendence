@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/20 19:56:50 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/21 15:52:55 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,10 @@ export class gameSocketGateway
 		this.Games.forEach(game=>
 		{
 			if(game.getGameId() === String(data.GameId))
+			{
 				socket.join(String(data.GameId));
+				this.server.emit('gameStarted', {GameId: game.GameId, isDefaultGame: game.isDefault, isWatcher: true});
+			}
 		});
 	}
 
