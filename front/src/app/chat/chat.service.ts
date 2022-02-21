@@ -101,6 +101,22 @@ export class ChatService {
     return this._currChat;
   }
 
+  leaveChannel(roomID = this.currChat?.roomID) {
+    console.log('leaveChannel', roomID);
+    if (roomID) {
+      this.socket.emit('chat-leave', {
+        roomID: roomID
+      }, (data: any) => {
+        if (data.roomID) {
+          if (this.currChat?.roomID == data.roomID) {
+            this.currChat = undefined;
+          }
+          this.chats.delete(data.roomID);
+        }
+      });
+    }
+
+  }
 
   isChatExists(user: User) {
     let roomID: string | null = null;
