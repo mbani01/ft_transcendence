@@ -5,6 +5,7 @@ import {environment} from "../../../../environments/environment";
 import {ChatService} from "../../chat.service";
 import {BehaviorSubject} from "rxjs";
 import {NgForm} from "@angular/forms";
+import {MainSocket} from "../../../socket/MainSocket";
 
 @Component({
   selector: 'chat-settings',
@@ -18,11 +19,13 @@ export class ChatSettingsComponent {
   editName = false;
   editPassword = false;
 
+  leaveConfirm = false;
+
   activeTab = 'members';
   // roomName = this.chatService.currChat!.name;
   // nickname: any;
 
-  constructor(private http: HttpClient, private chatService: ChatService) {
+  constructor(private http: HttpClient, private chatService: ChatService, private socket: MainSocket) {
     this.http.get<{
       id: number,
       username: string,
@@ -68,5 +71,14 @@ export class ChatSettingsComponent {
 
   sendInvite(inviteForm: NgForm) {
     this.chatService.sendInvite(inviteForm.value);
+  }
+
+  leaveChannel() {
+    if (!this.leaveConfirm) {
+      this.leaveConfirm = true;
+    } else {
+      this.chatService.leaveChannel();
+      this.leaveConfirm = false;
+    }
   }
 }
