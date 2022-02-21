@@ -21,15 +21,12 @@ export class TwoFactorAuthComponent {
 
   constructor(private http: HttpClient, private route: ActivatedRoute, public oauthService: OAuthService, private router: Router) {
     this.code = route.snapshot.queryParams['code'];
-    console.log("2FA");
 
     this.oauthService.generateAccessToken(this.code, undefined, {
       error: err => {
-        console.log(err)
         if (err.error["is2FA"]) {
           this.is2FA = true;
         } else {
-          console.log("not is2FA")
           this.fail.emit();
           router.navigate(['login']);
         }
@@ -39,7 +36,6 @@ export class TwoFactorAuthComponent {
 
   verify(twoFactorAuth: NgForm) {
     let twoFactorAuthCode = twoFactorAuth.value['twoFactorAuth'];
-    console.log(twoFactorAuth);
     this.loading = true;
     this.oauthService.generateAccessToken(this.code, twoFactorAuthCode, {
       next: value => {

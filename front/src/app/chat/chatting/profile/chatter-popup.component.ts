@@ -22,8 +22,6 @@ export class ChatterPopupComponent {
   // }
 
   mute(hours: string, minutes: string) {
-    console.log('Mute: ')
-    console.log(parseInt(hours) + ' ' + parseInt(minutes));
     this.popover.close();
   }
 
@@ -33,7 +31,6 @@ export class ChatterPopupComponent {
   }
 
   viewProfile() {
-    console.log(this.user);
     this.router.navigate(['profile', this.user.uid]);
     this.popover.close();
 

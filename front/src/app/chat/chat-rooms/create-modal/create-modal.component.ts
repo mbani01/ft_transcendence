@@ -27,23 +27,17 @@ export class CreateModalComponent {
   }
 
   ngOnInit() {
-    console.log(this.modal);
   }
 
   createRoom(createRoom: NgForm) {
-    console.log(createRoom.value);
     if (createRoom.value.isPublic && createRoom.value.password?.length === 0) {
       delete createRoom.value.password;
     }
     this.socket.emit('create-channel', createRoom.value, (value: any) => {
-      console.log(value);
       if (!value.error) {
-        console.log('next:' + value);
         this.createModal.emit(value);
         this.modal.close();
       } else {
-        console.log("ERROR creating room");
-        console.log(value);
         createRoom.form.setErrors(value);
       }
     });
