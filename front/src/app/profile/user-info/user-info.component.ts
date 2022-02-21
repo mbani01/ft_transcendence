@@ -1,6 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {UserInfo} from "../model/user-info.model";
 import {User} from "../../shared/user";
+import {HttpClient} from "@angular/common/http";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-user-info',
@@ -15,17 +17,37 @@ export class UserInfoComponent implements OnInit {
   isFriend: boolean = false;
   isBlocked: boolean = false;
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
   }
 
   addFriend() {
-    this.isFriend = true;
+    // this.isFriend = true;
+    this.http.post(`${environment.apiBaseUrl}/users/add_friend`,
+      {
+        userID: this.user.uid
+      }).subscribe({
+      next: value => {
+        console.log('add_friend', value);
+        this.isFriend = true;
+      },
+      error: err => {
+        console.log('add_friend err', err);
+      }
+    });
   }
 
   removeFriend() {
-    this.isFriend = false;
+    this.http.post(`${environment.apiBaseUrl}/users/remove_friend`,
+      {
+        userID: this.user.uid
+      }).subscribe({
+      next: value => {
+        this.isFriend = false;
+      }
+    });
+
   }
 
   blockUser() {

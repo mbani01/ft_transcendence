@@ -2,6 +2,7 @@ import {Component, ElementRef, ViewChild} from "@angular/core";
 import {ChatService} from "../chat.service";
 import {Message} from "../shared/message.model";
 import {NgForm} from "@angular/forms";
+import {User} from "../../shared/user";
 
 @Component({
   selector: 'app-chatting',
@@ -69,7 +70,7 @@ export class ChattingComponent {
   }
 
   get chat() {
-    return this.chatService.currChat;
+    return this.chatService.currChat!;
   }
   get messages() {
     // console.log("Yo!")
@@ -102,5 +103,9 @@ export class ChattingComponent {
   // }
   deleteInvite(i: number) {
     this.chatService.currChat!.messages.splice(i, 1);
+  }
+
+  getUser() {
+    return this.chatService.currChat?.users as User;
   }
 }

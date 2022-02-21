@@ -16,8 +16,9 @@ export class FriendsComponent {
   friends = new BehaviorSubject<User[]>([]);
 
   constructor(private http: HttpClient, private oauthService: OAuthService, private chatService: ChatService) {
-    this.http.get<User[]>(`${environment.apiBaseUrl}/users/${oauthService.user.uid}/friends`).subscribe({
+    this.http.get<User[]>(`${environment.apiBaseUrl}/users/friends`).subscribe({
       next: value => {
+        console.log(value);
         this.friends.next(value);
       }
     });

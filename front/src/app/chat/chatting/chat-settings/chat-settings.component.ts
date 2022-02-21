@@ -6,6 +6,7 @@ import {ChatService} from "../../chat.service";
 import {BehaviorSubject} from "rxjs";
 import {NgForm} from "@angular/forms";
 import {MainSocket} from "../../../socket/MainSocket";
+import {OAuthService} from "../../../login/oauth.service";
 
 @Component({
   selector: 'chat-settings',
@@ -25,7 +26,11 @@ export class ChatSettingsComponent {
   // roomName = this.chatService.currChat!.name;
   // nickname: any;
 
-  constructor(private http: HttpClient, private chatService: ChatService, private socket: MainSocket) {
+  constructor(private http: HttpClient,
+              private chatService: ChatService,
+              private socket: MainSocket,
+              private oauthService: OAuthService)
+  {
     this.http.get<{
       id: number,
       username: string,
@@ -76,5 +81,9 @@ export class ChatSettingsComponent {
       this.chatService.leaveChannel();
       this.leaveConfirm = false;
     }
+  }
+
+  isMe(member: User) {
+    return member.uid === this.oauthService.user.uid;
   }
 }
