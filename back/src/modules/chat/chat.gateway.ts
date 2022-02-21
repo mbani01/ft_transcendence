@@ -119,11 +119,11 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const user = client.user;
     const roomID = data.roomID;
     try {
-      const members = await this._chatService.removeMemberFromRoom(roomID, user.sub);
+      await this._chatService.removeMemberFromRoom(roomID, user.sub);
       this.server.to(String(roomID)).emit('chat-leave', { name: user.username });
-      console.log('deleted members: \n')
-      console.log(members);
-      console.log('----------------------------------------------------------------');
+      // console.log('deleted members: \n')
+      // console.log(members);
+      // console.log('----------------------------------------------------------------');
     } catch (e) {
       console.log(e);
       return { error: e.message };
@@ -133,7 +133,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     /** out:
     {
-      "name": string,
+      "roomID": number,
     }
   
     error:
