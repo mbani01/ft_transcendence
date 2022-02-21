@@ -24,7 +24,6 @@ export class JoinModalComponent {
   }
 
   ngOnInit() {
-    console.log(this.modal);
     this.joinModal.emit(this);
   }
 

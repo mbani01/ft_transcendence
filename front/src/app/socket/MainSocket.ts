@@ -9,9 +9,6 @@ export class MainSocket extends Socket {
     super({url: environment.socketUri, options: {} });
 
     this.ioSocket['auth'] = {token: cookieService.get('access_token')};
-
-    console.log("SOCKET CONSTRUCTOR");
-    console.log(cookieService.get('access_token'));
   }
 
 }

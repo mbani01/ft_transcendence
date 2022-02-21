@@ -72,7 +72,6 @@ export class AccountTabComponent {
       error: err => {
         qrCodeForm.controls['code'].setErrors({error: err.error.message});
         this.click2FA = false;
-        console.log(qrCodeForm);
         this.codeToolTip.open();
 
       }
@@ -109,7 +108,6 @@ export class AccountTabComponent {
       this.uploadStat = UploadStat.UPLOADING;
       this.progress = 0;
       let file = files[0];
-      console.log(file);
       let formData = new FormData();
       formData.append('uploadFile', file, file.name);
       this.http.post(`${environment.apiBaseUrl}/users/upload_avatar`, formData, {reportProgress: true, observe: 'events'})
@@ -118,17 +116,14 @@ export class AccountTabComponent {
             if (event.type == HttpEventType.UploadProgress) {
               this.progress = Math.round(100 * event.loaded / event.total);
             } else if (event instanceof HttpRequest) {
-              console.log('File is completely loaded!');
               console.log(event);
             }
           },
           error: err => {
-            console.log('Upload Error:', err);
             this.uploadStat = UploadStat.ERROR;
             setTimeout(() => this.uploadStat = UploadStat.NO_UPLOAD, 6900);
           },
           complete: () => {
-            console.log('Upload done');
             this.uploadStat = UploadStat.DONE;
             setTimeout(() => this.uploadStat = UploadStat.NO_UPLOAD, 2000);
           }
