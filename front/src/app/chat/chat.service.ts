@@ -106,11 +106,12 @@ export class ChatService {
     if (roomID) {
       this.socket.emit('chat-leave', {
         roomID: roomID
-      }, (error: any) => {
-        console.log(error);
-        if (!error.error) {
-          this.currChat = undefined;
-          this.chats.delete(roomID);
+      }, (data: any) => {
+        if (data.roomID) {
+          if (this.currChat?.roomID == data.roomID) {
+            this.currChat = undefined;
+          }
+          this.chats.delete(data.roomID);
         }
       });
     }
