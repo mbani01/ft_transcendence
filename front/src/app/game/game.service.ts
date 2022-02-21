@@ -92,12 +92,11 @@ export class GameService {
       GameId: gameID
     }, (obj: any) => {
       console.log(obj);
+      this.stat = GameStat.GAME
+      setTimeout(() => {
+        startGame(obj);
+      });
     });
-
-    setTimeout(() => {
-      startGame({GameId: gameID, ball: { x: -600, y: -600 }, isDefaultGame: true});
-    });
-    this.stat = GameStat.GAME
   }
 
   getLiveGames() {
