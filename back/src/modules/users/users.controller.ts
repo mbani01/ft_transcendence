@@ -84,7 +84,7 @@ export class UsersController {
 
     const user = req.user
     const otherUser = await this._usersService.findById(userID);
-    return { games: 0, wins: 0, rankPoints: 0, totalScore: 0, status: 'on-line', img: user.img, name: user.username, isFriend: true, isBlocked: false };
+    return { games: 0, wins: 0, rankPoints: 0, totalScore: 0, status: 'off-line', img: user.img, name: user.username, isFriend: true, isBlocked: false };
   }
 
 
