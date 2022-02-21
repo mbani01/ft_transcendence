@@ -6,14 +6,16 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/21 15:52:55 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/21 17:16:08 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 import { ConnectedSocket, SubscribeMessage, WebSocketGateway, WebSocketServer, MessageBody } from "@nestjs/websockets";
-import { Game } from "./game";
+import { GamePlay } from "./game";
 import {GameQueueService} from "./gameQueue"
 import { Clients } from '../../adapters/socket.adapter';
+import { Game } from "./entities/game.entity";
+import {getRepository} from "typeorm";
 
 @WebSocketGateway({ cors: true })
 export class gameSocketGateway
@@ -21,7 +23,7 @@ export class gameSocketGateway
 	@WebSocketServer()
 	server;
 
-	Games :Array<Game> = [];
+	Games :Array<GamePlay> = [];
 	DefautQueue :GameQueueService = new GameQueueService();
 	CustomQueue :GameQueueService = new GameQueueService();
 	PrivateQueues :Array<GameQueueService> = [];
@@ -34,7 +36,7 @@ export class gameSocketGateway
 	async startGame(GameQueue: GameQueueService, isDefault: boolean)
 	{
 		const Players = GameQueue.getPlayers();
-		const game = new Game(true, Players, isDefault);
+		const game = new GamePlay(true, Players, isDefault);
 		this.Games.push(game);
 		const gameInfos = game.getInfos();
 		Players[0].GameId = gameInfos.GameId;
@@ -63,7 +65,6 @@ export class gameSocketGateway
 	@SubscribeMessage('joinDefaultGame')
 	joinQueue(@ConnectedSocket() socket: any)
 	{
-		console.log("Player joined");
 		if (!this.DefautQueue.addUser(socket))
 			return ;
 		if (this.DefautQueue.isfull())
@@ -183,25 +184,35 @@ export class gameSocketGateway
             socket.to(String(data.GameId)).emit('focusLose', data);
     }
 	
-	GameOver(game :Game, disconnectedPlayer? :any)
+	
+	async GameOver(game :GamePlay, disconnectedPlayer? :any)
 	{
 		if (game)
 		{
 			const gameInfos = game.getInfos();
+			let winner ;
 			if (disconnectedPlayer !== undefined) // A Player disconnected
 			{
+				const tmpWinner = game.getPlayers().find(player => player.user.sub !== disconnectedPlayer.user.sub);
+				console.log(tmpWinner);
+				winner = tmpWinner.user;
 				this.server.to(gameInfos.GameId).emit('GameOver', {GameId: gameInfos.GameId, Players: gameInfos.Players, 
 					disconnectedPlayer: disconnectedPlayer.user});
-				}
-				else
-				{
-					const winner = game.getWinner();
-					this.server.to(gameInfos.GameId).emit('GameOver', {GameId: gameInfos.GameId, Players: gameInfos.Players, 
-						Winner: winner});
-				}
-				this.Games = this.Games.filter(element => element.getGameId() !== gameInfos.GameId);
-				this.server.socketsLeave(gameInfos.GameId); // make all players/watcher leave the room
-				this.LiveGames();
+			}
+			else
+			{
+				winner = game.getWinner();
+				this.server.to(gameInfos.GameId).emit('GameOver', {GameId: gameInfos.GameId, Players: gameInfos.Players, 
+					Winner: winner});
+			}
+			const gameRepo = getRepository(Game);
+			const gamedata = await gameRepo.create({id: gameInfos.GameId, firstPlayer:gameInfos.Players[0].sub, 
+				firstPlayerScore: gameInfos.score.player1, secondPlayer: gameInfos.Players[1].sub, 
+			secondPlayerScore: gameInfos.score.player2, winner: winner.sub, isDefault: gameInfos.isDefault});
+				await gameRepo.save(gamedata);
+			this.Games = this.Games.filter(element => element.getGameId() !== gameInfos.GameId);
+			this.server.socketsLeave(gameInfos.GameId); // make all players/watcher leave the room
+			this.LiveGames();
 		}
 	}
 
