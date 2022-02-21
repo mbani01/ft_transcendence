@@ -61,7 +61,7 @@
         <ng-template ngbNavContent>
 <!--          <p  class="mt-4">Members</p>-->
           <ul class="list-group">
-            <li class="list-group-item" *ngFor="let member of members | async" [ngbPopover]="chatterPopup"
+            <li class="list-group-item" *ngFor="let member of members | async" [ngbPopover]="!isMe(member) ? chatterPopup : undefined"
                 popoverClass="popover-dark" autoClose="outside" #p="ngbPopover" placement="left">
               <ng-template #chatterPopup>
                 <chatter-popup [user]="member" [popover]="p"></chatter-popup>

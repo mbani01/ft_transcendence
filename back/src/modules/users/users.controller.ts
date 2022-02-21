@@ -18,16 +18,6 @@ export class UsersController {
     return await this._usersService.findAll(paginationQuery);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get("/:id")
-  async getOne(@Param("id") userId: number | string, @Req() req): Promise<OutUserDto> {
-    if (typeof userId == "number") {
-      const user = await this._usersService.findById(userId);
-      return { uid: user.id, name: user.username, img: user.avatar };
-    }
-    const user = await this._usersService.findByUserName(req.user.username);
-    return { uid: user.id, name: user.username, img: user.avatar };
-  }
 
   @Post('/update_nickname')
   @UseGuards(JwtAuthGuard)
@@ -87,5 +77,40 @@ export class UsersController {
     return { games: 0, wins: 0, rankPoints: 0, totalScore: 0, status: 'off-line', img: user.img, name: user.username, isFriend: true, isBlocked: false };
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post('/add_friend')
+  async addFriend(@Body('userID') otherUserId: number, @Req() req: any) {
+    try {
+      const user = req.user;
+      const otherUser = await this._usersService.findById(otherUserId);
+      const friend = await this._usersService.createRelation({ userFirst: user, userSecond: otherUser, requester: user, blocker: null, isFriends: true });
+      console.log(friend);
+    } catch (e) {
+      return { error: e.message };
+    }
+    return { userID: otherUserId };
+  }
 
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/friends')
+  async getFriend(@Req() req: any) {
+    try {
+        const user = req.user;
+        return await this._usersService.getFriends(user);
+    } catch (e) {
+      return { error: e.message };
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get("/:id")
+  async getOne(@Param("id") userId: number, @Req() req): Promise<OutUserDto> {
+    if (typeof userId == "number") {
+      const user = await this._usersService.findById(userId);
+      return { uid: user.id, name: user.username, img: user.avatar };
+    }
+    const user = await this._usersService.findByUserName(req.user.username);
+    return { uid: user.id, name: user.username, img: user.avatar };
+  }
 }

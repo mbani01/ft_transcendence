@@ -95,6 +95,26 @@ export class UsersService {
       isFriends: updateRelation.isFriends,
     })
   }
+
+  async  getFriends(user: User)
+  {
+    let res = [];
+    const friends = await  this._relationsRepo.find({
+      relations: ['userFirst', 'userSecond'],
+      where:{
+        userFirst: user
+      }
+    });
+    for (let friend of friends)
+    {
+      res.push({
+        uid: friend.userSecond.id,
+        name: friend.userSecond.username,
+        img: friend.userSecond.avatar
+      })
+    }
+    return res;
+  }
 }
 
 

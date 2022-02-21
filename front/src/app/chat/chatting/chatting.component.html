@@ -10,9 +10,10 @@
       <h3 id="chat-back" class="bi bi-arrow-left-short rounded-circle"
           (click)="back()"></h3>
     </div>
-    <img width="32" height="32" class="rounded-circle mr-2 my-auto" alt="Cinque Terre" src="/assets/img.webp">
-    <b class="my-auto">{{ chat?.name }}</b>
-    <h5 *ngIf="!chatService.settings && chat?.isChannel" id="chat-settings" class="bi bi-gear-fill my-auto ml-auto mr-2" (click)="chatService.settings = true"></h5>
+    <img width="32" height="32" class="rounded-circle mr-2 my-auto" alt="Cinque Terre"
+         [src]="chat.isChannel ? '/assets/channel-icon.png' : getUser().img">
+    <b class="my-auto">{{ chat.name }}</b>
+    <h5 *ngIf="!chatService.settings && chat.isChannel" id="chat-settings" class="bi bi-gear-fill my-auto ml-auto mr-2" (click)="chatService.settings = true"></h5>
 <!--    <h5 *ngIf="chatService.settings" id="chat-leave" class="bi bi-door-open-fill my-auto ml-auto mr-2 text-danger" ></h5>-->
   </div>
 
