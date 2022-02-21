@@ -19,16 +19,13 @@ export class ProfileComponent implements OnInit {
   constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) {
     route.params.subscribe( {
       next: (value) => {
-        console.log(value);
         this.http.get(`${environment.apiBaseUrl}/users/${value['id']}`).subscribe({
           next: () => {
-            console.log("fetch user info");
             this.loadUser(value['id']);
             this.loadUserInfo(value['id']);
             this.loadMatchHistory(value['id']);
           },
           error: (err) => {
-            // console.log(err);
             this.router.navigateByUrl('/not-found', {skipLocationChange: true})
           }
         });
@@ -45,7 +42,6 @@ export class ProfileComponent implements OnInit {
         this.userInfo = userInfo;
       },
       error: err => {
-        console.log(err);
       }
     });
   }
@@ -56,7 +52,6 @@ export class ProfileComponent implements OnInit {
         this.user = user;
       },
       error: err => {
-        console.log(err);
       }
     });
   }
@@ -67,7 +62,6 @@ export class ProfileComponent implements OnInit {
         this.matchHistory = matchHistory;
       },
       error: err => {
-        console.log(err);
       }
     });
   }

@@ -18,14 +18,10 @@ export class OAuthService {
   public user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
   constructor(private http: HttpClient, private cookieService: CookieService, private router: Router) {
-    console.log('OAuth Service');
     // this.access_token =;
     this.http.get<UserInfo>(`${environment.apiBaseUrl}/auth/isAuthorized`).subscribe({
       next: value => {
-        console.log('IS_AUTH');
-        console.log(value);
         this._authorized = true;
-        console.log("Authorized");
         this.user$.next({
           uid: value.id,
           name: value.username,
@@ -37,8 +33,6 @@ export class OAuthService {
       },
       error: err => {
         this._authorized = false;
-        console.log("Not Authorized");
-        console.log(router.url);
         if (!router.url.startsWith('/login')) {
           this.router.navigate(['login']);
         }
@@ -58,14 +52,11 @@ export class OAuthService {
     if (_2fa != undefined) {
       params = params.set("twoFactorAuth", _2fa);
     }
-    console.log('GENERATE');
     let obs = this.http.post<any>(environment.apiBaseUrl + '/auth/access_token', null, {
       params: params
     });
     obs.subscribe({
       next: (value) => {
-        console.log('TOKEN');
-        // console.log(this.cookieService'access_token'));
         // if (value.success) {
         this.router.navigate(['']);
         this._authorized = true;
@@ -83,7 +74,6 @@ export class OAuthService {
       },
       error: (err) => {
         if (observer?.error) {
-          console.log("error observer");
           observer?.error(err);
         }
       }
@@ -105,7 +95,6 @@ export class OAuthService {
         this.user$.next(value);
       },
       error: err => {
-        console.log(err);
       }
     });
   }

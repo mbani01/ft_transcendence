@@ -20,7 +20,6 @@ export class ChattingComponent {
   // settings = false;
 
   constructor(public chatService: ChatService) {
-    console.log(this.chatService.currChat);
     if (this.chatService.currChat?.messages.length == 0 && this.chatService.currChat.roomID != '0') {
       this.loading = true;
       this.chatService.loadMessages(this.chatService.currChat).subscribe({
@@ -36,11 +35,9 @@ export class ChattingComponent {
   }
 
   ngOnInit() {
-    console.log('h2');
   }
   ngAfterViewInit(): void {
     this.content.nativeElement.onscroll = (scroll: any) => {
-      console.log('SCROLL ' + scroll.target.scrollTop);
       if (scroll.target.scrollTop == 0 && !this.isAllMessage && this.chatService.currChat) {
         this.loading = true;
         let topMessage = this.chatService.currChat.messages[0];
@@ -67,7 +64,6 @@ export class ChattingComponent {
 
   scrollDown() {
     this.content.nativeElement.scrollTop = this.content.nativeElement.scrollHeight;
-    console.log('YO ' + this.content.nativeElement.scrollTop);
   }
 
   get chat() {
@@ -94,7 +90,6 @@ export class ChattingComponent {
     // console.log(form.value);
     if (form.value.message) {
       this.chatService.sendMessage(form.value.message);
-      console.log("Help");
       form.reset();
       setTimeout(() => this.scrollDown(), 100);
     }

@@ -16,7 +16,6 @@ let ball_position : {x: number, y: number};
 
 export function gameOver(obj: any) {
   if (obj.hasOwnProperty('disconnectedPlayer')) {
-	console.log("disco", obj);
 	ball.setVisible(false);
 	game.scene.pause(scene);
 	if (obj.disconnectedPlayer.sub == obj.Players[0].sub) {

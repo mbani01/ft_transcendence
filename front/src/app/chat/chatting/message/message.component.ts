@@ -79,7 +79,6 @@ export class MessageComponent {
 
   acceptDuel() {
     this.chatService.acceptDuel(this.message.sender);
-    console.log(this.message);
     this.deleteInvite.emit();
   }
 

@@ -11,12 +11,12 @@ export class LoginComponent implements OnInit {
 
   public is2FA = false;
   constructor(private oauthService: OAuthService, private router: Router, private route: ActivatedRoute) {
+    console.log(this.oauthService.isAuthenticated());
     if (this.oauthService.isAuthenticated()) {
       this.router.navigate(['']);
     } else {
       if (route.snapshot.queryParams['code']) {
         this.is2FA = true;
-        console.log(route.snapshot.queryParams);
       }
     }
   }

@@ -13,7 +13,6 @@ export class ChatListComponent {
   ngOnInit() {
   }
   get chats() {
-    // console.log(this.chatService.chats.values());
     return this.chatService.chats;
   }
 
