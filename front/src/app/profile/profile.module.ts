@@ -26,6 +26,5 @@ import {GameLengthPipe} from "./pipes/game-length.pipe";
 })
 export class ProfileModule {
   constructor() {
-    console.log('Hello Profile');
   }
 }

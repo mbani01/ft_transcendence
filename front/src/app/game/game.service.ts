@@ -28,19 +28,16 @@ export class GameService {
   }
 
   joinNormalQueue() {
-    console.log('sendNormalQueueEvent')
     this.socket.emit("joinDefaultGame");
     this.stat = GameStat.NORMAL_QUEUE;
   }
 
   joinPowerUpQueue() {
-    console.log('sendCustomQueueEvent')
     this.socket.emit("joinCustomGame");
     this.stat = GameStat.CUSTOM_QUEUE;
   }
 
   leaveQueue() {
-    console.log('leaveQueue');
     this.socket.emit("leaveQueue", {isNormal: this.stat == GameStat.NORMAL_QUEUE});
     this.stat = GameStat.MAIN;
   }
@@ -50,7 +47,6 @@ export class GameService {
     // this.socket.emit('game/ready');
 
     this.stat = GameStat.GAME;
-    console.log('joinGame');
 
     setTimeout(() => {
       startGame(gameInfo);
@@ -91,7 +87,6 @@ export class GameService {
     this.socket.emit('watchGame', {
       GameId: gameID
     }, (obj: any) => {
-      console.log(obj);
       this.stat = GameStat.GAME
       setTimeout(() => {
         startGame(obj);

@@ -25,7 +25,6 @@ export class ChatService {
     this.oauthService.user$.subscribe({
       next: value => {
         if (value) {
-          console.log('Chat Service');
           socket.on('chat-message', this.receiveMessage);
           this.fetchRooms();
         }
@@ -34,15 +33,12 @@ export class ChatService {
   }
 
   joinChannel(roomID: string, password: string, callback: Function) {
-    console.log(password);
     this.socket.emit('join', {
         roomID: roomID,
         password: password
       },  (room: any) => {
-        console.log(room);
         if (!room?.error) {
           room.messages = [];
-          console.log(room);
           // this.loadMessages(room);
           this.chats.set(roomID, room);
           this.openChat(roomID);
@@ -102,15 +98,15 @@ export class ChatService {
   }
 
   leaveChannel(roomID = this.currChat?.roomID) {
-    console.log('leaveChannel', roomID);
     if (roomID) {
       this.socket.emit('chat-leave', {
         roomID: roomID
-      }, (error: any) => {
-        console.log(error);
-        if (!error.error) {
-          this.currChat = undefined;
-          this.chats.delete(roomID);
+      }, (data: any) => {
+        if (data.roomID) {
+          if (this.currChat?.roomID == data.roomID) {
+            this.currChat = undefined;
+          }
+          this.chats.delete(data.roomID);
         }
       });
     }
@@ -154,23 +150,18 @@ export class ChatService {
         message: message,
         timestamp: new Date()
       };
-      console.log(m);
       this.socket.emit('chat-message', JSON.stringify(m));
     } else {
-      console.log('sendMessage(): there is no chat opened');
     }
   }
 
   receiveMessage = (message: Message) => {
-    console.log('receiveMessage:');
-    console.log(message);
     let m: Message = message;
     m.timestamp = new Date(m.timestamp);
 
     let chat = this.chats.get(m.roomID);
     if (chat) {
       chat.messages.push(m);
-        console.log('yo')
       if (this.currChat?.roomID != chat.roomID) {
         if (!chat.unread) {
           chat.unread = 0;
@@ -185,11 +176,9 @@ export class ChatService {
   }
 
   fetchRooms() {
-    console.log(this.oauthService.user);
 
     this.http.get<Chat[]>(`${environment.apiBaseUrl}/chat/fetch-rooms`).subscribe({
       next: chats => {
-        console.log(chats);
         chats.forEach(value => {
           let chat: Chat = {
             roomID: value.roomID,
@@ -202,7 +191,6 @@ export class ChatService {
 
           this.chats.set(chat.roomID, chat);
         })
-        console.log(this.chats);
       }
     });
   }

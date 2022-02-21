@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 12:00:29 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/20 18:18:32 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/21 16:55:17 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ type score = {
 	player1: number;
 	player2: number;
 }
-export class Game{
+export class GamePlay
+{
 	isPublic: boolean;
 	Players: Array<any>;
 	GameId: string;
@@ -64,9 +65,9 @@ export class Game{
 	getInfos(isLive: boolean = false)
 	{
 		if (isLive)
-			return {GameId: this.GameId, Players: [this.Players[0].user, this.Players[1].user], score: this.score}
+			return {GameId: this.GameId, Players: [this.Players[0].user, this.Players[1].user], score: this.score, isDefault: this.isDefault}
 		else
-			return {GameId: this.GameId, ball: this.ball, Players: [this.Players[0].user, this.Players[1].user], score: this.score};
+			return {GameId: this.GameId, ball: this.ball, Players: [this.Players[0].user, this.Players[1].user], score: this.score, isDefault: this.isDefault};
 	}
 	getWinner()
 	{

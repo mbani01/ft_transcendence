@@ -33,7 +33,7 @@
   </div>
 
   <ng-template #login>
-    <ng-container *ngIf="!oauthService.isAuthenticated(); else content">
+    <ng-container *ngIf="oauthService.isAuthenticated() === false; else content">
       <router-outlet></router-outlet>
     </ng-container>
   </ng-template>
@@ -45,7 +45,7 @@
         <div class="col-lg overflow-auto p-2 h-100">
             <router-outlet></router-outlet>
         </div>
-        <app-chat class="col col-lg-auto p-0" style=""></app-chat>
+        <app-chat class="col col-lg-auto p-0 h-100" style=""></app-chat>
     </div>
   </ng-template>
 </div>

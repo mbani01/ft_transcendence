@@ -46,24 +46,20 @@ export class ChatSettingsComponent {
   }
 
   saveName(roomNameForm: NgForm) {
-    console.log(roomNameForm.value);
     this.editName = false
   }
 
   savePassword(roomPasswordForm: NgForm) {
-    console.log(roomPasswordForm.value);
     this.editPassword = false
   }
 
   unmute(member: User) {
-    console.log('unmute ' + member.uid);
     this.http.post(`${environment.apiBaseUrl}/chat/${this.chatService.currChat!.roomID}/unmute`, {
       uid: member.uid,
     });
   }
 
   unban(member: User) {
-    console.log('unban ' + member.uid);
     this.http.post(`${environment.apiBaseUrl}/chat/${this.chatService.currChat!.roomID}/unban`, {
       uid: member.uid,
     });

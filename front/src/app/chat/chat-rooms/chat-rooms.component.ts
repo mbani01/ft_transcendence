@@ -44,7 +44,6 @@ export class ChatRoomsComponent {
       this.openPasswordModal(chat, content);
     } else {
       this.chatService.joinChannel(chat.roomID!, '', (room: Chat) => {
-        console.log(room);
         // this.chatService.chats.set(room.roomID, room);
         // this.chatService.openChat(room.roomID);
       });
@@ -56,11 +55,6 @@ export class ChatRoomsComponent {
   }
 
   httpGetChannels() {
-    console.log('params:');
-    console.log({
-      like: this.like,
-      page: this.pagination.page
-    });
 
     this.http.get<{channels: ChatRoom[], collectionSize: number}>(`${environment.apiBaseUrl}/chat/channels`, {
       params: {
@@ -70,7 +64,6 @@ export class ChatRoomsComponent {
     }).subscribe(
       {
         next: value => {
-          console.log(value);
           this.chats = value.channels;
           this.pagination.collectionSize = value.channels.length;
         }
@@ -84,7 +77,6 @@ export class ChatRoomsComponent {
   }
 
   changePage() {
-    console.log(this.pagination.page);
     this.httpGetChannels();
   }
 
