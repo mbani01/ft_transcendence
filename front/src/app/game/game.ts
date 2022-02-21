@@ -11,6 +11,8 @@ let GameId : number;
 let isHost: number;
 let isDefaultGame : boolean;
 let ball_position : {x: number, y: number};
+let isWatcher : boolean = false;
+let isPlayer : boolean = false;
 // const socket = io("https://server-domain.com");
 
 
@@ -72,13 +74,19 @@ export function setSocket(s: MainSocket) {
 }
 
 export function startGame(obj: any) {
+	console.log(obj, game);
+	if (game == undefined)
+		game = new Phaser.Game(config);
 
-	game = new Phaser.Game(config);
-	// game.plugins.install("worker", PhaserWebWorkers.Plugin);
 
 	GameId = obj.GameId;
-	isHost = obj.isHost;
-	ball_position = obj.ball;
+	if (!obj.hasOwnProperty('isWatcher')){
+		isHost = obj.isHost;
+		ball_position = obj.ball;
+		isPlayer = true;
+	}
+	else if (isPlayer != true)
+		isWatcher = obj.isWatcher;
 	console.log("joined");
 	isDefaultGame = obj.isDefaultGame;
 	// console.log(obj);
@@ -111,7 +119,16 @@ export function socketListening () {
 	//   other_player.body.setVelocityY(-PLAYER_SPEED);
 	// }
 
-	other_player.setPosition(obj.player.x, obj.player.y);
+	if (isPlayer)
+		other_player.setPosition(obj.player.x, obj.player.y);
+	else if (isWatcher)
+	{
+		if (obj.isHost) {
+			player1.setPosition(obj.player.x, obj.player.y);
+		} else {
+			player2.setPosition(obj.player.x, obj.player.y);
+		}
+	}
   });
 
   socket.on('syncBall', (obj: any) => {
@@ -227,7 +244,7 @@ function start_game(this: Phaser.Scene) : void
 
 function onHidden() : void
 {
-  // socket.emit('focusLose', { GameId: GameId, isHost: isHost, focus: false });
+//   socket.emit('focusLose', { GameId: GameId, isHost: isHost, focus: false });
   console.log("hidden");
 }
 
@@ -239,26 +256,9 @@ function onFocus() : void
 
 function create (this: Phaser.Scene) : void
 {
-	// scene.add.text(game.canvas.width / 5.5, game.canvas.height / 2.1, 'game over', {
-    //     fontSize: '70px',
-    //     fontFamily: "'Press Start 2P', cursive"
-    // });
-    // scene.add.text(game.canvas.width / 1.7, game.canvas.height / 2.1, 'you won', {
-    //     fontSize: '70px',
-    //     fontFamily: "'Press Start 2P', cursive"
-    // });
-	// scene.add.text(game.canvas.width / 1.8, game.canvas.height / 2.1, 'game over', {
-    //     fontSize: '70px',
-    //     fontFamily: "'Press Start 2P', cursive"
-    // });
-    // scene.add.text(game.canvas.width / 5.5, game.canvas.height / 2.1, 'you won', {
-    //     fontSize: '70px',
-    //     fontFamily: "'Press Start 2P', cursive"
-    // });
 	this.sound.pauseOnBlur = false;
 	// game.events.addListener('blur', onHidden);
 	// game.events.addListener('focus', onFocus);
-	// game.events.off('hidden', game.events., game);
 	clock = this.time;
 	let line : Phaser.GameObjects.Line = this.add.line(this.sys.canvas.width / 2, this.sys.canvas.height / 2, 0, 0, 0, this.sys.canvas.height, 0xffffff).setLineWidth(5);
 	let mid_circle : Phaser.GameObjects.Arc = this.add.circle(this.sys.canvas.width / 2, this.sys.canvas.height / 2, 100, 0).setStrokeStyle(10, 0xffffff);
@@ -331,19 +331,19 @@ function create (this: Phaser.Scene) : void
 	// timer_obj = this.add.text(this.sys.canvas.width / 2 - 32 / 2, 20, '' + player2_score, {fontSize: '50px', fontFamily: "'Press Start 2P', cursive" });
 	this.time.delayedCall(1000, start_game, [], this);
 	if (isHost){
-	local_player = player1;
-	other_player = player2;
+		local_player = player1;
+		other_player = player2;
 	} else {
-	local_player = player2;
-	other_player = player1;
+		local_player = player2;
+		other_player = player1;
 	}
 	if (isHost){
-	this.physics.add.collider(ball, player1, HandleHit, undefined, player1);
-	this.physics.add.collider(ball, player2, HandleHit, undefined, player2);
-	if (!isDefaultGame){
-		this.physics.add.collider(powerUpBall, player1, setPowerUp, undefined, player1);
-		this.physics.add.collider(powerUpBall, player2, setPowerUp, undefined, player2);
-	}
+		this.physics.add.collider(ball, player1, HandleHit, undefined, player1);
+		this.physics.add.collider(ball, player2, HandleHit, undefined, player2);
+		if (!isDefaultGame){
+			this.physics.add.collider(powerUpBall, player1, setPowerUp, undefined, player1);
+			this.physics.add.collider(powerUpBall, player2, setPowerUp, undefined, player2);
+		}
 	}
 
 	if (!isDefaultGame)
@@ -412,13 +412,14 @@ function update(this: Phaser.Scene) : void
 	  socket.emit('syncPowerUp', {"GameId":GameId, isHost: isHost, isVisible : powerUpBall.visible, powerUpBall: { x: game.canvas.width / 2, y: game.canvas.height / 2 }});
 	}
   }
-  if (cursors.down.isDown && !cursors.up.isDown )
+  
+  if (cursors.down.isDown && !cursors.up.isDown && !isWatcher)
   {
 	local_player.setPosition(local_player.x, local_player.y + PLAYER_SPEED);
 	socket.emit('sync', {"GameId":GameId, player: {x: local_player.x, y: local_player.y}, isHost: isHost});
 
   }
-  else if (cursors.up.isDown && !cursors.down.isDown)
+  else if (cursors.up.isDown && !cursors.down.isDown && !isWatcher)
   {
 	local_player.setPosition(local_player.x, local_player.y - PLAYER_SPEED);
 	socket.emit('sync', {"GameId":GameId, player: {x: local_player.x, y: local_player.y}, isHost: isHost});
