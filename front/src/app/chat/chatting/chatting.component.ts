@@ -16,7 +16,7 @@ export class ChattingComponent {
 
   loading = false;
 
-  private isAllMessage = false;
+  // private isAllMessage = false;
   // settings = false;
 
   constructor(public chatService: ChatService) {
@@ -25,7 +25,7 @@ export class ChattingComponent {
       this.chatService.loadMessages(this.chatService.currChat).subscribe({
         next: chats => {
           if (chats.length < 30) {
-            this.isAllMessage = true;
+            // this.isAllMessage = true;
           }
           this.loading = false;
           this.scrollDown();
@@ -37,22 +37,24 @@ export class ChattingComponent {
   ngOnInit() {
   }
   ngAfterViewInit(): void {
-    this.content.nativeElement.onscroll = (scroll: any) => {
-      if (scroll.target.scrollTop == 0 && !this.isAllMessage && this.chatService.currChat) {
-        this.loading = true;
-        let topMessage = this.chatService.currChat.messages[0];
-        this.chatService.loadMessages(this.chatService.currChat, true).subscribe({
-          next: (chats) => {
-            this.loading = false
-            if (chats.length < 30) {
-              this.isAllMessage = true;
-            }
-          }});
-
-      }
-    }
-
+    console.log(this.content.nativeElement.scrollHeight);
     this.scrollDown();
+  //   this.content.nativeElement.onscroll = (scroll: any) => {
+  //     if (scroll.target.scrollTop == 0 && !this.isAllMessage && this.chatService.currChat) {
+  //       this.loading = true;
+  //       let topMessage = this.chatService.currChat.messages[0];
+  //       this.chatService.loadMessages(this.chatService.currChat, true).subscribe({
+  //         next: (chats) => {
+  //           this.loading = false
+  //           if (chats.length < 30) {
+  //             this.isAllMessage = true;
+  //           }
+  //         }});
+  //
+  //     }
+  //   }
+  //
+  //   this.scrollDown();
   }
 
   isLateMessage(prev: Message, message: Message) {
