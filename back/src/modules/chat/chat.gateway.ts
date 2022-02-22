@@ -28,7 +28,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const rooms = await this._chatService.getRoomByUid(client.user.sub);
     for (let room of rooms)
       client.join("" + room.roomID)
-    console.log(`client with id #${client.id} connected`)
   }
 
   @SubscribeMessage('create-channel')
@@ -45,10 +44,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       return { error: "password too weak" };
     const channelType = this._chatService.getChannelType(isPublic, password);
     const roomEntity: CreateRoomDto = { name, password, channelType, ownerID: client.user.sub }
+    const user = await this._chatService._userService.findById(client.user.sub);
     let newRoom: any;
     try {
       newRoom = await this._chatService.createRoom(roomEntity);
       await this._chatService.createMember({
+        user,
         roomID: newRoom.roomID,
         userID: client.user.sub,
         password: newRoom.password,
@@ -91,7 +92,9 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   async join(@ConnectedSocket() client: CustomSocket, @MessageBody() createMemberDto: any) {
     const { roomID, password } = createMemberDto;
     const userID = client.user.sub;
+    const user = await this._chatService._userService.findById(userID);
     const member: CreateMemberColumn = {
+      user,
       roomID,
       userID: +userID,
       password,
@@ -125,7 +128,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       // console.log(members);
       // console.log('----------------------------------------------------------------');
     } catch (e) {
-      console.log(e);
       return { error: e.message };
     }
 
@@ -157,14 +159,15 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const { uid: userID, roomID, timestamp: createdAt } = data;
     try {
       const room = await this._chatService.getRoomById(roomID);
+      const user = await this._chatService._userService.findById(data.uid);
       this._chatService.createMember({
+        user,
         roomID,
         userID: +userID,
         password: room.password,
         role: 'member'
       });
     } catch (e) {
-      console.log(e);
       return { error: e.message };
     }
 
@@ -187,30 +190,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
      }
      */
   }
-
-  @SubscribeMessage('chat-duel')
-  async duel(@ConnectedSocket() client: CustomSocket, @MessageBody() data: any) {
-    /**
-    {
-      "uid": number | string,
-      "timestamp": Date
-    }
-     */
-
-    /** out:
-    {
-      "roomID": number | string,
-      "sender": {
-          "uid": number | string,
-          "name": string,
-          "img": string
-      }
-      "duel": boolean,
-      "timestamp": Date
-    }
-    */
-  }
-
 
   @SubscribeMessage('chat-conversation')
   async DM(@ConnectedSocket() client: CustomSocket, @MessageBody() data: any) {

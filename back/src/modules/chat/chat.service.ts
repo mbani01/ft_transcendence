@@ -17,7 +17,7 @@ export class ChatService {
   constructor(@InjectRepository(RoomEntity) private readonly _roomsRepo: Repository<RoomEntity>,
     @InjectRepository(MessageEntity) private readonly _messagesRepo: Repository<MessageEntity>,
     @InjectRepository(MembersEntity) private readonly _membersRepo: Repository<MembersEntity>,
-    private readonly _userService: UsersService) { }
+    public readonly _userService: UsersService) { }
 
 
   async createRoom(createRoomDto: CreateRoomDto) {
@@ -132,8 +132,10 @@ export class ChatService {
     await this._roomsRepo.save(newDM);
 
     // Create the Members that going to join the dm.
-    await this.createMember({ userID: usersIDs.userID1, roomID: newDM.roomID, password: newDM.password, role: 'member' });
-    await this.createMember({ userID: usersIDs.userID2, roomID: newDM.roomID, password: newDM.password, role: 'member' });
+    const user1 = await this._userService.findById(usersIDs.userID1);
+    const user2 = await this._userService.findById(usersIDs.userID2);
+    await this.createMember({ user: user1, userID: usersIDs.userID1, roomID: newDM.roomID, password: newDM.password, role: 'member' });
+    await this.createMember({ user: user2, userID: usersIDs.userID2, roomID: newDM.roomID, password: newDM.password, role: 'member' });
     return newDM;
   }
 
@@ -156,5 +158,67 @@ export class ChatService {
     else if (isPublic)
       return 'public';
     return 'private';
+  }
+
+  async updateRoomName(roomID: number, newRoomName: string)
+  {
+    const res = await this._roomsRepo.update(roomID, {
+      name: newRoomName
+    })
+    if (!res) throw new NotFoundException('room not found');
+  }
+
+  async updateRoomPassword(roomID: number, newRoomPassword: string)
+  {
+    const res = await this._roomsRepo.update(roomID, {
+      password: newRoomPassword
+    })
+    if (!res) throw new NotFoundException('room not found');
+  }
+
+  async getMutedMembers(roomID: number)
+  {
+    const mutedMembersArray = [];
+    const room = await this._roomsRepo.findOne({roomID});
+    if (!room) throw new NotFoundException('room not found');
+    const mutedMembers = await this._membersRepo.find({
+      relations: ['user'],
+       where: {
+        roomID: roomID,
+        isMuted: true
+      }
+    })
+    for (let member of mutedMembers)
+    {
+      mutedMembersArray.push({
+        uid: member.user.id,
+        name: member.user.username,
+        img: member.user.avatar
+      })
+    }
+    return mutedMembersArray;
+  }
+
+  async getBannedMembers(roomID: number)
+  {
+    const bannedMembersArray = [];
+    const room = await this._roomsRepo.findOne({roomID});
+    if (!room) throw new NotFoundException('room not found');
+    const bannedMembers = await this._membersRepo.find({
+      relations: ['user'],
+       where: {
+        roomID: roomID,
+        isBaned: true
+      }
+    })
+    for (let member of bannedMembers)
+    {
+      bannedMembersArray.push({
+        uid: member.user.id,
+        name: member.user.username,
+        img: member.user.avatar
+      })
+    }
+    return bannedMembersArray;
   }
 }
