@@ -10,6 +10,7 @@ import { CreateRoomDto } from './dto/create-room.dto';
 import { MembersEntity } from './entities/members.entity';
 import { MessageEntity } from './entities/message.entity';
 import { RoomEntity } from './entities/room.entity';
+import {Not} from "typeorm";
 
 @Injectable()
 export class ChatService {
@@ -119,7 +120,18 @@ export class ChatService {
           roomID: member.roomID
         }
       })
-      res.push(room[0]);
+      let otherUser;
+      if (!room[0].isChannel)
+      {
+          let otherMember = await  this._membersRepo.find({
+            where: {
+                roomID: room[0].roomID,
+                userID: Not(member.userID)
+            }
+          });
+          otherUser = await this._userService.findById(otherMember[0].userID);
+      }
+      res.push({...room[0], users: otherUser ? {uid: otherUser.id, name: otherUser.username, img: otherUser.avatar}:undefined});
     }
     return res;
   }
