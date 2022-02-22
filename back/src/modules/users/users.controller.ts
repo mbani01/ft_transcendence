@@ -132,7 +132,7 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch('/block')
+  @Post('/block')
   async blockUser(@Body('userID') userID: number, @Req() req: any)
   {
     try{

@@ -6,12 +6,14 @@ import { CreateUserDto } from "./dto/create-user.dto";
 import { Relation } from "./entity/relation.entity";
 import { User } from "./entity/user.entity";
 import { ICreateRelation, IDeleteRelation, IUpdateRelation } from "./interfaces/create-relation.interface";
+import {ExtractJwt} from "passport-jwt";
+import fromAuthHeaderWithScheme = ExtractJwt.fromAuthHeaderWithScheme;
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly _usersRepo: Repository<User>,
-    @InjectRepository(Relation) private readonly _relationsRepo: Repository<Relation>,
+    @InjectRepository(Relation) public readonly _relationsRepo: Repository<Relation>,
   ) { }
 
   async create(userDto: CreateUserDto): Promise<User> {
@@ -86,9 +88,20 @@ export class UsersService {
         requester: createRelation.requester
       }
     });
-    if (relation.length) throw new UnauthorizedException('relation already exist');
-    const newRelation = this._relationsRepo.create(createRelation);
-    return await this._relationsRepo.save(newRelation);
+    if (relation.length)
+    {
+      await  this._relationsRepo.update(relation[0].id, {
+        userFirst: createRelation.userFirst,
+        userSecond: createRelation.userSecond,
+        requester: createRelation.requester,
+        isFriends: createRelation.isFriends,
+        blocker: createRelation.blocker
+      })
+    }
+    else {
+      const newRelation = this._relationsRepo.create(createRelation);
+      return await this._relationsRepo.save(newRelation);
+    }
   }
 
 
@@ -122,7 +135,8 @@ export class UsersService {
     const friends = await this._relationsRepo.find({
       relations: ['userFirst', 'userSecond'],
       where: {
-        userFirst: user
+        userFirst: user,
+        isFriends: true
       }
     });
     for (let friend of friends) {
@@ -140,15 +154,24 @@ export class UsersService {
       where: {
         userFirst: curUser,
         userSecond: otherUser,
-        isFriends: true,
         blocker: null
       }
     });
-    if (relation.length === 0) throw new NotFoundException('you can\'t block this user');
-    await this._relationsRepo.update(relation[0].id, {
-      blocker: curUser,
-      isFriends: false
-    })
+   if (relation.length !== 0) {
+     await this._relationsRepo.update(relation[0].id, {
+       blocker: curUser,
+       isFriends: false
+     })
+   }
+   else{
+     const newRelation = this._relationsRepo.create({
+       userFirst: curUser,
+       userSecond: otherUser,
+       isFriends: false,
+       blocker: curUser
+     });
+     await this._relationsRepo.save(newRelation);
+   }
   }
 
   async unblockUser(curUser: User, otherUser: User) {

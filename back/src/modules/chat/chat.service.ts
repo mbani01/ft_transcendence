@@ -11,6 +11,7 @@ import { MembersEntity } from './entities/members.entity';
 import { MessageEntity } from './entities/message.entity';
 import { RoomEntity } from './entities/room.entity';
 import {Not} from "typeorm";
+import {User} from "../users/entity/user.entity";
 
 @Injectable()
 export class ChatService {
@@ -76,11 +77,20 @@ export class ChatService {
     return await this._membersRepo.find({ where: { userID, roomID } });
   }
 
-  async getMessages(roomId: number) {
+  async getMessages(roomId: number, curUser: User) {
     const res = []; // res to store inof about returned object
     const messages = await this._messagesRepo.find({ roomID: roomId })
+    const blocker = await  this._userService._relationsRepo.find({
+      relations: ['userSecond'],
+      where: {
+        userFirst: curUser,
+        blocker: curUser
+      }
+    })
     for (let message of messages) {
       const user = await this._userService.findById(message.userID);
+      if (blocker.find(el => el.userSecond.id === user.id))
+        continue;
       res.push({
         message: message.content,
         sender: {
@@ -131,7 +141,15 @@ export class ChatService {
           });
           otherUser = await this._userService.findById(otherMember[0].userID);
       }
-      res.push({...room[0], users: otherUser ? {uid: otherUser.id, name: otherUser.username, img: otherUser.avatar}:undefined});
+      delete room[0].password;
+      let ownerR = await this._userService.findById(room[0].ownerID);
+      delete room[0].ownerID;
+      res.push({...room[0], owner: ownerR ? {
+          uid: ownerR.id,
+          name: ownerR.username,
+          img: ownerR.avatar
+        } : undefined,
+        users: otherUser ? {uid: otherUser.id, name: otherUser.username, img: otherUser.avatar}:undefined});
     }
     return res;
   }
@@ -183,7 +201,8 @@ export class ChatService {
   async updateRoomPassword(roomID: number, newRoomPassword: string)
   {
     const res = await this._roomsRepo.update(roomID, {
-      password: newRoomPassword
+      password: newRoomPassword,
+      channelType: newRoomPassword.length ? 'protected' : 'public'
     })
     if (!res) throw new NotFoundException('room not found');
   }

@@ -170,21 +170,22 @@ export class ChatService {
 
   fetchRooms() {
 
-    this.http.get<Chat[]>(`${environment.apiBaseUrl}/chat/fetch-rooms`).subscribe({
+    this.http.get<any>(`${environment.apiBaseUrl}/chat/fetch-rooms`).subscribe({
       next: chats => {
-        chats.forEach(value => {
+        chats.forEach((value: any) => {
           let chat: Chat = {
             roomID: value.roomID,
             name: value.name,
             isChannel: value.isChannel,
             messages: [],
             unread: 0,
-            type: value.type,
+            owner: value.owner,
+            type: value.channelType,
             users: value.users
           }
-
           this.chats.set(chat.roomID, chat);
         })
+        console.log(chats);
       }
     });
   }
@@ -197,8 +198,11 @@ export class ChatService {
 
   }
 
-  sendInvite(value: { nickname: string }) {
-
+  sendInvite(value: { nickname: string }, callback: any) {
+    this.socket.emit('chat-room-invite', {
+      name: value.nickname,
+      roomID: this.currChat?.roomID
+    }, callback);
   }
 
 }

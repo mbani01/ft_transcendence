@@ -4,6 +4,7 @@ import {NgbPopover} from "@ng-bootstrap/ng-bootstrap";
 import {Router} from "@angular/router";
 import {Chat} from "../../shared/chat.model";
 import {OAuthService} from "../../../login/oauth.service";
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'chatter-popup',
@@ -14,7 +15,8 @@ export class ChatterPopupComponent {
   @Input() user: User;
   @Input() chatRoom?: Chat;
   @Input() popover: NgbPopover;
-  constructor(private router: Router, public oauthService: OAuthService) {
+  constructor(private router: Router, public oauthService: OAuthService, private http: HttpClient) {
+    setTimeout(() => console.log(this.chatRoom));
   }
 
   // ngAfterViewInit() {
@@ -25,6 +27,7 @@ export class ChatterPopupComponent {
   // }
 
   mute(hours: string, minutes: string) {
+    // this.http.
     this.popover.close();
   }
 

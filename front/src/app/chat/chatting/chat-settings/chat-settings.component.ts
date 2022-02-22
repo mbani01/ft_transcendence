@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, ViewChild} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {User} from "../../../shared/user";
 import {environment} from "../../../../environments/environment";
@@ -7,6 +7,7 @@ import {BehaviorSubject} from "rxjs";
 import {NgForm} from "@angular/forms";
 import {MainSocket} from "../../../socket/MainSocket";
 import {OAuthService} from "../../../login/oauth.service";
+import {NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'chat-settings',
@@ -25,9 +26,10 @@ export class ChatSettingsComponent {
   activeTab = 'members';
   // roomName = this.chatService.currChat!.name;
   // nickname: any;
+  @ViewChild('t') tooltip: NgbTooltip;
 
   constructor(private http: HttpClient,
-              private chatService: ChatService,
+              public chatService: ChatService,
               private socket: MainSocket,
               public oauthService: OAuthService)
   {
@@ -51,11 +53,30 @@ export class ChatSettingsComponent {
   }
 
   saveName(roomNameForm: NgForm) {
-    this.editName = false
+    this.editName = false;
+    this.http.patch(`${environment.apiBaseUrl}/chat/${this.chatService.currChat!.roomID}/update-name`,
+      roomNameForm.value).subscribe({
+      next: value => {
+
+      },
+      error: err => {
+
+      }
+    });
   }
 
   savePassword(roomPasswordForm: NgForm) {
-    this.editPassword = false
+    this.editPassword = false;
+    this.http.patch(`${environment.apiBaseUrl}/chat/${this.chatService.currChat!.roomID}/update-password`,
+      roomPasswordForm.value).subscribe({
+      next: value => {
+
+      },
+      error: err => {
+
+      }
+    });
+
   }
 
   unmute(member: User) {
@@ -71,7 +92,13 @@ export class ChatSettingsComponent {
   }
 
   sendInvite(inviteForm: NgForm) {
-    this.chatService.sendInvite(inviteForm.value);
+    this.chatService.sendInvite(inviteForm.value, (err: any) => {
+      if (err.error) {
+        inviteForm.controls['nickname'].setErrors(err);
+        this.tooltip.open();
+      }
+    });
+    inviteForm.reset();
   }
 
   leaveChannel() {

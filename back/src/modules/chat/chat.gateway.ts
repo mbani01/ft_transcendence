@@ -155,39 +155,26 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
      } 
      */
 
-    const { uid: userID, roomID, timestamp: createdAt } = data;
+    const { name, roomID } = data;
+    const user = await this._chatService._userService.findByUserName(name);
+    if (!user)
+      return { error: 'no such user' };
     try {
       const room = await this._chatService.getRoomById(roomID);
-      const user = await this._chatService._userService.findById(data.uid);
-      this._chatService.createMember({
+      await  this._chatService.createMember({
         user,
         roomID,
-        userID: +userID,
+        userID: user.id,
         password: room.password,
         role: 'member'
       });
     } catch (e) {
       return { error: e.message };
     }
-
-    client.join(String(roomID));
-    return {}
-
-
-
-    /** out:
-     
-     {
-       "roomID": number | string,
-       "sender": {
-           "uid": number | string,
-           "name": string,
-           "img": string
-       }
-       "roomInvite": number | string,
-       "timestamp": Date
-     }
-     */
+    const res = await this.server.fetchSockets();
+    const otherUserClient = res.find(clt => clt.id === Clients.getSocketId(user.id));
+    if (otherUserClient)
+      otherUserClient.join(String(roomID));
   }
 
   @SubscribeMessage('chat-conversation')
