@@ -10,8 +10,18 @@
 
 .game-type {
   margin: auto;
-  max-width: 256px;
+  max-width: 25%;
   max-height: 256px;
+  border-radius: 360px;
+  //transition-delay: 200ms;
+  transition: transform .7s ease-in;
+
+}
+
+
+.game-type:hover {
+  transform: rotate(360deg);
+
 }
 
 #live-games {

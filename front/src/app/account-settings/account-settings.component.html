@@ -2,19 +2,19 @@
   <div class="row m-5">
     <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-pills col-3 offset-1" orientation="vertical">
       <li ngbNavItem="account">
-        <a routerLink="settings" class="nav-link text-center">Account</a>
+        <a routerLink="settings" routerLinkActive="active" class="nav-link text-center">Account</a>
 <!--        <ng-template ngbNavContent>-->
 <!--          <account-tab></account-tab>-->
 <!--        </ng-template>-->
       </li>
       <li ngbNavItem="friends">
-        <a routerLink="/account/friends" class="nav-link text-center">Friends</a>
+        <a routerLink="/account/friends" routerLinkActive="active" class="nav-link text-center">Friends</a>
 <!--        <ng-template ngbNavContent>-->
 <!--          <friends-list></friends-list>-->
 <!--        </ng-template>-->
       </li>
       <li ngbNavItem="blocks">
-        <a routerLink="blocks" class="nav-link text-center">Blocks</a>
+        <a routerLink="blocks" routerLinkActive="active" class="nav-link text-center">Blocks</a>
 <!--        <ng-template ngbNavContent>-->
 <!--          <blocks-list></blocks-list>-->
 <!--        </ng-template>-->

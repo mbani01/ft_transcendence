@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {MainSocket} from "../socket/MainSocket";
-import {GameService} from "./game.service";
+import {GameService, GameStat} from "./game.service";
 import {HttpClient} from "@angular/common/http";
 
 @Component({
@@ -43,5 +43,9 @@ export class GameComponent implements OnInit {
 
   watchGame(game: { GameId: string }) {
     this.gameService.watchGame(game.GameId);
+  }
+
+  backToMain() {
+    this.gameService.stat = GameStat.MAIN;
   }
 }
