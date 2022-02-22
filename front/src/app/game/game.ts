@@ -13,60 +13,68 @@ let isDefaultGame : boolean;
 let ball_position : {x: number, y: number};
 let isWatcher : boolean = false;
 let isPlayer : boolean = false;
+let gameEnd : boolean = false;
+
 // const socket = io("https://server-domain.com");
+
+function disconnectedPlayer(obj: any, isHostDisconnected: boolean)
+{
+	if (isHostDisconnected) {
+		console.log("host Disco", obj);
+		scene.add.text(game.canvas.width / 6.35, game.canvas.height / 2.1, obj.Players[0].username + ' disconnected', {
+			fontSize: '30px',
+			fontFamily: "'Press Start 2P', cursive"
+		});
+		scene.add.text(game.canvas.width / 1.7, game.canvas.height / 2.1, obj.Players[1].username + ' won', {
+			fontSize: '30px',
+			fontFamily: "'Press Start 2P', cursive"
+		});
+	} else {
+		console.log("not host Disco", obj);
+		scene.add.text(game.canvas.width / 1.82, game.canvas.height / 2.1, obj.Players[1].username +' disconnected', {
+			fontSize: '30px',
+			fontFamily: "'Press Start 2P', cursive"
+		});
+		scene.add.text(game.canvas.width / 4.7, game.canvas.height / 2.1, obj.Players[0].username + ' won', {
+			fontSize: '30px',
+			fontFamily: "'Press Start 2P', cursive"
+		});
+	}
+}
 
 
 export function gameOver(obj: any) {
-  if (obj.hasOwnProperty('disconnectedPlayer')) {
-	ball.setVisible(false);
-	game.scene.pause(scene);
-	if (obj.disconnectedPlayer.sub == obj.Players[0].sub) {
-		console.log("host Disco");
-		scene.add.text(game.canvas.width / 6.35, game.canvas.height / 2.1, 'Disconnected', {
-			fontSize: '60px',
-			fontFamily: "'Press Start 2P', cursive"
-		});
-		scene.add.text(game.canvas.width / 1.7, game.canvas.height / 2.1, 'you won', {
-			fontSize: '70px',
-			fontFamily: "'Press Start 2P', cursive"
-		});
+	clearInterval(hostInterval);
+	clearInterval(clientInterval);
+	gameEnd = true;
+	if (obj.hasOwnProperty('disconnectedPlayer')) {
+		ball.setVisible(false);
+		game.scene.pause(scene);
+		disconnectedPlayer(obj ,obj.disconnectedPlayer.sub == obj.Players[0].sub);	
 	} else {
-		console.log("not host Disco");
-		scene.add.text(game.canvas.width / 1.82, game.canvas.height / 2.1, 'Disconnected', {
-			fontSize: '60px',
-			fontFamily: "'Press Start 2P', cursive"
-		});
-		scene.add.text(game.canvas.width / 4.7, game.canvas.height / 2.1, 'you won', {
-			fontSize: '70px',
-			fontFamily: "'Press Start 2P', cursive"
-		});
+		console.log("win", obj);
+		ball.setVisible(false);
+		game.scene.pause(scene);
+		if (obj.Winner.sub != obj.Players[0].sub) {
+			scene.add.text(game.canvas.width / 5.5, game.canvas.height / 2.1, obj.Players[0].username + ' lost', {
+				fontSize: '30px',
+				fontFamily: "'Press Start 2P', cursive"
+			});
+			scene.add.text(game.canvas.width / 1.7, game.canvas.height / 2.1, obj.Players[1].username + ' won', {
+				fontSize: '30px',
+				fontFamily: "'Press Start 2P', cursive"
+			});
+		} else {
+			scene.add.text(game.canvas.width / 1.8, game.canvas.height / 2.1, obj.Players[1].username + ' lost', {
+				fontSize: '30px',
+				fontFamily: "'Press Start 2P', cursive"
+			});
+			scene.add.text(game.canvas.width / 5.5, game.canvas.height / 2.1, obj.Players[0].username + ' won', {
+				fontSize: '30px	',
+				fontFamily: "'Press Start 2P', cursive"
+			});
+		}
 	}
-
-
-  } else {
-	console.log("win", obj);
-	ball.setVisible(false);
-	game.scene.pause(scene);
-	if (obj.Winner.sub != obj.Players[0].sub) {
-		scene.add.text(game.canvas.width / 5.5, game.canvas.height / 2.1, 'game over', {
-			fontSize: '70px',
-			fontFamily: "'Press Start 2P', cursive"
-		});
-		scene.add.text(game.canvas.width / 1.7, game.canvas.height / 2.1, 'you won', {
-			fontSize: '70px',
-			fontFamily: "'Press Start 2P', cursive"
-		});
-	} else {
-		scene.add.text(game.canvas.width / 1.8, game.canvas.height / 2.1, 'game over', {
-			fontSize: '70px',
-			fontFamily: "'Press Start 2P', cursive"
-		});
-		scene.add.text(game.canvas.width / 5.5, game.canvas.height / 2.1, 'you won', {
-			fontSize: '70px',
-			fontFamily: "'Press Start 2P', cursive"
-		});
-	}
-  }
 }
 
 export function setSocket(s: MainSocket) {
@@ -159,14 +167,14 @@ export function socketListening () {
 		console.log(obj, game.hasFocus);
 		if (obj.focus == false) {
 			game.scene.pause(scene);
-			if (obj.isHost == true) {
+			if (obj.isHost == true && gameEnd == false) {
 				hostInterval = setInterval(() => {
 					hostText.setText('' + hostCounter--);
 					hostText.setFontSize(50);
 					if (hostCounter == 0)
 						clearInterval(hostInterval);
 				}, 1000);
-			} else {
+			} else if (gameEnd == false) {
 				clientInterval = setInterval(() => {
 					clientText.setText('' + clientCounter--);
 					clientText.setFontSize(50);
@@ -296,6 +304,7 @@ function onHidden() : void
 					// socket.emit("", );
 					clientCounter = 30;
 					clearInterval(hostInterval);
+					
 				}
 				hostCounter--;
 			}, 1000)
