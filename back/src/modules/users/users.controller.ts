@@ -91,13 +91,28 @@ export class UsersController {
     return { userID: otherUserId };
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post('/remove_friend')
+  async removeFriend(@Body('userID') otherUserId: number, @Req() req: any) {
+    try {
+      const user = req.user;
+      const otherUser = await this._usersService.findById(otherUserId);
+      const friend = await this._usersService.removeRelation({ userFirst: user, userSecond: otherUser, requester: user });
+      console.log(friend);
+    } catch (e) {
+      return { error: e.message };
+    }
+    return { userID: otherUserId };
+  }
+
+
 
   @UseGuards(JwtAuthGuard)
   @Get('/friends')
   async getFriend(@Req() req: any) {
     try {
-        const user = req.user;
-        return await this._usersService.getFriends(user);
+      const user = req.user;
+      return await this._usersService.getFriends(user);
     } catch (e) {
       return { error: e.message };
     }

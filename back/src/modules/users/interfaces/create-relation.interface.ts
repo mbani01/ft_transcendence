@@ -19,3 +19,8 @@ export interface IUpdateRelation {
     userFirst: User;
     userSecond: User;
 }
+export interface IDeleteRelation {
+    userFirst: User;
+    userSecond: User;
+    requester: User;
+}
