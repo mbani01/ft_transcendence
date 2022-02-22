@@ -23,8 +23,8 @@
     </ng-container>
   </ng-template>
   <ng-template #liveTemplate>
-    <div id="live-games" style="overflow-y:scroll;">
-      <ul class="list-group">
+    <div id="live-games" class="d-flex flex-column" >
+      <ul class="list-group" style="overflow-y:auto;">
         <p *ngIf="gameService.liveGames.length === 0" class="mx-auto mt-3" style="color: #888b91">There is no games right now</p>
         <li class="list-group-item" *ngFor="let game of gameService.liveGames">
           <div class="row">
@@ -39,6 +39,7 @@
           </div>
         </li>
       </ul>
+    <button class="btn btn-outline-primary mx-auto px-5 mt-auto" (click)="backToMain()">Back</button>
     </div>
   </ng-template>
 </div>
