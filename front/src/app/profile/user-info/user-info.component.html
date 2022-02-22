@@ -6,17 +6,17 @@
   <div class="col">
     <div class="row h-50 d-flex">
       <span id="nickname" class="">{{user.name}}</span>
-      <button *ngIf="!oauthService.isMe(user)" class="btn btn-{{isFriend ? 'warning' : 'info'}} ml-auto mt-auto mb-1" (click)="friend()">
-        <i class="bi bi-person-{{isFriend ? 'dash' : 'plus'}}-fill"></i>
-        {{isFriend ? 'Remove' : 'Add'}} Friend
+      <button *ngIf="!oauthService.isMe(user)" class="btn btn-{{userInfo.isFriend ? 'warning' : 'info'}} ml-auto mt-auto mb-1" (click)="friend()">
+        <i class="bi bi-person-{{userInfo.isFriend ? 'dash' : 'plus'}}-fill"></i>
+        {{userInfo.isFriend ? 'Remove' : 'Add'}} Friend
       </button>
     </div>
     <div class="row h-50">
       <span class="dot"></span>
-      <span class="status">Online</span>
-      <button *ngIf="!oauthService.isMe(user)" class="btn btn-{{isBlocked ? 'warning' : 'danger'}} ml-auto mb-auto mt-1" (click)="block()">
+      <span class="status">{{userInfo.status}}</span>
+      <button *ngIf="!oauthService.isMe(user)" class="btn btn-{{userInfo.isBlocked ? 'warning' : 'danger'}} ml-auto mb-auto mt-1" (click)="block()">
         <i class="bi bi-x-octagon-fill"></i>
-        {{isBlocked ? 'Unblock' : 'Block'}}
+        {{userInfo.isBlocked ? 'Unblock' : 'Block'}}
       </button>
     </div>
   </div>
