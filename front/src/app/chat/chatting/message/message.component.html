@@ -1,6 +1,6 @@
 <div class="row">
   <ng-template #chatterPopup>
-    <chatter-popup [user]="message.sender" [popover]="p"></chatter-popup>
+    <chatter-popup [user]="message.sender" [chatRoom]="chatService.chats.get(message.roomID)" [popover]="p"></chatter-popup>
   </ng-template>
 
   <div class="img-frame mt-auto m-1" [ngbPopover]="chatterPopup"

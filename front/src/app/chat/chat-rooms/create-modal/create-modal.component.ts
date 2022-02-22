@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {NgbActiveModal, NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {ChatRoom} from "../../shared/chat-room.model";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {environment} from "../../../../environments/environment";
 import {OAuthService} from "../../../login/oauth.service";
@@ -17,7 +16,7 @@ import {Chat} from "../../shared/chat.model";
 })
 export class CreateModalComponent {
   @Input() modal: NgbActiveModal;
-  @Input() room: ChatRoom;
+  @Input() room: Chat;
   @Output() createModal = new EventEmitter<Chat>();
 
   isPublic: boolean = false;

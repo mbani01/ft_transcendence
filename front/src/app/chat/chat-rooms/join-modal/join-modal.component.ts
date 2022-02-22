@@ -1,13 +1,12 @@
 import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {NgbActiveModal, NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {ChatRoom} from "../../shared/chat-room.model";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../../environments/environment";
 import {OAuthService} from "../../../login/oauth.service";
 import {NgForm} from "@angular/forms";
-import {Socket} from "ngx-socket-io";
 import {ChatService} from "../../chat.service";
 import {MainSocket} from "../../../socket/MainSocket";
+import {Chat} from "../../shared/chat.model";
 
 @Component({
   selector: 'join-modal',
@@ -16,7 +15,7 @@ import {MainSocket} from "../../../socket/MainSocket";
 })
 export class JoinModalComponent {
   @Input() modal: NgbActiveModal;
-  @Input() room: ChatRoom;
+  @Input() room: Chat;
   @Output() joinModal = new EventEmitter<JoinModalComponent>();
 
   constructor(private ngbModal:NgbModal, private http: HttpClient, private oauthService: OAuthService,

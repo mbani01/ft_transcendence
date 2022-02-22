@@ -85,6 +85,10 @@ export class OAuthService {
     return this._authorized;
   }
 
+  isMe(user: User) {
+     return user.uid === this.user?.uid;
+  }
+
   get user() {
     return this.user$.value;
   }
