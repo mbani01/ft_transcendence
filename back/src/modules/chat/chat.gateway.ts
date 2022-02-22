@@ -1,12 +1,11 @@
 import { WebSocketGateway, SubscribeMessage, MessageBody, OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect, ConnectedSocket, WebSocketServer } from '@nestjs/websockets';
 import { ChatService } from './chat.service';
 import { Server } from 'socket.io'
-import { CreateMessageColumnDto, CreateMessageDto } from './dto/create-message.dto';
-import { CreateMemberColumn, CreateMemberDto } from './dto/create-member.dto';
+import { CreateMessageColumnDto } from './dto/create-message.dto';
+import { CreateMemberColumn } from './dto/create-member.dto';
 import { Clients, CustomSocket } from 'src/adapters/socket.adapter';
-import { NotFoundException, UnauthorizedException, UsePipes, ValidationPipe } from '@nestjs/common';
+import { NotFoundException} from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
-import e from 'express';
 import { RoomEntity } from './entities/room.entity';
 
 @WebSocketGateway()
