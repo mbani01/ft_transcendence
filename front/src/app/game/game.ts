@@ -286,53 +286,58 @@ function start_game(this: Phaser.Scene) : void
 
 function onHidden() : void
 {
-	socket.emit('focusLose', { GameId: GameId, isHost: isHost, focus: false });
-	if (isHost == true) {
-		hostInterval = setInterval(() => {
-			hostText.setText('' + hostCounter);
-			hostText.setFontSize(50);
-			if (hostCounter == 0) {
-				// socket.emit("", );
-				clearInterval(hostInterval);
-			}
-			hostCounter--;
-		}, 1000)
-	} else {
-		clientInterval = setInterval(() => {
-			clientText.setText('' + clientCounter);
-			clientText.setFontSize(50);
-			if (clientCounter == 0) {
-				// socket.emit("", );
-				clearInterval(clientInterval);
-			}
-			clientCounter--;
-		}, 1000)
+	if (isPlayer){
+		socket.emit('focusLose', { GameId: GameId, isHost: isHost, focus: false });
+		if (isHost == true) {
+			hostInterval = setInterval(() => {
+				hostText.setText('' + hostCounter);
+				hostText.setFontSize(50);
+				if (hostCounter <= 0) {
+					// socket.emit("", );
+					clientCounter = 30;
+					clearInterval(hostInterval);
+				}
+				hostCounter--;
+			}, 1000)
+		} else {
+			clientInterval = setInterval(() => {
+				clientText.setText('' + clientCounter);
+				clientText.setFontSize(50);
+				if (clientCounter <= 0) {
+					// socket.emit("", );
+					clientCounter = 30;
+					clearInterval(clientInterval);
+				}
+				clientCounter--;
+			}, 1000)
+		}
 	}
   console.log("hidden");
 }
 
 function onFocus() : void
 {
-  socket.emit('focusLose', { GameId: GameId, isHost: isHost, focus: true });
-  if (isHost == true) {
-	// hostInterval = setInterval(() => {
-	// hostText.setText('' + hostCounter--);
-		hostCounter = 30;
-		hostText.setFontSize(0);
-	// 	if (hostCounter == 0)
-		clearInterval(hostInterval);
-	// }, 1000);
+	if(isPlayer){
+  		socket.emit('focusLose', { GameId: GameId, isHost: isHost, focus: true });
+		if (isHost == true) {
+			// hostInterval = setInterval(() => {
+			// hostText.setText('' + hostCounter--);
+				hostCounter = 30;
+				hostText.setFontSize(0);
+			// 	if (hostCounter == 0)
+				clearInterval(hostInterval);
+			// }, 1000);
 
-} else {
-	// clientInterval = setInterval(() => {
-	// 	clientText.setText('' + clientCounter--);
-		clientCounter = 30;
-		clientText.setFontSize(0);
-	// 	if (clientCounter == 0)
-		clearInterval(clientInterval);
-	// }, 1000);
-}
-
+		} else {
+			// clientInterval = setInterval(() => {
+			// 	clientText.setText('' + clientCounter--);
+				clientCounter = 30;
+				clientText.setFontSize(0);
+			// 	if (clientCounter == 0)
+				clearInterval(clientInterval);
+			// }, 1000);
+		}
+	}
 }
 
 function create (this: Phaser.Scene) : void
