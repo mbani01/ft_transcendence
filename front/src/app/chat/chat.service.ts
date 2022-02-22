@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import {EventEmitter, Injectable} from "@angular/core";
 import {OAuthService} from "../login/oauth.service";
 import {User} from "../shared/user";
 import {Message} from "./shared/message.model";
@@ -8,6 +8,7 @@ import {HttpClient} from "@angular/common/http";
 import {NgbDropdown} from "@ng-bootstrap/ng-bootstrap";
 import {Socket} from "ngx-socket-io";
 import {MainSocket} from "../socket/MainSocket";
+import {Observer} from "rxjs";
 
 type ChannelType = 'public' | 'protected' | 'private';
 
@@ -19,6 +20,7 @@ export class ChatService {
   public chats: Map<string, Chat>;
   public dropdown: NgbDropdown;
   public settings = false;
+  public onReceiveMessage = new EventEmitter<void>();
 
   constructor(private oauthService: OAuthService, private http: HttpClient, private socket: MainSocket) {
     this.chats = new Map();
@@ -64,24 +66,13 @@ export class ChatService {
     }
   }
 
-  loadMessages(chat: Chat, before: boolean = false) {
-    let obs = this.http.get<Message[]>(`${environment.apiBaseUrl}/chat/messages/${chat.roomID}`,
-      // before ? {
-        // params: {
-        //   before: new Date(chat.messages[0].timestamp).getTime()
-        // }
-      // } : {}
-      );
-    obs.subscribe({
+  loadMessages(chat: Chat, obs: Partial<Observer<any>>) {
+    this.http.get<Message[]>(`${environment.apiBaseUrl}/chat/messages/${chat.roomID}`).subscribe({
       next: value => {
-        // if (before) {
-        //   chat.messages.unshift(...value);
-        // } else {
-          chat.messages = value
-        // }
+        chat.messages = value
+        obs.next?.(value);
       }
     });
-    return obs;
   }
 
   set currChat(value) {
@@ -168,6 +159,7 @@ export class ChatService {
         }
         chat.unread++;
       }
+      this.onReceiveMessage.emit();
     }
   }
 

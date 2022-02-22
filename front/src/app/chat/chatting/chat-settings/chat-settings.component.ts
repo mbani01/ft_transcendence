@@ -29,7 +29,7 @@ export class ChatSettingsComponent {
   constructor(private http: HttpClient,
               private chatService: ChatService,
               private socket: MainSocket,
-              private oauthService: OAuthService)
+              public oauthService: OAuthService)
   {
     this.http.get<{
       id: number,
@@ -83,7 +83,4 @@ export class ChatSettingsComponent {
     }
   }
 
-  isMe(member: User) {
-    return member.uid === this.oauthService.user.uid;
-  }
 }

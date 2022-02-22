@@ -3,6 +3,7 @@ import {UserInfo} from "../model/user-info.model";
 import {User} from "../../shared/user";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
+import {OAuthService} from "../../login/oauth.service";
 
 @Component({
   selector: 'app-user-info',
@@ -17,7 +18,7 @@ export class UserInfoComponent implements OnInit {
   isFriend: boolean = false;
   isBlocked: boolean = false;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, public oauthService: OAuthService) { }
 
   ngOnInit(): void {
   }

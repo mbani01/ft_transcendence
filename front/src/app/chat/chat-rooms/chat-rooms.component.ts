@@ -1,5 +1,4 @@
 import {Component, TemplateRef} from "@angular/core";
-import {ChatRoom, ChatType} from "../shared/chat-room.model";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
@@ -14,8 +13,8 @@ import {NgForm} from "@angular/forms";
   styleUrls: ['chat-rooms.component.scss']
 })
 export class ChatRoomsComponent {
-  chats: ChatRoom[];
-  selectedChat: ChatRoom;
+  chats: Chat[];
+  selectedChat: Chat;
 
   // @ViewChild('passwordModal') passwordModal: TemplateRef<any>;
   private like: string;
@@ -30,7 +29,7 @@ export class ChatRoomsComponent {
     this.httpGetChannels();
   }
 
-  openPasswordModal(chat: ChatRoom, content: TemplateRef<any>) {
+  openPasswordModal(chat: Chat, content: TemplateRef<any>) {
     this.ngbModal.open(content, {centered: true});
     this.selectedChat = chat;
   }
@@ -39,8 +38,8 @@ export class ChatRoomsComponent {
     joinModal.room = this.selectedChat;
   }
 
-  joinChannel(chat: ChatRoom, content: TemplateRef<any>) {
-    if (chat.type == "protected") {
+  joinChannel(chat: Chat, content: TemplateRef<any>) {
+    if (chat.channelType == "protected") {
       this.openPasswordModal(chat, content);
     } else {
       this.chatService.joinChannel(chat.roomID!, '', (room: Chat) => {
@@ -56,7 +55,7 @@ export class ChatRoomsComponent {
 
   httpGetChannels() {
 
-    this.http.get<{channels: ChatRoom[], collectionSize: number}>(`${environment.apiBaseUrl}/chat/channels`, {
+    this.http.get<{channels: Chat[], collectionSize: number}>(`${environment.apiBaseUrl}/chat/channels`, {
       params: {
         like: this.like,
         page: this.pagination.page

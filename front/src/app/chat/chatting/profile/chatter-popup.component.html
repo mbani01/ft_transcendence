@@ -17,7 +17,7 @@
       <button class="btn btn-primary col" (click)="invitePlay()">Invite Play</button>
   </div>
   <hr class="bg-light mb-0">
-  <div class="row justify-content-around m-0">
+  <div *ngIf="chatRoom?.owner" class="row justify-content-around m-0">
     <div class="row my-2 w-100 d-flex">
       <button class="btn btn-warning m-auto" (click)="mute(hourInput.value, minuteInput.value)">Mute</button>
       <input type="number" maxlength="6" class="form-control col-3 p-0 text-center mr-1 ml-auto input-dark" placeholder="HH"
@@ -28,7 +28,7 @@
     </div>
     <div class="row w-100">
       <button class="btn btn-danger col" (click)="ban()">Ban</button>
-      <button class="btn btn-success col-6 ml-1" (click)="giveAdmin()">Give Admin</button>
+      <button *ngIf="oauthService.isMe(chatRoom!.owner!)" class="btn btn-success col-6 ml-1" (click)="giveAdmin()">Give Admin</button>
     </div>
   </div>
 </div>

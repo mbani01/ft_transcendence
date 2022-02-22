@@ -16,7 +16,7 @@ export class MessageComponent {
   @Output('deleteInvite') deleteInvite = new EventEmitter();
   // @Input() showAvatar: boolean = false;
 
-  constructor(private oAuthService: OAuthService, private popover: NgbPopoverConfig, private chatService: ChatService) {
+  constructor(private oAuthService: OAuthService, private popover: NgbPopoverConfig, public chatService: ChatService) {
     popover.popoverClass = 'popover-dark';
   }
 

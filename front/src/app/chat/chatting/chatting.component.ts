@@ -21,15 +21,14 @@ export class ChattingComponent {
   // settings = false;
 
   constructor(public chatService: ChatService) {
+    this.chatService.onReceiveMessage.subscribe(() => setTimeout(this.scrollDown.bind(this)));
+
     if (this.chatService.currChat?.messages.length == 0 && this.chatService.currChat.roomID != '0') {
       this.loading = true;
-      this.chatService.loadMessages(this.chatService.currChat).subscribe({
-        next: chats => {
-          if (chats.length < 30) {
-            // this.isAllMessage = true;
-          }
+      this.chatService.loadMessages(this.chatService.currChat, {
+        next: () => {
           this.loading = false;
-          this.scrollDown();
+          setTimeout(this.scrollDown.bind(this));
         }
       });
     }
@@ -40,22 +39,6 @@ export class ChattingComponent {
   ngAfterViewInit(): void {
     console.log(this.content.nativeElement.scrollHeight);
     this.scrollDown();
-  //   this.content.nativeElement.onscroll = (scroll: any) => {
-  //     if (scroll.target.scrollTop == 0 && !this.isAllMessage && this.chatService.currChat) {
-  //       this.loading = true;
-  //       let topMessage = this.chatService.currChat.messages[0];
-  //       this.chatService.loadMessages(this.chatService.currChat, true).subscribe({
-  //         next: (chats) => {
-  //           this.loading = false
-  //           if (chats.length < 30) {
-  //             this.isAllMessage = true;
-  //           }
-  //         }});
-  //
-  //     }
-  //   }
-  //
-  //   this.scrollDown();
   }
 
   isLateMessage(prev: Message, message: Message) {
@@ -73,7 +56,6 @@ export class ChattingComponent {
     return this.chatService.currChat!;
   }
   get messages() {
-    // console.log("Yo!")
     let msg: Message[] = [];
     if (this.chatService.currChat) {
       msg = this.chatService.currChat.messages;
@@ -90,17 +72,12 @@ export class ChattingComponent {
   }
 
   sendMessage(form: NgForm) {
-    // console.log(form.value);
     if (form.value.message) {
       this.chatService.sendMessage(form.value.message);
       form.reset();
-      setTimeout(() => this.scrollDown(), 100);
     }
   }
 
-  // onScroll($event: Event) {
-  //   console.log($event);
-  // }
   deleteInvite(i: number) {
     this.chatService.currChat!.messages.splice(i, 1);
   }

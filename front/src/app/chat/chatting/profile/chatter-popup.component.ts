@@ -2,6 +2,8 @@ import {Component, Input} from "@angular/core";
 import {User} from "../../../shared/user";
 import {NgbPopover} from "@ng-bootstrap/ng-bootstrap";
 import {Router} from "@angular/router";
+import {Chat} from "../../shared/chat.model";
+import {OAuthService} from "../../../login/oauth.service";
 
 @Component({
   selector: 'chatter-popup',
@@ -10,8 +12,9 @@ import {Router} from "@angular/router";
 })
 export class ChatterPopupComponent {
   @Input() user: User;
+  @Input() chatRoom?: Chat;
   @Input() popover: NgbPopover;
-  constructor(private router: Router) {
+  constructor(private router: Router, public oauthService: OAuthService) {
   }
 
   // ngAfterViewInit() {
