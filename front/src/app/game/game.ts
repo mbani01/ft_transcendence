@@ -8,7 +8,7 @@ import {MainSocket} from "../socket/MainSocket";
 // import * from '@azerion/phaser-web-workers/build/phaser-web-workers';
 let socket: MainSocket;
 let GameId : number;
-let isHost: number;
+let isHost: boolean;
 let isDefaultGame : boolean;
 let ball_position : {x: number, y: number};
 let isWatcher : boolean = false;
@@ -155,13 +155,50 @@ export function socketListening () {
 	}
   });
 
-  socket.on('focusLose', (obj: any) => {
-	console.log(obj, game.hasFocus);
-	if (obj.focus == false)
-	  game.scene.pause(scene);
-	else if (game.hasFocus == true)
-	  game.scene.resume(scene);
-  });
+	socket.on('focusLose', (obj: any) => {
+		console.log(obj, game.hasFocus);
+		if (obj.focus == false) {
+			game.scene.pause(scene);
+			if (obj.isHost == true) {
+				hostInterval = setInterval(() => {
+					hostText.setText('' + hostCounter--);
+					hostText.setFontSize(50);
+					if (hostCounter == 0)
+						clearInterval(hostInterval);
+				}, 1000);
+			} else {
+				clientInterval = setInterval(() => {
+					clientText.setText('' + clientCounter--);
+					clientText.setFontSize(50);
+					if (clientCounter == 0)
+						clearInterval(clientInterval);
+				}, 1000);
+			}
+		}
+		else if (game.hasFocus == true) {
+			game.scene.resume(scene);
+		}
+		if (obj.focus == true) {
+			if (obj.isHost == true) {
+				// hostInterval = setInterval(() => {
+				// hostText.setText('' + hostCounter--);
+					hostCounter = 30;
+					hostText.setFontSize(0);
+				// 	if (hostCounter == 0)
+					clearInterval(hostInterval);
+				// }, 1000);
+
+			} else {
+				// clientInterval = setInterval(() => {
+				// 	clientText.setText('' + clientCounter--);
+					clientCounter = 30;
+					clientText.setFontSize(0);
+				// 	if (clientCounter == 0)
+					clearInterval(clientInterval);
+				// }, 1000);
+			}
+		}
+	});
 }
 /*            hello world!          */
 
@@ -213,7 +250,12 @@ let BALL_SPEED: number = 200;
 let BALL_DIAMETER : number = 50;
 let PLAYER_WIDTH : number = 6;
 let PLAYER_HEIGHT : number = 200;
-
+let hostInterval : any;
+let hostCounter : number = 30;
+let hostText : any;
+let clientInterval : any;
+let clientCounter : number = 30;
+let clientText : any;
 
 function preload (this: Phaser.Scene) : void
 {
@@ -244,22 +286,63 @@ function start_game(this: Phaser.Scene) : void
 
 function onHidden() : void
 {
-//   socket.emit('focusLose', { GameId: GameId, isHost: isHost, focus: false });
+	socket.emit('focusLose', { GameId: GameId, isHost: isHost, focus: false });
+	if (isHost == true) {
+		hostInterval = setInterval(() => {
+			hostText.setText('' + hostCounter);
+			hostText.setFontSize(50);
+			if (hostCounter == 0) {
+				// socket.emit("", );
+				clearInterval(hostInterval);
+			}
+			hostCounter--;
+		}, 1000)
+	} else {
+		clientInterval = setInterval(() => {
+			clientText.setText('' + clientCounter);
+			clientText.setFontSize(50);
+			if (clientCounter == 0) {
+				// socket.emit("", );
+				clearInterval(clientInterval);
+			}
+			clientCounter--;
+		}, 1000)
+	}
   console.log("hidden");
 }
 
 function onFocus() : void
 {
   socket.emit('focusLose', { GameId: GameId, isHost: isHost, focus: true });
+  if (isHost == true) {
+	// hostInterval = setInterval(() => {
+	// hostText.setText('' + hostCounter--);
+		hostCounter = 30;
+		hostText.setFontSize(0);
+	// 	if (hostCounter == 0)
+		clearInterval(hostInterval);
+	// }, 1000);
+
+} else {
+	// clientInterval = setInterval(() => {
+	// 	clientText.setText('' + clientCounter--);
+		clientCounter = 30;
+		clientText.setFontSize(0);
+	// 	if (clientCounter == 0)
+		clearInterval(clientInterval);
+	// }, 1000);
+}
 
 }
 
 function create (this: Phaser.Scene) : void
 {
 	this.sound.pauseOnBlur = false;
-	// game.events.addListener('blur', onHidden);
-	// game.events.addListener('focus', onFocus);
+	game.events.addListener('blur', onHidden);
+	game.events.addListener('focus', onFocus);
 	clock = this.time;
+	hostText = scene.add.text(scene.sys.canvas.width / 4, 200, '' + hostCounter, {fontSize: '0px', fontFamily: "'Press Start 2P', cursive" });
+	clientText = this.add.text(this.sys.canvas.width / 4 * 3, 200, '' + player2_score, {fontSize: '0px', fontFamily: "'Press Start 2P', cursive" });
 	let line : Phaser.GameObjects.Line = this.add.line(this.sys.canvas.width / 2, this.sys.canvas.height / 2, 0, 0, 0, this.sys.canvas.height, 0xffffff).setLineWidth(5);
 	let mid_circle : Phaser.GameObjects.Arc = this.add.circle(this.sys.canvas.width / 2, this.sys.canvas.height / 2, 100, 0).setStrokeStyle(10, 0xffffff);
 	let left_circle : Phaser.GameObjects.Arc = this.add.circle(-700 / 2, this.sys.canvas.height / 2, 700, 0).setStrokeStyle(10, 0xffffff);
@@ -268,11 +351,11 @@ function create (this: Phaser.Scene) : void
 	player1.setDisplaySize(PLAYER_WIDTH, PLAYER_HEIGHT);
 	player2 = this.physics.add.sprite(this.sys.canvas.width * 97 / 100, this.sys.canvas.height / 2, "bar");
 	player2.setDisplaySize(PLAYER_WIDTH, PLAYER_HEIGHT);
-	if (!isDefaultGame){
-	powerUpBall = this.physics.add.sprite(this.sys.canvas.width / 2, this.sys.canvas.height / 2, "powerUp");
-	powerUpBall.setDisplaySize(50, 50);
-	powerUpBall.setVisible(false);
-	powerUpBall.setOrigin(0.5, 0.5);
+	if (!isDefaultGame) {
+		powerUpBall = this.physics.add.sprite(this.sys.canvas.width / 2, this.sys.canvas.height / 2, "powerUp");
+		powerUpBall.setDisplaySize(50, 50);
+		powerUpBall.setVisible(false);
+		powerUpBall.setOrigin(0.5, 0.5);
 	}
 	ball = this.physics.add.sprite(this.sys.canvas.width / 2, this.sys.canvas.height / 2, "ball");
 	ball.setDisplaySize(BALL_DIAMETER, BALL_DIAMETER);
