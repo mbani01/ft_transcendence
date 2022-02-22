@@ -7,6 +7,7 @@ import {CommonModule} from "@angular/common";
 import {FriendsComponent} from "./friends/friends.component";
 import {ChatModule} from "../chat/chat.module";
 import {BlockComponent} from "./blocks/block.component";
+import {RouterModule} from "@angular/router";
 
 @NgModule({
   declarations: [
@@ -15,15 +16,16 @@ import {BlockComponent} from "./blocks/block.component";
     FriendsComponent,
     BlockComponent
   ],
-  imports: [
-    CommonModule,
-    NgbNavModule,
-    FormsModule,
-    NgbTooltipModule,
-    NgbPopoverModule,
-    ChatModule,
-    NgbProgressbarModule
-  ],
+    imports: [
+        CommonModule,
+        NgbNavModule,
+        FormsModule,
+        NgbTooltipModule,
+        NgbPopoverModule,
+        ChatModule,
+        NgbProgressbarModule,
+        RouterModule
+    ],
   exports: [AccountSettingsComponent]
 })
 export class AccountSettingsModule {

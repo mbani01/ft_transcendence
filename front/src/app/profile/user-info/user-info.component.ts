@@ -32,9 +32,11 @@ export class UserInfoComponent implements OnInit {
       next: value => {
         console.log('add_friend', value);
         this.userInfo.isFriend = true;
+        this.userInfo.isBlocked = false;
       },
       error: err => {
-        console.log('add_friend err', err);
+        console.log('add_friend' +
+          ' err', err);
       }
     });
   }
@@ -52,11 +54,32 @@ export class UserInfoComponent implements OnInit {
   }
 
   blockUser() {
-    this.userInfo.isBlocked = true;
+    this.http.post(`${environment.apiBaseUrl}/users/block`,
+      {
+        userID: this.user.uid
+      }).subscribe({
+      next: value => {
+        console.log('block', value);
+        this.userInfo.isBlocked = true;
+        this.userInfo.isFriend = false;
+      },
+      error: err => {
+        console.log('block err', err);
+      }
+    });
+
   }
 
   unblockUser() {
-    this.userInfo.isBlocked = false;
+    this.http.patch(`${environment.apiBaseUrl}/users/unblock`,
+      {
+        userID: this.user.uid
+      }).subscribe({
+      next: value => {
+        this.userInfo.isBlocked = false;
+      }
+    });
+
   }
 
   friend() {

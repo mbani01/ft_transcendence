@@ -16,7 +16,7 @@ export class ChatController {
 
     @UseGuards(JwtAuthGuard)
     @Get('messages/:roomID')
-    async getMessages(@Param() { roomID }: ParamsDto) {
+    async getMessages(@Param() { roomID }: ParamsDto, @Req() req: any) {
         /**
          * [
             {
@@ -30,7 +30,7 @@ export class ChatController {
             }
             ]
          */
-        return await this._chaTService.getMessages(roomID);
+        return await this._chaTService.getMessages(roomID, req.user);
     }
 
     @UseGuards(JwtAuthGuard) // 
