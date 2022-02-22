@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Param, Post, Query, Req, Res, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, Param, Patch, Post, Query, Req, Res, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { join } from "path";
 import { PaginationQueryDto } from "src/common/dto/pagination-query.dto";
@@ -116,6 +116,36 @@ export class UsersController {
     } catch (e) {
       return { error: e.message };
     }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('/block')
+  async blockUser(@Body('userID') userID: number, @Req() req: any)
+  {
+    try{
+        const otherUser = await this._usersService.findById(userID);
+        await this._usersService.blockUser(req.user, otherUser);
+    }
+    catch(e)
+    {
+      return { error: e.message };
+    }
+    return { userID };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('/unblock')
+  async unblockUser(@Body('userID') userID: number, @Req() req: any)
+  {
+    try{
+        const otherUser = await this._usersService.findById(userID);
+        await this._usersService.unblockUser(req.user, otherUser);
+    }
+    catch(e)
+    {
+      return { error: e.message };
+    }
+    return { userID };
   }
 
   @UseGuards(JwtAuthGuard)

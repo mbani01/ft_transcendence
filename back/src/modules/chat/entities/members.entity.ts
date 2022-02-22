@@ -17,6 +17,12 @@ export class MembersEntity {
     @Column({ default: 'member', nullable: false })
     role: Roles;
 
+    @Column({nullable: true, default: false})
+    isMuted: boolean;
+
+    @Column({nullable: true, default: false})
+    isBaned: boolean;
+
     @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
     public created_at: Date;
 

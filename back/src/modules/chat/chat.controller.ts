@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 import { check } from 'prettier';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -181,5 +181,59 @@ export class ChatController {
     unbanMember(@Param() params: UnmuteAndUnbanDto) {
         const { roomID, uid } = params;
         return `this action will unban the user with id #${uid} from room with id #${roomID}`;
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Patch('/:roomID/update-name')
+    async updateRoomName(@Param('roomID') roomID: number, @Body('name') newRoomName: string)
+    {
+        try{
+            await this._chaTService.updateRoomName(roomID, newRoomName);
+        }
+        catch(e)
+        {
+            return {error: e.message};
+        }
+        return { name: newRoomName } ;
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Patch('/:roomID/update-password')
+    async updateRoomPassword(@Param('roomID') roomID: number, @Body('password') newRoomPassword: string)
+    {
+        try{
+            await this._chaTService.updateRoomPassword(roomID, newRoomPassword);
+        }
+        catch(e)
+        {
+            return {error: e.message};
+        }
+        return { roomID } ;
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('/:roomID/mutes')
+    async getMutedMembers(@Param('roomID') roomID: number)
+    {
+        try{
+            return await this._chaTService.getMutedMembers(roomID);
+        }
+        catch(e)
+        {
+            return { error: e.message };
+        }
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('/:roomID/bans')
+    async getBanedMembers(@Param('roomID') roomID: number)
+    {
+        try{
+            return await this._chaTService.getBannedMembers(roomID);
+        }
+        catch(e)
+        {
+            return { error: e.message };
+        }
     }
 }

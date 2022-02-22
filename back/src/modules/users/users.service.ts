@@ -125,4 +125,36 @@ export class UsersService {
     }
     return res;
   }
+
+  async blockUser(curUser: User, otherUser: User) {
+      const relation = await  this._relationsRepo.find({
+        where: {
+          userFirst: curUser,
+          userSecond: otherUser,
+          isFriends: true,
+          blocker: null
+        }
+      });
+      if (relation.length === 0) throw new NotFoundException('you can\'t block this user');
+      await this._relationsRepo.update(relation[0].id, {
+        blocker: curUser,
+        isFriends: false
+      })
+  }
+
+  async unblockUser(curUser: User, otherUser: User) {
+      const relation = await  this._relationsRepo.find({
+        where: {
+          userFirst: curUser,
+          userSecond: otherUser,
+          isFriends: false,
+          blocker: curUser
+        }
+      });
+      if (relation.length === 0) throw new NotFoundException('you can\'t unblock this user');
+      await this._relationsRepo.update(relation[0].id, {
+        blocker: null,
+        isFriends: false
+      })
+  }
 }

@@ -1,4 +1,5 @@
 import { IsNumber, IsOptional, IsPositive, IsString, Matches, MaxLength, MinLength } from "class-validator";
+import { User } from "src/modules/users/entity/user.entity";
 import { Roles } from "../common/chat.types";
 
 export class CreateMemberDto{
@@ -13,6 +14,7 @@ export class CreateMemberDto{
 }
 
 export class CreateMemberColumn{
+    user: User;
     userID: number;
     roomID: number;
     password: string;
