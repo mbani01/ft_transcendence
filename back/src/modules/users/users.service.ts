@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { PaginationQueryDto } from "src/common/dto/pagination-query.dto";
 import { Repository } from "typeorm";
@@ -79,6 +79,14 @@ export class UsersService {
 
 
   async createRelation(createRelation: ICreateRelation) {
+    const relation = await this._relationsRepo.find({
+      where: {
+        userFirst: createRelation.userFirst,
+        userSecond: createRelation.userSecond,
+        requester: createRelation.requester
+      }
+    });
+    if (relation.length) throw new UnauthorizedException('relation already exist');
     const newRelation = this._relationsRepo.create(createRelation);
     return await this._relationsRepo.save(newRelation);
   }
@@ -105,6 +113,7 @@ export class UsersService {
         requester: relation.userFirst,
       }
     })
+    console.log(relationToDelete[0]);
     await this._relationsRepo.delete(relationToDelete[0].id);
   }
 
@@ -127,34 +136,44 @@ export class UsersService {
   }
 
   async blockUser(curUser: User, otherUser: User) {
-      const relation = await  this._relationsRepo.find({
-        where: {
-          userFirst: curUser,
-          userSecond: otherUser,
-          isFriends: true,
-          blocker: null
-        }
-      });
-      if (relation.length === 0) throw new NotFoundException('you can\'t block this user');
-      await this._relationsRepo.update(relation[0].id, {
-        blocker: curUser,
-        isFriends: false
-      })
+    const relation = await this._relationsRepo.find({
+      where: {
+        userFirst: curUser,
+        userSecond: otherUser,
+        isFriends: true,
+        blocker: null
+      }
+    });
+    if (relation.length === 0) throw new NotFoundException('you can\'t block this user');
+    await this._relationsRepo.update(relation[0].id, {
+      blocker: curUser,
+      isFriends: false
+    })
   }
 
   async unblockUser(curUser: User, otherUser: User) {
-      const relation = await  this._relationsRepo.find({
-        where: {
-          userFirst: curUser,
-          userSecond: otherUser,
-          isFriends: false,
-          blocker: curUser
-        }
-      });
-      if (relation.length === 0) throw new NotFoundException('you can\'t unblock this user');
-      await this._relationsRepo.update(relation[0].id, {
-        blocker: null,
-        isFriends: false
-      })
+    const relation = await this._relationsRepo.find({
+      where: {
+        userFirst: curUser,
+        userSecond: otherUser,
+        isFriends: false,
+        blocker: curUser
+      }
+    });
+    if (relation.length === 0) throw new NotFoundException('you can\'t unblock this user');
+    await this._relationsRepo.update(relation[0].id, {
+      blocker: null,
+      isFriends: false
+    })
+  }
+
+  async getRelation(user: User, otherUser: User) {
+    return await this._relationsRepo.find({
+      relations: ['blocker'],
+      where: {
+        userFirst: user,
+        userSecond: otherUser
+      }
+    })
   }
 }
