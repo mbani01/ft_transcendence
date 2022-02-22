@@ -9,5 +9,5 @@ export interface Chat {
   messages: Message[];
   unread: number;
   owner?: User;
-  channelType: 'public' | 'protected' | 'private';
+  type: 'public' | 'protected' | 'private';
 }

@@ -39,6 +39,7 @@ export class ChatService {
         roomID: roomID,
         password: password
       },  (room: any) => {
+        console.log(room);
         if (!room?.error) {
           room.messages = [];
           // this.loadMessages(room);
@@ -56,7 +57,7 @@ export class ChatService {
       this.currChat = this.chats.get(roomID) as Chat;
     } else {
       this.socket.emit('chat-conversation', {
-        user: user.uid
+        otherUser: user.uid
       }, (chat: Chat) => {
         if (chat) {
           this.currChat = chat;
@@ -178,7 +179,8 @@ export class ChatService {
             isChannel: value.isChannel,
             messages: [],
             unread: 0,
-            channelType: value.channelType,
+            type: value.type,
+            users: value.users
           }
 
           this.chats.set(chat.roomID, chat);

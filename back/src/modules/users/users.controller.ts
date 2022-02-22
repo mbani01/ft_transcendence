@@ -8,6 +8,7 @@ import { OutUserDto } from "./dto/out-user.dto";
 import { UpdateUserNameDto } from "./dto/update-body.dto";
 import { UsersService } from "./users.service";
 import * as fs from 'fs';
+import {Clients} from "../../adapters/socket.adapter";
 
 @Controller("users")
 export class UsersController {
@@ -57,7 +58,7 @@ export class UsersController {
   */
   @UseGuards(JwtAuthGuard)
   @Get("/user-info/:uid")
-  async getUserInfo(@Param("uid") userID: number, @Req() req): Promise<OutUserInfoDto> {
+  async getUserInfo(@Param("uid") userID: number, @Req() req): Promise<any> {
     /**
      {
         "name": string
@@ -73,8 +74,21 @@ export class UsersController {
      */
 
     const user = req.user
-    const otherUser = await this._usersService.findById(userID);
-    return { games: 0, wins: 0, rankPoints: 0, totalScore: 0, status: 'off-line', img: user.img, name: user.username, isFriend: true, isBlocked: false };
+    let relation;
+    let isActive;
+    try {
+      const otherUser = await this._usersService.findById(userID);
+      relation = await this._usersService.getRelation(user, otherUser);
+      isActive = Clients.isActiveUser(otherUser.id);
+    }
+    catch (e)
+    {
+      return{ error: e.message };
+    }
+
+    if (relation.length === 0)
+      return { games: 0, wins: 0, rankPoints: 0, totalScore: 0, status: (isActive) ? 'on-line':'off-line', img: user.img, name: user.username, isFriend: false, isBlocked: false };
+    return { games: 0, wins: 0, rankPoints: 0, totalScore: 0, status: (isActive) ? 'on-line':'off-line', img: user.img, name: user.username, isFriend: relation[0].isFriends, isBlocked: (relation[0].blocker !== null) };
   }
 
   @UseGuards(JwtAuthGuard)
@@ -97,8 +111,7 @@ export class UsersController {
     try {
       const user = req.user;
       const otherUser = await this._usersService.findById(otherUserId);
-      const friend = await this._usersService.removeRelation({ userFirst: user, userSecond: otherUser, requester: user });
-      console.log(friend);
+      await this._usersService.removeRelation({ userFirst: user, userSecond: otherUser, requester: user });
     } catch (e) {
       return { error: e.message };
     }

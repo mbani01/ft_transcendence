@@ -15,8 +15,8 @@ export class UserInfoComponent implements OnInit {
   @Input() user: User;
   @Input() userInfo: UserInfo;
 
-  isFriend: boolean = false;
-  isBlocked: boolean = false;
+  // isFriend: boolean = false;
+  // isBlocked: boolean = false;
 
   constructor(private http: HttpClient, public oauthService: OAuthService) { }
 
@@ -31,7 +31,7 @@ export class UserInfoComponent implements OnInit {
       }).subscribe({
       next: value => {
         console.log('add_friend', value);
-        this.isFriend = true;
+        this.userInfo.isFriend = true;
       },
       error: err => {
         console.log('add_friend err', err);
@@ -45,22 +45,22 @@ export class UserInfoComponent implements OnInit {
         userID: this.user.uid
       }).subscribe({
       next: value => {
-        this.isFriend = false;
+        this.userInfo.isFriend = false;
       }
     });
 
   }
 
   blockUser() {
-    this.isBlocked = true;
+    this.userInfo.isBlocked = true;
   }
 
   unblockUser() {
-    this.isBlocked = false;
+    this.userInfo.isBlocked = false;
   }
 
   friend() {
-    if (this.isFriend) {
+    if (this.userInfo.isFriend) {
       this.removeFriend();
     } else {
       this.addFriend();
@@ -68,7 +68,7 @@ export class UserInfoComponent implements OnInit {
   }
 
   block() {
-    if (this.isBlocked) {
+    if (this.userInfo.isBlocked) {
       this.unblockUser();
     } else {
       this.blockUser();

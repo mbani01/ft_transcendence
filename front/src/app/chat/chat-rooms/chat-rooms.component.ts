@@ -39,7 +39,7 @@ export class ChatRoomsComponent {
   }
 
   joinChannel(chat: Chat, content: TemplateRef<any>) {
-    if (chat.channelType == "protected") {
+    if (chat.type === "protected") {
       this.openPasswordModal(chat, content);
     } else {
       this.chatService.joinChannel(chat.roomID!, '', (room: Chat) => {
