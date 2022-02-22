@@ -5,7 +5,7 @@ import { Repository } from "typeorm";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { Relation } from "./entity/relation.entity";
 import { User } from "./entity/user.entity";
-import { ICreateRelation, IUpdateRelation } from "./interfaces/create-relation.interface";
+import { ICreateRelation, IDeleteRelation, IUpdateRelation } from "./interfaces/create-relation.interface";
 
 @Injectable()
 export class UsersService {
@@ -96,17 +96,27 @@ export class UsersService {
     })
   }
 
-  async  getFriends(user: User)
-  {
+  async removeRelation(relation: IDeleteRelation) {
+    const relationToDelete = await this._relationsRepo.find({
+      // relations: ['userFirst', 'userSecond', 'requester'],
+      where: {
+        userFirst: relation.userFirst,
+        userSecond: relation.userSecond,
+        requester: relation.userFirst,
+      }
+    })
+    await this._relationsRepo.delete(relationToDelete[0].id);
+  }
+
+  async getFriends(user: User) {
     let res = [];
-    const friends = await  this._relationsRepo.find({
+    const friends = await this._relationsRepo.find({
       relations: ['userFirst', 'userSecond'],
-      where:{
+      where: {
         userFirst: user
       }
     });
-    for (let friend of friends)
-    {
+    for (let friend of friends) {
       res.push({
         uid: friend.userSecond.id,
         name: friend.userSecond.username,
@@ -116,22 +126,3 @@ export class UsersService {
     return res;
   }
 }
-
-
-/**
-    @Column({ default: false })
-    isFriends: boolean;
-
-    @ManyToOne(() => User, user => user.relationsFirst)
-    userFirst: User;
-
-    @ManyToOne(() => User, user => user.relationsSecond)
-    userSecond: User;
-    
-    @ManyToOne(() => User, user => user.BlockedRelations)
-    blocker: User;
-
-    @ManyToOne(() => User, user => user.FriendshipRequests)
-    requester: User;
-
- */
