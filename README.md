@@ -8,7 +8,58 @@ This is a group project which is about creating a website for the mighty Pong co
 • Game    
 are the main things in the project.   
 
-### 8. Observations : 
+**Exemples**
+
+![alt text]()
+
+---
+
+</p>
+<p align="center">
+<img src="https://github.com/mbani01/ft_transcendence/blob/main/assets/Screen%20Shot%202022-02-23%20at%2023.01.30.png" width="800">
+</p>
+
+---
+---
+
+</p>
+<p align="center">
+<img src="https://github.com/mbani01/ft_transcendence/blob/main/assets/Screen%20Shot%202022-02-23%20at%2023.00.06.png" width="800">
+</p>
+
+---
+
+
+---
+
+</p>
+<p align="center">
+<img src="https://github.com/mbani01/ft_transcendence/blob/main/assets/Screen%20Shot%202022-02-23%20at%2023.01.15.png" width="800">
+</p>
+
+---
+---
+
+</p>
+<p align="center">
+<img src="https://github.com/mbani01/ft_transcendence/blob/main/assets/Screen%20Shot%202022-02-23%20at%2023.01.07.png" width="800">
+</p>
+
+---
+
+**Requirements:**
+``` NodeJS```
+
+
+**Installation and launch:**
+
+* `https://github.com/mbani01/ft_transcendence.git`
+* `cd ft_transcendence.git`
+* `npm i`
+* `go to your favourite browser && localhost:3000`
+
+
+**Observations :** 
 
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/made-with-typescript.svg)](https://forthebadge.com)
