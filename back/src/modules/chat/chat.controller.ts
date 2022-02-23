@@ -1,13 +1,9 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
-import { Request } from 'express';
-import { check } from 'prettier';
+import { Body, Controller, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { User } from '../users/entity/user.entity';
 import { UsersService } from '../users/users.service';
-import { ChatGateway } from './chat.gateway';
 import { ChatService } from './chat.service';
-import { CreateRoomBodyDto, CreateRoomDto } from './dto/create-room.dto';
-import { GetAllRoomsQueryDto, GetMessageQueryDto, ParamsDto, UnmuteAndUnbanDto } from './dto/params.dto';
+import { GetAllRoomsQueryDto, ParamsDto, UnmuteAndUnbanDto } from './dto/params.dto';
 
 @Controller('chat')
 export class ChatController {
