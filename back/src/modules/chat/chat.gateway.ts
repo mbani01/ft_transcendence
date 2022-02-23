@@ -73,11 +73,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const { roomID, timestamp: createdAt, message: content } = JSON.parse(data);
     const userID = client.user.sub;
     const user = await this._chatService.getMember({ roomID, userID });
-    if (user.isBaned || user.isMuted) 
-    {
-      client.emit('chat-message', { error: 'you can\'t send messages to this room!' });
-      return;
-    }
+    if (user.isBaned || user.isMuted)
+      return { error: (user.isBaned) ? 'you are banned': 'you are muted' };
     const message: CreateMessageColumnDto = { roomID, createdAt, content, userID: +userID }
     const room = await this._chatService.getRoomById(roomID);
     if (!room) throw new NotFoundException('room not found');
@@ -194,7 +191,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       newDM = await this._chatService.createDM({ isChannel: false, channelType: 'private', name: `DM${client.user.sub}${otherUser}` }, { userID1: client.user.sub, userID2: otherUser });
     } catch (e) {
       return { error: e.message };
-
     }
 
     const res = await this.server.fetchSockets();
@@ -207,20 +203,35 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   @SubscribeMessage('ban')
   async banMember(@ConnectedSocket() client: CustomSocket, @MessageBody() data: any) { // userID is the id of the user to ban
-    console.log()
     const {roomID, userID} = data;
     try {
+      const member = await  this._chatService.getMember({userID: client.user.sub});
+      if (member.role !== 'admin')
+          return { error: 'you are not the admin' };
+      const room = await  this._chatService.getRoomById(roomID);
+      if (room.ownerID === userID)
+          return { error: 'you can\'t ban the room owner'};
       await this._chatService.banMember(roomID, userID);
     } catch (e) {
         return { error: e.message };
     }
     this.server.to(String(roomID)).emit('ban', {roomID, userID})
+    const res = await this.server.fetchSockets();
+    const otherUserClient = res.find(clt => clt.id === Clients.getSocketId(userID));
+    if (otherUserClient)
+      otherUserClient.leave(String(roomID));
   }
 
   @SubscribeMessage('mute')
   async muteMember(@ConnectedSocket() client: CustomSocket, @MessageBody() data: any) { // userID is the id of the user to ban
     const {userID, timeout, roomID} = data;
     try {
+      const member = await  this._chatService.getMember({userID: client.user.sub});
+      if (member.role !== 'admin')
+        return { error: 'you are not the admin' };
+      const room = await  this._chatService.getRoomById(roomID);
+      if (room.ownerID === userID)
+        return { error: 'you can\'t mute the room owner'};
       await this._chatService.muteMember(roomID, userID);
       const time = setTimeout(() => {
         this._chatService.unmuteMember(roomID, userID);

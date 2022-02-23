@@ -28,15 +28,6 @@
   border-radius: 360px;
 }
 
-::ng-deep .error-tooltip .tooltip-inner {
-  background-color: var(--danger) ;
-
-}
-
-::ng-deep .error-tooltip .arrow::before {
-  border-top-color: var(--danger) ;
-}
-
 //
 //.nav-pills {
 //  list-style-type: none;

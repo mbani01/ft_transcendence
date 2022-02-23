@@ -148,7 +148,7 @@ export class ChatService {
     }
   }
 
-  sendMessage(message: string) {
+  sendMessage(message: string, callback?: any) {
     if (this.currChat) {
       let m: Message = {
         roomID: this.currChat.roomID,
@@ -156,7 +156,7 @@ export class ChatService {
         message: message,
         timestamp: new Date()
       };
-      this.socket.emit('chat-message', JSON.stringify(m));
+      this.socket.emit('chat-message', JSON.stringify(m), callback);
     } else {
     }
   }

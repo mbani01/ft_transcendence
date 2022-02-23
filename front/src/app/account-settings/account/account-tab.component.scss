@@ -10,6 +10,16 @@ input::-webkit-inner-spin-button {
   margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 }
 
+
+::ng-deep .error-tooltip .tooltip-inner {
+  background-color: var(--danger) ;
+
+}
+
+::ng-deep .error-tooltip .arrow::before {
+  border-top-color: var(--danger) ;
+}
+
 input[type=number] {
   -moz-appearance:textfield; /* Firefox */
 }

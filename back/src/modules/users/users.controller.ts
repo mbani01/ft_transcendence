@@ -105,8 +105,8 @@ export class UsersController {
     console.log(stats);
 
     if (relation.length === 0)
-      return { ...stats, status: (isActive) ? 'on-line' : 'off-line', img: user.img, name: user.username, isFriend: false, isBlocked: false };
-    return { ...stats, status: (isActive) ? 'on-line' : 'off-line', img: user.img, name: user.username, isFriend: relation[0].isFriends, isBlocked: (relation[0].blocker !== null) };
+      return { ...stats, status: (isActive) ? 'Online' : 'Offline', img: user.img, name: otherUser.username, isFriend: false, isBlocked: false };
+    return { ...stats, status: (isActive) ? 'Online' : 'Offline', img: user.img, name: otherUser.username, isFriend: relation[0].isFriends, isBlocked: (relation[0].blocker !== null) };
   }
 
   @UseGuards(JwtAuthGuard)

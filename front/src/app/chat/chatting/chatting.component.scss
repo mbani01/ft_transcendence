@@ -80,3 +80,13 @@
 #chat-settings:hover {
   color: var(--primary);
 }
+
+
+::ng-deep .error-tooltip .tooltip-inner {
+  background-color: var(--danger) ;
+
+}
+
+::ng-deep .error-tooltip .arrow::before {
+  border-top-color: var(--danger) ;
+}

@@ -7,6 +7,7 @@ import { GetAllRoomsQueryDto, ParamsDto, UnmuteAndUnbanDto } from './dto/params.
 import {WebSocketServer} from "@nestjs/websockets";
 import {Server} from "socket.io";
 import {Clients} from "../../adapters/socket.adapter";
+import {createJwtProvider} from "@nestjs/jwt/dist/jwt.providers";
 
 @Controller('chat')
 export class ChatController {
@@ -34,11 +35,12 @@ export class ChatController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get('/:roomID/role')
-    async getMyRole(@Param('roomID') roomID: number, @Req() req: any)
+    @Get('/:roomID/role/:uid')
+    async getMyRole(@Param() params: any, @Req() req: any)
     {
+        const {roomID, uid} = params;
         try {
-            const member = await  this._chaTService.getMember({roomID, userID: req.user.sub});
+            const member = await  this._chaTService.getMember({roomID, userID: uid});
             return { role: member.role };
         } catch (e)
         {
@@ -165,8 +167,6 @@ export class ChatController {
         }
         return { channels, collectionSize: channels.length };
     }
-
-
 
     @UseGuards(JwtAuthGuard)
     @Get(':roomID/members')

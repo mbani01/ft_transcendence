@@ -7,6 +7,7 @@ import {OAuthService} from "../../../login/oauth.service";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../../environments/environment";
 import {MainSocket} from "../../../socket/MainSocket";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'chatter-popup',
@@ -17,9 +18,38 @@ export class ChatterPopupComponent {
   @Input() user: User;
   @Input() chatRoom?: Chat;
   @Input() popover: NgbPopover;
+  myRole: string
+  userRole: string;
   constructor(private router: Router, public oauthService: OAuthService, private http: HttpClient,
               private socket: MainSocket) {
-    setTimeout(() => console.log(this.chatRoom));
+    setTimeout(() => {
+      if (this.chatRoom) {
+        this.http.get<{ role: string }>(`${environment.apiBaseUrl}/chat/${this.chatRoom!.roomID}/role/${this.oauthService.user.uid}`).subscribe({
+          next: value => {
+            this.myRole = value.role;
+            console.log('this.userRole', this.myRole);
+          }
+        });
+        this.http.get<{ role: string }>(`${environment.apiBaseUrl}/chat/${this.chatRoom!.roomID}/role/${this.user!.uid}`).subscribe({
+          next: value => {
+            this.userRole = value.role;
+            console.log('this.userRole', this.userRole);
+          }
+        });
+
+      }
+    });
+  }
+
+  ngAfterContentInit() {
+    // if (this.chatRoom) {
+    //   this.http.get<{ role: string }>(`${environment.apiBaseUrl}/chat/${this.chatRoom!.roomID}/role/${this.user!.uid}`).subscribe({
+    //     next: value => {
+    //       this.userRole = value.role;
+    //     }
+    //   });
+    // }
+    // console.log('this.userRole', this.userRole);
   }
 
   mute(hours: string, minutes: string) {
@@ -56,7 +86,24 @@ export class ChatterPopupComponent {
   }
 
   giveAdmin() {
+    this.http.patch(`${environment.apiBaseUrl}/chat/${this.chatRoom!.roomID}/give-admin`, {
+      userID: this.user.uid
+    }).subscribe({
+      next: () => {
+        this.userRole = 'admin';
+      }
+    })
+    this.popover.close();
+  }
 
+  revokeAdmin() {
+    this.http.patch(`${environment.apiBaseUrl}/chat/${this.chatRoom!.roomID}/revoke-admin`, {
+      userID: this.user.uid
+    }).subscribe({
+      next: () => {
+        this.userRole = 'member';
+      }
+    })
     this.popover.close();
   }
 
