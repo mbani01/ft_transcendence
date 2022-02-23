@@ -17,6 +17,8 @@ import {NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
 export class ChatSettingsComponent {
 
   members = new BehaviorSubject<User[]>([]);
+  mutes = new BehaviorSubject<User[]>([]);
+  bans = new BehaviorSubject<User[]>([]);
 
   editName = false;
   editPassword = false;
@@ -33,19 +35,7 @@ export class ChatSettingsComponent {
               private socket: MainSocket,
               public oauthService: OAuthService)
   {
-    this.http.get<{
-      id: number,
-      username: string,
-      avatar: string
-    }[]>(`${environment.apiBaseUrl}/chat/${this.chatService.currChat!.roomID}/members`).subscribe({
-      next: members => {
-        this.members.next(members.map(value => ({
-          uid: value.id,
-          name: value.username,
-          img: value.avatar
-        } as User)));
-      }
-    });
+    this.fetchMembers();
   }
 
   get name() {
@@ -110,4 +100,49 @@ export class ChatSettingsComponent {
     }
   }
 
+  fetchMembers() {
+    this.http.get<{
+      id: number,
+      username: string,
+      avatar: string
+    }[]>(`${environment.apiBaseUrl}/chat/${this.chatService.currChat!.roomID}/members`).subscribe({
+      next: members => {
+        this.members.next(members.map(value => ({
+          uid: value.id,
+          name: value.username,
+          img: value.avatar
+        } as User)));
+      }
+    });
+  }
+  fetchMutes() {
+    this.http.get<{
+      id: number,
+      username: string,
+      avatar: string
+    }[]>(`${environment.apiBaseUrl}/chat/${this.chatService.currChat!.roomID}/mutes`).subscribe({
+      next: mutes => {
+        this.mutes.next(mutes.map(value => ({
+          uid: value.id,
+          name: value.username,
+          img: value.avatar
+        } as User)));
+      }
+    });
+  }
+  fetchBans() {
+    this.http.get<{
+      id: number,
+      username: string,
+      avatar: string
+    }[]>(`${environment.apiBaseUrl}/chat/${this.chatService.currChat!.roomID}/bans`).subscribe({
+      next: bans => {
+        this.bans.next(bans.map(value => ({
+          uid: value.id,
+          name: value.username,
+          img: value.avatar
+        } as User)));
+      }
+    });
+  }
 }
