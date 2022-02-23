@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Patch, Post, Query, Req, Res, UseGuards }
 import { Request } from 'express';
 import { check } from 'prettier';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { User } from '../users/entity/user.entity';
 import { UsersService } from '../users/users.service';
 import { ChatGateway } from './chat.gateway';
 import { ChatService } from './chat.service';
@@ -170,6 +171,7 @@ export class ChatController {
         // return `return all the users in the room with id #${roomId}`;
     }
 
+    @UseGuards(JwtAuthGuard)
     @Post('/:roomID/unmute/:uid')
     unmuteMember(@Param() params: UnmuteAndUnbanDto) {
         console.log(params);
@@ -177,63 +179,97 @@ export class ChatController {
         return `this action will unmute the user with id #${uid} from room with id #${roomID}`;
     }
 
-    @Post('/:roomID/unban/:uid')
-    unbanMember(@Param() params: UnmuteAndUnbanDto) {
-        const { roomID, uid } = params;
-        return `this action will unban the user with id #${uid} from room with id #${roomID}`;
+    @UseGuards(JwtAuthGuard)
+    @Patch('/:roomID/ban')
+    async banMemeber(@Param('roomID') roomID: number, @Body('userID') userID: number, @Req() req) { // userID is the id of the user to ban
+        const user: User = req.user;
+        try {
+            await this._chaTService.banMember(roomID, userID, user);
+        } catch (e) {
+            return { error: e.message };
+        }
+        return { userID };
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Patch('/:roomID/mute')
+    async muteMemeber(@Param('roomID') roomID: number, @Body('userID') userID: number, @Req() req) { // userID is the id of the user to ban
+        const user: User = req.user;
+        try {
+            await this._chaTService.muteMember(roomID, userID, user);
+        } catch (e) {
+            return { error: e.message };
+        }
+        return { userID };
     }
 
     @UseGuards(JwtAuthGuard)
     @Patch('/:roomID/update-name')
-    async updateRoomName(@Param('roomID') roomID: number, @Body('name') newRoomName: string)
-    {
-        try{
+    async updateRoomName(@Param('roomID') roomID: number, @Body('name') newRoomName: string) {
+        try {
             await this._chaTService.updateRoomName(roomID, newRoomName);
         }
-        catch(e)
-        {
-            return {error: e.message};
+        catch (e) {
+            return { error: e.message };
         }
-        return { name: newRoomName } ;
+        return { name: newRoomName };
     }
 
     @UseGuards(JwtAuthGuard)
     @Patch('/:roomID/update-password')
-    async updateRoomPassword(@Param('roomID') roomID: number, @Body('password') newRoomPassword: string)
-    {
-        try{
+    async updateRoomPassword(@Param('roomID') roomID: number, @Body('password') newRoomPassword: string) {
+        try {
             await this._chaTService.updateRoomPassword(roomID, newRoomPassword);
         }
-        catch(e)
-        {
-            return {error: e.message};
+        catch (e) {
+            return { error: e.message };
         }
-        return { roomID } ;
+        return { roomID };
     }
 
     @UseGuards(JwtAuthGuard)
     @Get('/:roomID/mutes')
-    async getMutedMembers(@Param('roomID') roomID: number)
-    {
-        try{
+    async getMutedMembers(@Param('roomID') roomID: number) {
+        try {
             return await this._chaTService.getMutedMembers(roomID);
         }
-        catch(e)
-        {
+        catch (e) {
             return { error: e.message };
         }
     }
 
     @UseGuards(JwtAuthGuard)
     @Get('/:roomID/bans')
-    async getBanedMembers(@Param('roomID') roomID: number)
-    {
-        try{
+    async getBanedMembers(@Param('roomID') roomID: number) {
+        try {
             return await this._chaTService.getBannedMembers(roomID);
         }
-        catch(e)
-        {
+        catch (e) {
             return { error: e.message };
         }
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Patch('/:roomID/give-admin')
+    async giveAdmin(@Param('roomID') roomID: number, @Body('userID') userID: number, @Req() req) {
+        const user: User = req.user;
+        try {
+            await this._chaTService.makeAdmin(roomID, userID, user);
+        } catch (e) {
+            return { error: e.message };
+        }
+        return { userID };
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Patch('/:roomID/revoke-admin')
+    async revokeAdmin(@Param('roomID') roomID: number, @Body('userID') userID: number, @Req() req) {
+        const user: User = req.user;
+        try {
+            await this._chaTService.revokeAdmin(roomID, userID, user);
+        } catch (e) {
+            return { error: e.message };
+        }
+        return { userID };
     }
 }
