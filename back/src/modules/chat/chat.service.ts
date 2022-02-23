@@ -10,8 +10,8 @@ import { CreateRoomDto } from './dto/create-room.dto';
 import { MembersEntity } from './entities/members.entity';
 import { MessageEntity } from './entities/message.entity';
 import { RoomEntity } from './entities/room.entity';
-import {Not} from "typeorm";
-import {User} from "../users/entity/user.entity";
+import { Not } from "typeorm";
+import { User } from "../users/entity/user.entity";
 
 @Injectable()
 export class ChatService {
@@ -80,7 +80,7 @@ export class ChatService {
   async getMessages(roomId: number, curUser: User) {
     const res = []; // res to store inof about returned object
     const messages = await this._messagesRepo.find({ roomID: roomId })
-    const blocker = await  this._userService._relationsRepo.find({
+    const blocker = await this._userService._relationsRepo.find({
       relations: ['userSecond'],
       where: {
         userFirst: curUser,
@@ -131,25 +131,26 @@ export class ChatService {
         }
       })
       let otherUser;
-      if (!room[0].isChannel)
-      {
-          let otherMember = await  this._membersRepo.find({
-            where: {
-                roomID: room[0].roomID,
-                userID: Not(member.userID)
-            }
-          });
-          otherUser = await this._userService.findById(otherMember[0].userID);
+      if (!room[0].isChannel) {
+        let otherMember = await this._membersRepo.find({
+          where: {
+            roomID: room[0].roomID,
+            userID: Not(member.userID)
+          }
+        });
+        otherUser = await this._userService.findById(otherMember[0].userID);
       }
       delete room[0].password;
       let ownerR = await this._userService.findById(room[0].ownerID);
       delete room[0].ownerID;
-      res.push({...room[0], owner: ownerR ? {
+      res.push({
+        ...room[0], owner: ownerR ? {
           uid: ownerR.id,
           name: ownerR.username,
           img: ownerR.avatar
         } : undefined,
-        users: otherUser ? {uid: otherUser.id, name: otherUser.username, img: otherUser.avatar}:undefined});
+        users: otherUser ? { uid: otherUser.id, name: otherUser.username, img: otherUser.avatar } : undefined
+      });
     }
     return res;
   }
@@ -170,7 +171,7 @@ export class ChatService {
   }
 
   async fetchCurrentUserDMs(userID1: number, userID2: number) {
-    return await this._roomsRepo.find({where: {isChannel: false, name: `DM${userID1}${userID2}`}})
+    return await this._roomsRepo.find({ where: { isChannel: false, name: `DM${userID1}${userID2}` } })
   }
 
   /**
@@ -190,16 +191,14 @@ export class ChatService {
     return 'private';
   }
 
-  async updateRoomName(roomID: number, newRoomName: string)
-  {
+  async updateRoomName(roomID: number, newRoomName: string) {
     const res = await this._roomsRepo.update(roomID, {
       name: newRoomName
     })
     if (!res) throw new NotFoundException('room not found');
   }
 
-  async updateRoomPassword(roomID: number, newRoomPassword: string)
-  {
+  async updateRoomPassword(roomID: number, newRoomPassword: string) {
     const res = await this._roomsRepo.update(roomID, {
       password: newRoomPassword,
       channelType: newRoomPassword.length ? 'protected' : 'public'
@@ -207,20 +206,18 @@ export class ChatService {
     if (!res) throw new NotFoundException('room not found');
   }
 
-  async getMutedMembers(roomID: number)
-  {
+  async getMutedMembers(roomID: number) {
     const mutedMembersArray = [];
-    const room = await this._roomsRepo.findOne({roomID});
+    const room = await this._roomsRepo.findOne({ roomID });
     if (!room) throw new NotFoundException('room not found');
     const mutedMembers = await this._membersRepo.find({
       relations: ['user'],
-       where: {
+      where: {
         roomID: roomID,
         isMuted: true
       }
     })
-    for (let member of mutedMembers)
-    {
+    for (let member of mutedMembers) {
       mutedMembersArray.push({
         uid: member.user.id,
         name: member.user.username,
@@ -230,20 +227,18 @@ export class ChatService {
     return mutedMembersArray;
   }
 
-  async getBannedMembers(roomID: number)
-  {
+  async getBannedMembers(roomID: number) {
     const bannedMembersArray = [];
-    const room = await this._roomsRepo.findOne({roomID});
+    const room = await this._roomsRepo.findOne({ roomID });
     if (!room) throw new NotFoundException('room not found');
     const bannedMembers = await this._membersRepo.find({
       relations: ['user'],
-       where: {
+      where: {
         roomID: roomID,
         isBaned: true
       }
     })
-    for (let member of bannedMembers)
-    {
+    for (let member of bannedMembers) {
       bannedMembersArray.push({
         uid: member.user.id,
         name: member.user.username,
@@ -252,4 +247,50 @@ export class ChatService {
     }
     return bannedMembersArray;
   }
+
+  async banMember(roomID: number, userID: number, user: User) {
+
+    const member = await this._membersRepo.findOne({ userID, roomID, isBaned: false });
+    if (!member) throw new UnauthorizedException('you can\'t ban this member!');
+
+    await this._membersRepo.update(member.id, {
+      isBaned: true
+    })
+  }
+
+  async muteMember(roomID: number, userID: number, user: User) {
+
+    const member = await this._membersRepo.findOne({ userID, roomID, isBaned: false, isMuted: false });
+    if (!member) throw new UnauthorizedException('you can\'t mute this member!');
+
+    await this._membersRepo.update(member.id, {
+      isMuted: true
+    })
+  }
+
+  async makeAdmin(roomID: number, userID: number, currUser: User) {
+    const member = await this._membersRepo.findOne({
+      where: {
+        userID, roomID, role: 'member',
+      }
+    });
+
+    if (member) throw new UnauthorizedException('Cannot grant admin to current user!');
+    await this._membersRepo.update(member.id, {
+      role: 'admin'
+    })
+  }
+
+  async revokeAdmin(roomID: number, userID: number, currUser: User) {
+    const member = await this._membersRepo.findOne({
+      where: {
+        userID, roomID, role: 'admin',
+      }
+    });
+    if (member) throw new UnauthorizedException('Cannot revoke admin from current user!');
+    await this._membersRepo.update(member.id, {
+      role: 'member'
+    })
+  }
+
 }
