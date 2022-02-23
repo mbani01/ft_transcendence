@@ -78,9 +78,9 @@ Built by these awsome fellas
 
 ## Contributer
 * <a href="mbani@student.1337.ma">Mouad Bani (mbani)</a>
-* <a href="moboustt@student.1337.ma">Mohammad Boustta(moboustt)</a> 
-* <a href="mamoussa@student.1337.ma">Mohammed Amoussaoui(mamoussa)</a>
-* <a href="ojoubout@student.1337.ma">Ousama Joubouti(ojoubout)</a>
-* <a href="hmoumami@student.1337.ma">Houssam Moumani(hmoumani)</a>
+* <a href="moboustt@student.1337.ma">Mohammad Boustta (moboustt)</a> 
+* <a href="mamoussa@student.1337.ma">Mohammed Amoussaoui (mamoussa)</a>
+* <a href="ojoubout@student.1337.ma">Ousama Joubouti (ojoubout)</a>
+* <a href="hmoumami@student.1337.ma">Houssam Moumani (hmoumani)</a>
 
 
