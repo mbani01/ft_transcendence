@@ -5,6 +5,7 @@ import {Router} from "@angular/router";
 import {Chat} from "../../shared/chat.model";
 import {OAuthService} from "../../../login/oauth.service";
 import {HttpClient} from "@angular/common/http";
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'chatter-popup',
@@ -19,20 +20,17 @@ export class ChatterPopupComponent {
     setTimeout(() => console.log(this.chatRoom));
   }
 
-  // ngAfterViewInit() {
-  //   let input = <HTMLInputElement>document.getElementsByClassName('ngb-tp-input').item(0);
-  //   input.maxLength = 6;
-  //   // @ts-ignore
-  //   console.log(input.);// = (value) => {console.log(value)};
-  // }
-
   mute(hours: string, minutes: string) {
-    // this.http.
+    this.http.patch(`${environment.apiBaseUrl}/chat/${this.chatRoom?.roomID}/mute`, {
+      userID: this.user.uid
+    }).subscribe();
     this.popover.close();
   }
 
   ban() {
-
+    this.http.patch(`${environment.apiBaseUrl}/chat/${this.chatRoom?.roomID}/ban`, {
+      userID: this.user.uid
+    }).subscribe();
     this.popover.close();
   }
 

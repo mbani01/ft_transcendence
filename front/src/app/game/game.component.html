@@ -2,21 +2,21 @@
 <!--  MAIN MENU -->
   <ng-container *ngIf="gameService.isMain(); else queueTemplate">
 <!--    <button class="btn btn-primary m-auto" (click)="startGame()">Play Now</button>-->
-    <div class="game-type rounded-circle">
-      <img class="w-100 h-100 rounded-circle" src="assets/normal.png" alt="Normal Game" (click)="normalGame()">
+    <div class="game-type rounded-circle" (click)="normalGame()">
+      <img class="w-100 h-100 rounded-circle" src="assets/normal.png" alt="Normal Game">
       <div class="desc rounded-circle d-flex">
         <span class="m-auto">Normal Pong game</span>
       </div>
     </div>
 
-    <div class="game-type rounded-circle">
-      <img class="w-100 h-100 rounded-circle" src="assets/powerups.png" alt="Power Ups" (click)="powerUpsGame()">
+    <div class="game-type rounded-circle" (click)="powerUpsGame()">
+      <img class="w-100 h-100 rounded-circle" src="assets/powerups.png" alt="Power Ups">
       <div class="desc rounded-circle d-flex">
         <span class="m-auto">Pong with Power-Ups</span>
       </div>
     </div>
-    <div class="game-type rounded-circle">
-      <img class="w-100 h-100 rounded-circle" src="assets/live.png" alt="Power Ups" (click)="showLiveGames()">
+    <div class="game-type rounded-circle" (click)="showLiveGames()">
+      <img class="w-100 h-100 rounded-circle" src="assets/live.png" alt="Power Ups">
       <div class="desc rounded-circle d-flex">
         <span class="m-auto">Watch live games</span>
       </div>
@@ -26,7 +26,7 @@
 <!--  QUEUE -->
   <ng-template #queueTemplate>
     <ng-container *ngIf="gameService.isQueue(); else gameTemplate">
-      <div class="w-25 h-25 d-flex flex-column justify-content-center align-content-center m-auto queue p-5">
+      <div class="w-25 h-50 d-flex flex-column justify-content-center align-content-center m-auto queue p-5">
         <p class="queue-text text-center">QUEUE</p>
         <span class="text-center">00:01</span>
         <button class="btn btn-primary mt-3" (click)="cancelQueue()">CANCEL</button>
