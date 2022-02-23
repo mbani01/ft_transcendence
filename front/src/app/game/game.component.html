@@ -28,7 +28,7 @@
     <ng-container *ngIf="gameService.isQueue(); else gameTemplate">
       <div class="w-25 h-50 d-flex flex-column justify-content-center align-content-center m-auto queue p-5">
         <p class="queue-text text-center">QUEUE</p>
-        <span class="text-center">00:01</span>
+        <span class="text-center">{{getQueueTimer()}}</span>
         <button class="btn btn-primary mt-3" (click)="cancelQueue()">CANCEL</button>
       </div>
     </ng-container>
