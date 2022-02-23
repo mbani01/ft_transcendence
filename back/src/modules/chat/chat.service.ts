@@ -53,6 +53,14 @@ export class ChatService {
     return await this._membersRepo.save(createdMember);
   }
 
+  async getMember(criteria: any) {
+    return await this._membersRepo.findOne({
+      where: {
+        ...criteria
+      }
+    })
+  }
+
   async removeMemberFromRoom(roomID: number, userID: number) {
     return await this._membersRepo.delete({ roomID, userID });
   }
@@ -121,7 +129,8 @@ export class ChatService {
     const res = []; // res to store rooms info
     const members = await this._membersRepo.find({
       where: {
-        userID: user.id
+        userID: user.id,
+        isBaned: false
       }
     });
     for (let member of members) {
@@ -167,6 +176,7 @@ export class ChatService {
     const user2 = await this._userService.findById(usersIDs.userID2);
     await this.createMember({ user: user1, userID: usersIDs.userID1, roomID: newDM.roomID, password: newDM.password, role: 'member' });
     await this.createMember({ user: user2, userID: usersIDs.userID2, roomID: newDM.roomID, password: newDM.password, role: 'member' });
+    newDM.name = user2.username;
     return newDM;
   }
 

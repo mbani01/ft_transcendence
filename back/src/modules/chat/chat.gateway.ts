@@ -4,7 +4,7 @@ import { Server } from 'socket.io'
 import { CreateMessageColumnDto } from './dto/create-message.dto';
 import { CreateMemberColumn } from './dto/create-member.dto';
 import { Clients, CustomSocket } from 'src/adapters/socket.adapter';
-import { NotFoundException} from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { RoomEntity } from './entities/room.entity';
 
@@ -52,7 +52,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         roomID: newRoom.roomID,
         userID: client.user.sub,
         password: newRoom.password,
-        role: 'member'
+        role: 'admin'
       }
       )
     }
@@ -69,10 +69,16 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     @ConnectedSocket() client: CustomSocket) {
     const { roomID, timestamp: createdAt, message: content } = JSON.parse(data);
     const userID = client.user.sub;
+    const user = await this._chatService.getMember({ roomID, userID });
+    if (user.isBaned || user.isMuted) 
+    {
+      client.emit('chat-message', { error: 'you can\'t send messages to this room!' });
+      return;
+    }
     const message: CreateMessageColumnDto = { roomID, createdAt, content, userID: +userID }
-    await this._chatService.createMessage(message);
     const room = await this._chatService.getRoomById(roomID);
     if (!room) throw new NotFoundException('room not found');
+    await this._chatService.createMessage(message);
     const outData = {
       roomID,
       sender: {
@@ -161,7 +167,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       return { error: 'no such user' };
     try {
       const room = await this._chatService.getRoomById(roomID);
-      await  this._chatService.createMember({
+      await this._chatService.createMember({
         user,
         roomID,
         userID: user.id,
@@ -193,6 +199,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     if (otherUserClient)
       otherUserClient.join(String(newDM.roomID));
     client.join(String(newDM.roomID));
+    console.log(newDM);
     return newDM;
   }
 

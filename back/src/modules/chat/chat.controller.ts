@@ -90,7 +90,9 @@ export class ChatController {
         const rooms = await this._chaTService.findAllRooms();
         let channels = [];
         for (let e of rooms) {
-            if (e.isChannel) {
+            const currMember = await this._chaTService.getMember({ userID: req.user.id, roomID: e.roomID });
+            console.log(currMember);
+            if (e.isChannel && e.channelType !== 'private' && (!currMember || !currMember.isBaned)) {
                 channels.push(
                     {
                         roomID: e.roomID,
