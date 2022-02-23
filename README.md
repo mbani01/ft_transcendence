@@ -8,6 +8,10 @@ This is a group project which is about creating a website for the mighty Pong co
 • Game    
 are the main things in the project.   
 
+# Description: 
+
+
+
 **ScreenShots of the Project**
 
 ---
