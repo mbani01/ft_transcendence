@@ -8,9 +8,7 @@ This is a group project which is about creating a website for the mighty Pong co
 • Game    
 are the main things in the project.   
 
-**Exemples**
-
-![alt text]()
+**ScreenShots of the Project**
 
 ---
 
@@ -60,6 +58,10 @@ are the main things in the project.
 
 
 **Observations :** 
+
+Built by these awsome fellas
+![alt text](http://url/to/img.png)
+
 
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/made-with-typescript.svg)](https://forthebadge.com)
