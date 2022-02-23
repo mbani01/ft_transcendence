@@ -1,14 +1,19 @@
 import { Controller, Get, HttpCode, Param, Req, Res} from '@nestjs/common';
 import { Request, Response } from 'express';
-import {getConnection} from "typeorm";
+import {getConnection, getRepository} from "typeorm";
+import { User } from '../users/entity/user.entity';
 
 @Controller('game')
 export class GameController {
-	@Get('query')
-	getallgame(@Req() request: Request, @Res() res: Response){
+	@Get()
+	async getallgame(@Req() request: Request, @Res() res: Response, @Param('like') like: string){
 		// hmoumani write your queries here !
-		// const user = getConnection().createQueryBuilder().select("user").from(User, "user").
-		// console.log()
+		const user = await getRepository(User)
+		.createQueryBuilder("user")
+		.where("user.username like :name", { name:`${like}%` })
+                  .getMany();
+
+		console.log("users " + user[0].username);
 	}
 
 }
