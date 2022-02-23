@@ -6,8 +6,9 @@ import { CreateUserDto } from "./dto/create-user.dto";
 import { Relation } from "./entity/relation.entity";
 import { User } from "./entity/user.entity";
 import { ICreateRelation, IDeleteRelation, IUpdateRelation } from "./interfaces/create-relation.interface";
-import {ExtractJwt} from "passport-jwt";
+import { ExtractJwt } from "passport-jwt";
 import fromAuthHeaderWithScheme = ExtractJwt.fromAuthHeaderWithScheme;
+import { Rank } from "./interfaces/stats.interface";
 
 @Injectable()
 export class UsersService {
@@ -27,7 +28,7 @@ export class UsersService {
   }
 
   async findById(userId: number): Promise<User> {
-    return await this._usersRepo.findOne({ id: userId });
+    return await this._usersRepo.findOne({ relations: ['wins', 'gamesAsFirstPlayer', 'gamesAsSecondPlayer'], where: { id: userId } });
   }
 
   async findByUserName(username: string): Promise<User> {
@@ -88,9 +89,8 @@ export class UsersService {
         requester: createRelation.requester
       }
     });
-    if (relation.length)
-    {
-      await  this._relationsRepo.update(relation[0].id, {
+    if (relation.length) {
+      await this._relationsRepo.update(relation[0].id, {
         userFirst: createRelation.userFirst,
         userSecond: createRelation.userSecond,
         requester: createRelation.requester,
@@ -157,21 +157,21 @@ export class UsersService {
         blocker: null
       }
     });
-   if (relation.length !== 0) {
-     await this._relationsRepo.update(relation[0].id, {
-       blocker: curUser,
-       isFriends: false
-     })
-   }
-   else{
-     const newRelation = this._relationsRepo.create({
-       userFirst: curUser,
-       userSecond: otherUser,
-       isFriends: false,
-       blocker: curUser
-     });
-     await this._relationsRepo.save(newRelation);
-   }
+    if (relation.length !== 0) {
+      await this._relationsRepo.update(relation[0].id, {
+        blocker: curUser,
+        isFriends: false
+      })
+    }
+    else {
+      const newRelation = this._relationsRepo.create({
+        userFirst: curUser,
+        userSecond: otherUser,
+        isFriends: false,
+        blocker: curUser
+      });
+      await this._relationsRepo.save(newRelation);
+    }
   }
 
   async unblockUser(curUser: User, otherUser: User) {
@@ -198,5 +198,21 @@ export class UsersService {
         userSecond: otherUser
       }
     })
+  }
+
+  getUserRank(points: number): Rank {
+    if (points < 100)
+      return 'Beginner';
+    else if (points > 100 && points < 200)
+      return 'Novice';
+    else if (points > 200 && points < 300)
+      return 'Graduate';
+    else if (points > 300 && points < 400)
+      return 'Expert';
+    else if (points > 400 && points < 500)
+      return 'Master';
+    else if (points > 500 && points < 600)
+      return ' Grand Master';
+    return 'Legend';
   }
 }
