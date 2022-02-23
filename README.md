@@ -1,6 +1,8 @@
 # ft_transcendence
 Final Common Core Project at 1337 (42_cursus)
 
+## Description: 
+
 This is a group project which is about creating a website for the mighty Pong contest! where things like:   
 • Security concerns   
 • User Account    
@@ -8,12 +10,7 @@ This is a group project which is about creating a website for the mighty Pong co
 • Game    
 are the main things in the project.   
 
-# Description: 
-
-
-
-**ScreenShots of the Project**
-
+## ScreenShots of the Project:
 ---
 
 </p>
@@ -49,11 +46,11 @@ are the main things in the project.
 
 ---
 
-**Requirements:**
+## Requirements:
 ``` NodeJS```
 
 
-**Installation and launch:**
+## Installation and launch:
 
 * `https://github.com/mbani01/ft_transcendence.git`
 * `cd ft_transcendence.git`
@@ -62,9 +59,10 @@ are the main things in the project.
 * `go to your favourite browser && localhost:3000`
 
 
-**Observations :** 
+## Observations :
 
-Built by these awsome fellas
+**Built by these awsome fellas**
+
 ---
 
 </p>
