@@ -12,8 +12,9 @@ are the main things in the project.
 
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/made-with-typescript.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](https://forthebadge.com)
 
-need help:
+contributers:
 mbani@student.1337.ma
 moboustt@student.1337.ma
 mamoussa@student.1337.ma
