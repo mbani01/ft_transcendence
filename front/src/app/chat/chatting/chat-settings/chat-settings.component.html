@@ -81,7 +81,7 @@
         <a ngbNavLink class="mutes-nav">Mutes</a>
         <ng-template ngbNavContent>
           <ul class="list-group">
-            <li class="list-group-item" *ngFor="let member of members | async">
+            <li class="list-group-item" *ngFor="let member of mutes | async">
               <img class="rounded-circle my-auto" width="48" height="48" alt="Cinque Terre" [src]="member.img">
               <span class="ml-2">
                 {{member.name}}
@@ -95,7 +95,7 @@
         <a ngbNavLink class="bans-nav">Bans</a>
         <ng-template ngbNavContent>
           <ul class="list-group">
-            <li class="list-group-item" *ngFor="let member of members | async">
+            <li class="list-group-item" *ngFor="let member of bans | async">
               <img class="rounded-circle my-auto" width="48" height="48" alt="Cinque Terre" [src]="member.img">
               <span class="ml-2">
                 {{member.name}}

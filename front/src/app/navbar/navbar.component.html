@@ -26,7 +26,7 @@
             <div class="spinner-border d-flex mx-auto" role="status" *ngIf="loading">
               <span class="sr-only">Loading...</span>
             </div>
-            <a *ngFor="let user of users | async" class="dropdown-item" [routerLink]="['profile', user.uid]">
+            <a *ngFor="let user of users" class="dropdown-item" [routerLink]="['profile', user.uid]">
               <!--        <a *ngFor="let user of users | async" class="dropdown-item" [routerLink]="['profile', 'ojoubout']">-->
 
               <div *ngIf="!user">Loading...</div>

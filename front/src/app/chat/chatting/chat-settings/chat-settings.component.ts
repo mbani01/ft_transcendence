@@ -35,7 +35,13 @@ export class ChatSettingsComponent {
               private socket: MainSocket,
               public oauthService: OAuthService)
   {
+    this.socket.on('ban', this.onBan);
+    this.socket.on('unban', this.onBan);
+    this.socket.on('mute', this.onMute);
+    this.socket.on('unmute', this.onMute);
     this.fetchMembers();
+    this.fetchMutes();
+    this.fetchBans();
   }
 
   get name() {
@@ -70,15 +76,26 @@ export class ChatSettingsComponent {
   }
 
   unmute(member: User) {
-    this.http.post(`${environment.apiBaseUrl}/chat/${this.chatService.currChat!.roomID}/unmute`, {
-      uid: member.uid,
-    });
+    this.socket.emit('unmute', {
+      roomID: this.chatService.currChat!.roomID,
+      uid: member.uid
+    }, (err: any) => {
+      if (!err.error) {
+        this.fetchMutes();
+      }
+    })
   }
 
   unban(member: User) {
-    this.http.post(`${environment.apiBaseUrl}/chat/${this.chatService.currChat!.roomID}/unban`, {
-      uid: member.uid,
-    });
+    this.socket.emit('unban', {
+      roomID: this.chatService.currChat!.roomID,
+      uid: member.uid
+    }, (err: any) => {
+      if (!err.error) {
+        this.fetchBans();
+        this.fetchMembers();
+      }
+    })
   }
 
   sendInvite(inviteForm: NgForm) {
@@ -116,33 +133,27 @@ export class ChatSettingsComponent {
     });
   }
   fetchMutes() {
-    this.http.get<{
-      id: number,
-      username: string,
-      avatar: string
-    }[]>(`${environment.apiBaseUrl}/chat/${this.chatService.currChat!.roomID}/mutes`).subscribe({
+    this.http.get<User[]>(`${environment.apiBaseUrl}/chat/${this.chatService.currChat!.roomID}/mutes`).subscribe({
       next: mutes => {
-        this.mutes.next(mutes.map(value => ({
-          uid: value.id,
-          name: value.username,
-          img: value.avatar
-        } as User)));
+        this.mutes.next(mutes);
       }
     });
   }
   fetchBans() {
-    this.http.get<{
-      id: number,
-      username: string,
-      avatar: string
-    }[]>(`${environment.apiBaseUrl}/chat/${this.chatService.currChat!.roomID}/bans`).subscribe({
+    this.http.get<User[]>(`${environment.apiBaseUrl}/chat/${this.chatService.currChat!.roomID}/bans`).subscribe({
       next: bans => {
-        this.bans.next(bans.map(value => ({
-          uid: value.id,
-          name: value.username,
-          img: value.avatar
-        } as User)));
+        this.bans.next(bans);
       }
     });
+  }
+
+  onBan = (ban: {roomID: string, userID: string}) => {
+    console.log('onBan');
+    this.fetchBans();
+    this.fetchMembers()
+  }
+  onMute = () => {
+    console.log('onMute');
+    this.fetchMutes();
   }
 }

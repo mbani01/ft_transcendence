@@ -1,4 +1,4 @@
-import {Component, Input} from "@angular/core";
+import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {User} from "../../../shared/user";
 import {NgbPopover} from "@ng-bootstrap/ng-bootstrap";
 import {Router} from "@angular/router";
@@ -6,6 +6,7 @@ import {Chat} from "../../shared/chat.model";
 import {OAuthService} from "../../../login/oauth.service";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../../environments/environment";
+import {MainSocket} from "../../../socket/MainSocket";
 
 @Component({
   selector: 'chatter-popup',
@@ -16,22 +17,30 @@ export class ChatterPopupComponent {
   @Input() user: User;
   @Input() chatRoom?: Chat;
   @Input() popover: NgbPopover;
-  constructor(private router: Router, public oauthService: OAuthService, private http: HttpClient) {
+  constructor(private router: Router, public oauthService: OAuthService, private http: HttpClient,
+              private socket: MainSocket) {
     setTimeout(() => console.log(this.chatRoom));
   }
 
   mute(hours: string, minutes: string) {
-    this.http.patch(`${environment.apiBaseUrl}/chat/${this.chatRoom?.roomID}/mute`, {
-      userID: this.user.uid
-    }).subscribe();
-    this.popover.close();
+    if (this.chatRoom) {
+      this.socket.emit('mute', {
+        roomID: this.chatRoom?.roomID,
+        userID: this.user.uid,
+        timeout: (+hours * 60 + +minutes) * 60 * 1000
+      })
+      this.popover.close();
+    }
   }
 
   ban() {
-    this.http.patch(`${environment.apiBaseUrl}/chat/${this.chatRoom?.roomID}/ban`, {
-      userID: this.user.uid
-    }).subscribe();
-    this.popover.close();
+    if (this.chatRoom) {
+      this.socket.emit('ban', {
+        roomID: this.chatRoom?.roomID,
+        userID: this.user.uid,
+      });
+      this.popover.close();
+    }
   }
 
   viewProfile() {

@@ -13,7 +13,7 @@ import {Observable} from "rxjs";
 })
 export class NavbarComponent implements OnInit {
 
-  users: Observable<User[]>;
+  users: User[];
   loading: boolean = true;
   constructor(private http: HttpClient, public oauthService: OAuthService, private router: Router) { }
 
@@ -23,13 +23,15 @@ export class NavbarComponent implements OnInit {
 
   search(event: any) {
     this.loading = true;
-    this.users = this.http.get<User[]>(`${environment.apiBaseUrl}/users`, {
+    this.http.get<any[]>(`${environment.apiBaseUrl}/users`, {
       params: {
         username: event.target.value
       }
-    });
-    this.users.subscribe({
+    }).subscribe({
       next: value => {
+
+        console.log('Users', value);
+        // this.users = value.map(user => {uid: user.id, name: user.username, img: user.avatar});
         this.loading = false
       }
     })
