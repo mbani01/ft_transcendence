@@ -60,7 +60,7 @@ are the main things in the project.
 **Observations :** 
 
 Built by these awsome fellas
-![alt text](http://url/to/img.png)
+![alt text](https://github.com/mbani01/ft_transcendence/blob/main/assets/Screen_Shot_2022-02-23_at_10.41.20_PM.png)
 
 
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
