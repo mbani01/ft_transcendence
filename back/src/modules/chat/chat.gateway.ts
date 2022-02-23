@@ -4,16 +4,19 @@ import { Server } from 'socket.io'
 import { CreateMessageColumnDto } from './dto/create-message.dto';
 import { CreateMemberColumn } from './dto/create-member.dto';
 import { Clients, CustomSocket } from 'src/adapters/socket.adapter';
-import { NotFoundException } from '@nestjs/common';
+import {Body, Injectable, NotFoundException, Param, Patch, Req, UseGuards} from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { RoomEntity } from './entities/room.entity';
+import {JwtAuthGuard} from "../auth/jwt-auth.guard";
+import {User} from "../users/entity/user.entity";
+import {UnmuteAndUnbanDto} from "./dto/params.dto";
 
 @WebSocketGateway()
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
   constructor(private readonly _chatService: ChatService) { }
   @WebSocketServer()
-  private server: Server;
+  public server: Server;
 
   afterInit(server: any) {
     console.log('Gateway Inited')
@@ -199,8 +202,57 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     if (otherUserClient)
       otherUserClient.join(String(newDM.roomID));
     client.join(String(newDM.roomID));
-    console.log(newDM);
     return newDM;
   }
 
+  @SubscribeMessage('ban')
+  async banMember(@ConnectedSocket() client: CustomSocket, @MessageBody() data: any) { // userID is the id of the user to ban
+    console.log()
+    const {roomID, userID} = data;
+    try {
+      await this._chatService.banMember(roomID, userID);
+    } catch (e) {
+        return { error: e.message };
+    }
+    this.server.to(String(roomID)).emit('ban', {roomID, userID})
+  }
+
+  @SubscribeMessage('mute')
+  async muteMember(@ConnectedSocket() client: CustomSocket, @MessageBody() data: any) { // userID is the id of the user to ban
+    const {userID, timeout, roomID} = data;
+    try {
+      await this._chatService.muteMember(roomID, userID);
+      const time = setTimeout(() => {
+        this._chatService.unmuteMember(roomID, userID);
+        this.server.to(String(roomID)).emit('unmute', {roomID, userID});
+      }, timeout);
+      this._chatService.timers.set(`${userID}-${roomID}`, time);
+    } catch (e) {
+      return { error: e.message };
+    }
+    this.server.to(String(roomID)).emit('mute', {roomID, userID})
+  }
+
+
+  @SubscribeMessage('unmute')
+  async unmuteMember(@ConnectedSocket() client: CustomSocket, @MessageBody() data: any) {
+    const { roomID, uid } = data;
+    try {
+      await  this._chatService.unmuteMember(roomID, uid);
+    } catch (e) {
+      return { error: e.message };
+    }
+    this.server.to(String(roomID)).emit('unmute', {roomID, uid})
+  }
+
+  @SubscribeMessage('unban')
+  async unbanMember(@ConnectedSocket() client: CustomSocket, @MessageBody() data: any) {
+    const { roomID, uid } = data;
+    try {
+      await this._chatService.unbanMember(roomID, uid);
+    } catch (e) {
+      return { error: e.message };
+    }
+    this.server.to(String(roomID)).emit('unban', {roomID, uid})
+  }
 }

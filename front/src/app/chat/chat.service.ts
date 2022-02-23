@@ -19,7 +19,7 @@ export class ChatService {
   public _currChat?: Chat;
   public chats: Map<string, Chat>;
   public dropdown: NgbDropdown;
-  public settings = false;
+  private _settings = false;
   public onReceiveMessage = new EventEmitter<void>();
 
   constructor(private oauthService: OAuthService, private http: HttpClient, private socket: MainSocket) {
@@ -74,6 +74,20 @@ export class ChatService {
         obs.next?.(value);
       }
     });
+  }
+
+  set settings(settings: boolean) {
+    this._settings = settings;
+    if (!settings) {
+      this.socket.removeListener('ban');
+      this.socket.removeListener('unban');
+      this.socket.removeListener('mute');
+      this.socket.removeListener('unmute');
+    }
+  }
+
+  get settings() {
+    return this._settings;
   }
 
   set currChat(value) {

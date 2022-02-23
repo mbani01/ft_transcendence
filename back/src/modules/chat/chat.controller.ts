@@ -4,6 +4,9 @@ import { User } from '../users/entity/user.entity';
 import { UsersService } from '../users/users.service';
 import { ChatService } from './chat.service';
 import { GetAllRoomsQueryDto, ParamsDto, UnmuteAndUnbanDto } from './dto/params.dto';
+import {WebSocketServer} from "@nestjs/websockets";
+import {Server} from "socket.io";
+import {Clients} from "../../adapters/socket.adapter";
 
 @Controller('chat')
 export class ChatController {
@@ -28,6 +31,19 @@ export class ChatController {
             ]
          */
         return await this._chaTService.getMessages(roomID, req.user);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('/:roomID/role')
+    async getMyRole(@Param('roomID') roomID: number, @Req() req: any)
+    {
+        try {
+            const member = await  this._chaTService.getMember({roomID, userID: req.user.sub});
+            return { role: member.role };
+        } catch (e)
+        {
+            return { error: e.message };
+        }
     }
 
     @UseGuards(JwtAuthGuard) // 
@@ -93,20 +109,20 @@ export class ChatController {
             const currMember = await this._chaTService.getMember({ userID: req.user.id, roomID: e.roomID });
             console.log(currMember);
             if (e.isChannel && e.channelType !== 'private' && (!currMember || !currMember.isBaned)) {
+                const owner = await this._usersService.findById(e.ownerID);
                 channels.push(
                     {
                         roomID: e.roomID,
                         name: e.name,
                         type: e.channelType,
                         owner: {
-                            uid: req.user.id,
-                            name: req.user.username,
-                            img: req.user.avatar
+                            uid: e.ownerID,
+                            name: owner.username,
+                            img: owner.avatar
                         }
                     })
             }
         }
-        console.log(channels);
         return { channels, collectionSize: channels.length };
     }
 
@@ -169,37 +185,56 @@ export class ChatController {
         // return `return all the users in the room with id #${roomId}`;
     }
 
-    @UseGuards(JwtAuthGuard)
-    @Post('/:roomID/unmute/:uid')
-    unmuteMember(@Param() params: UnmuteAndUnbanDto) {
-        console.log(params);
-        const { roomID, uid } = params;
-        return `this action will unmute the user with id #${uid} from room with id #${roomID}`;
-    }
+    // @UseGuards(JwtAuthGuard)
+    // @Patch('/:roomID/unmute/:uid')
+    // async unmuteMember(@Param() params: UnmuteAndUnbanDto, @Req() req) {
+    //     const { roomID, uid } = params;
+    //     try {
+    //     await  this._chaTService.unmuteMember(roomID, uid, req.user);
+    //     } catch (e) {
+    //         return {error: e.message };
+    //     }
+    //     return {roomID, uid};
+    // }
+    //
+    // @UseGuards(JwtAuthGuard)
+    // @Patch('/:roomID/unban/:uid')
+    // async unbanMember(@Param() params: UnmuteAndUnbanDto, @Req() req) {
+    //     const { roomID, uid } = params;
+    //     try {
+    //     await this._chaTService.unbanMember(roomID, uid, req.user);
+    //     } catch (e) {
+    //         return {error: e.message };
+    //     }
+    //     return {roomID, uid};
+    // }
 
-    @UseGuards(JwtAuthGuard)
-    @Patch('/:roomID/ban')
-    async banMemeber(@Param('roomID') roomID: number, @Body('userID') userID: number, @Req() req) { // userID is the id of the user to ban
-        const user: User = req.user;
-        try {
-            await this._chaTService.banMember(roomID, userID, user);
-        } catch (e) {
-            return { error: e.message };
-        }
-        return { userID };
-    }
+    // @UseGuards(JwtAuthGuard)
+    // @Patch('/:roomID/ban')
+    // async banMemeber(@Param('roomID') roomID: number, @Body('userID') userID: number, @Req() req) { // userID is the id of the user to ban
+    //     const user: User = req.user;
+    //     try {
+    //         await this._chaTService.banMember(roomID, userID, user);
+    //     } catch (e) {
+    //         return { error: e.message };
+    //     }
+    //     return { userID };
+    // }
 
-    @UseGuards(JwtAuthGuard)
-    @Patch('/:roomID/mute')
-    async muteMemeber(@Param('roomID') roomID: number, @Body('userID') userID: number, @Req() req) { // userID is the id of the user to ban
-        const user: User = req.user;
-        try {
-            await this._chaTService.muteMember(roomID, userID, user);
-        } catch (e) {
-            return { error: e.message };
-        }
-        return { userID };
-    }
+    // @UseGuards(JwtAuthGuard)
+    // @Patch('/:roomID/mute')
+    // async muteMemeber(@Param('roomID') roomID: number, @Body() body: any, @Req() req) { // userID is the id of the user to ban
+    //     const user: User = req.user;
+    //     const {userID, timeout} = body;
+    //     try {
+    //         await this._chaTService.muteMember(roomID, userID, user);
+    //         const time = setTimeout(this._chaTService.unmuteMember.bind(this._chaTService), timeout, roomID, userID, user);
+    //         this._chaTService.timers.set(`${userID}-${roomID}`, time);
+    //     } catch (e) {
+    //         return {error: e.message};
+    //     }
+    //     return {userID};
+    // }
 
     @UseGuards(JwtAuthGuard)
     @Patch('/:roomID/update-name')

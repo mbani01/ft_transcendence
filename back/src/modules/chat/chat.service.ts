@@ -12,6 +12,9 @@ import { MessageEntity } from './entities/message.entity';
 import { RoomEntity } from './entities/room.entity';
 import { Not } from "typeorm";
 import { User } from "../users/entity/user.entity";
+import {WebSocketServer} from "@nestjs/websockets";
+import {Server} from "socket.io";
+import {ChatGateway} from "./chat.gateway";
 
 @Injectable()
 export class ChatService {
@@ -20,7 +23,7 @@ export class ChatService {
     @InjectRepository(MessageEntity) private readonly _messagesRepo: Repository<MessageEntity>,
     @InjectRepository(MembersEntity) private readonly _membersRepo: Repository<MembersEntity>,
     public readonly _userService: UsersService) { }
-
+    public timers = new Map<string, NodeJS.Timeout>();
 
   async createRoom(createRoomDto: CreateRoomDto) {
     const { name } = createRoomDto;
@@ -116,7 +119,8 @@ export class ChatService {
     const res = []; // res to store users info
     const members = await this._membersRepo.find({
       where: {
-        roomID: roomId
+        roomID: roomId,
+        isBaned: false
       }
     });
     for (let member of members)
@@ -248,6 +252,7 @@ export class ChatService {
         isBaned: true
       }
     })
+    console.log(bannedMembers);
     for (let member of bannedMembers) {
       bannedMembersArray.push({
         uid: member.user.id,
@@ -258,7 +263,7 @@ export class ChatService {
     return bannedMembersArray;
   }
 
-  async banMember(roomID: number, userID: number, user: User) {
+  async banMember(roomID: number, userID: number) {
 
     const member = await this._membersRepo.findOne({ userID, roomID, isBaned: false });
     if (!member) throw new UnauthorizedException('you can\'t ban this member!');
@@ -268,13 +273,35 @@ export class ChatService {
     })
   }
 
-  async muteMember(roomID: number, userID: number, user: User) {
+  async unbanMember(roomID: number, userID: number) {
 
+    const member = await this._membersRepo.findOne({ userID, roomID, isBaned: true });
+    if (!member) throw new UnauthorizedException('you can\'t unban this member!');
+
+    await this._membersRepo.update(member.id, {
+      isBaned: false
+    })
+  }
+
+  async muteMember(roomID: number, userID: number) {
     const member = await this._membersRepo.findOne({ userID, roomID, isBaned: false, isMuted: false });
     if (!member) throw new UnauthorizedException('you can\'t mute this member!');
 
     await this._membersRepo.update(member.id, {
       isMuted: true
+    })
+  }
+
+  async unmuteMember(roomID: number, userID: number) {
+    const member = await this._membersRepo.findOne({ userID, roomID, isBaned: false, isMuted: true });
+    if (!member) throw new UnauthorizedException('you can\'t unmute this member!');
+    const key = `${userID}-${roomID}`;
+    if (this.timers.has(key)){
+      clearTimeout(this.timers.get(key));
+      this.timers.delete(key);
+    }
+    await this._membersRepo.update(member.id, {
+      isMuted: false
     })
   }
 
