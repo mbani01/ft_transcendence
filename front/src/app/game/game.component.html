@@ -2,9 +2,26 @@
 <!--  MAIN MENU -->
   <ng-container *ngIf="gameService.isMain(); else queueTemplate">
 <!--    <button class="btn btn-primary m-auto" (click)="startGame()">Play Now</button>-->
-    <img class="game-type" src="assets/normal.png" alt="Normal Game" (click)="normalGame()">
-    <img class="game-type" src="assets/powerups.png" alt="Power Ups" (click)="powerUpsGame()">
-    <img class="game-type" src="assets/live.png" alt="Power Ups" (click)="showLiveGames()">
+    <div class="game-type rounded-circle">
+      <img class="w-100 h-100 rounded-circle" src="assets/normal.png" alt="Normal Game" (click)="normalGame()">
+      <div class="desc rounded-circle d-flex">
+        <span class="m-auto">Normal Pong game</span>
+      </div>
+    </div>
+
+    <div class="game-type rounded-circle">
+      <img class="w-100 h-100 rounded-circle" src="assets/powerups.png" alt="Power Ups" (click)="powerUpsGame()">
+      <div class="desc rounded-circle d-flex">
+        <span class="m-auto">Pong with Power-Ups</span>
+      </div>
+    </div>
+    <div class="game-type rounded-circle">
+      <img class="w-100 h-100 rounded-circle" src="assets/live.png" alt="Power Ups" (click)="showLiveGames()">
+      <div class="desc rounded-circle d-flex">
+        <span class="m-auto">Watch live games</span>
+      </div>
+    </div>
+
   </ng-container>
 <!--  QUEUE -->
   <ng-template #queueTemplate>
