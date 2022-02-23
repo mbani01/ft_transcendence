@@ -53,6 +53,7 @@ are the main things in the project.
 
 * `https://github.com/mbani01/ft_transcendence.git`
 * `cd ft_transcendence.git`
+* `docker-compose up --build`
 * `npm i`
 * `go to your favourite browser && localhost:3000`
 
@@ -75,11 +76,11 @@ Built by these awsome fellas
 [![forthebadge](https://forthebadge.com/images/badges/made-with-typescript.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](https://forthebadge.com)
 
-**contributers:**   
-**mbani@student.1337.ma   
-moboustt@student.1337.ma    
-mamoussa@student.1337.ma    
-ojoubout@student.1337.ma    
-hmoumami@student.1337.ma**
+## Contributer
+* <a href="mbani@student.1337.ma">Mouad Bani (mbani)</a>
+* <a href="moboustt@student.1337.ma">Mohammad Boustta(moboustt)</a> 
+* <a href="mamoussa@student.1337.ma">Mohammed Amoussaoui(mamoussa)</a>
+* <a href="ojoubout@student.1337.ma">Ousama Joubouti(ojoubout)</a>
+* <a href="hmoumami@student.1337.ma">Houssam Moumani(hmoumani)</a>
 
 
