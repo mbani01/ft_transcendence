@@ -8,7 +8,9 @@ import { OutUserDto } from "./dto/out-user.dto";
 import { UpdateUserNameDto } from "./dto/update-body.dto";
 import { UsersService } from "./users.service";
 import * as fs from 'fs';
-import {Clients} from "../../adapters/socket.adapter";
+import { Clients } from "../../adapters/socket.adapter";
+import { User } from "./entity/user.entity";
+import { IStats } from "./interfaces/stats.interface";
 
 @Controller("users")
 export class UsersController {
@@ -76,19 +78,35 @@ export class UsersController {
     const user = req.user
     let relation;
     let isActive;
+    let otherUser: User;
+    let stats: IStats;
     try {
-      const otherUser = await this._usersService.findById(userID);
+      otherUser = await this._usersService.findById(userID);
+      console.log('Stats: \n', otherUser);
       relation = await this._usersService.getRelation(user, otherUser);
       isActive = Clients.isActiveUser(otherUser.id);
+      let totalScore: number = 0;
+      for (let i of otherUser.gamesAsFirstPlayer)
+        totalScore += i.firstPlayerScore;
+      for (let i of otherUser.gamesAsSecondPlayer)
+        totalScore += i.secondPlayerScore;
+
+      stats = {
+        games: otherUser.gamesAsFirstPlayer.length + otherUser.gamesAsSecondPlayer.length,
+        wins: otherUser.wins.length,
+        totalScore,
+        rankPoints: this._usersService.getUserRank(totalScore),
+      };
     }
-    catch (e)
-    {
-      return{ error: e.message };
+    catch (e) {
+      return { error: e.message };
     }
 
+    console.log(stats);
+
     if (relation.length === 0)
-      return { games: 0, wins: 0, rankPoints: 0, totalScore: 0, status: (isActive) ? 'on-line':'off-line', img: user.img, name: user.username, isFriend: false, isBlocked: false };
-    return { games: 0, wins: 0, rankPoints: 0, totalScore: 0, status: (isActive) ? 'on-line':'off-line', img: user.img, name: user.username, isFriend: relation[0].isFriends, isBlocked: (relation[0].blocker !== null) };
+      return { ...stats, status: (isActive) ? 'on-line' : 'off-line', img: user.img, name: user.username, isFriend: false, isBlocked: false };
+    return { ...stats, status: (isActive) ? 'on-line' : 'off-line', img: user.img, name: user.username, isFriend: relation[0].isFriends, isBlocked: (relation[0].blocker !== null) };
   }
 
   @UseGuards(JwtAuthGuard)
@@ -133,14 +151,12 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/block')
-  async blockUser(@Body('userID') userID: number, @Req() req: any)
-  {
-    try{
-        const otherUser = await this._usersService.findById(userID);
-        await this._usersService.blockUser(req.user, otherUser);
+  async blockUser(@Body('userID') userID: number, @Req() req: any) {
+    try {
+      const otherUser = await this._usersService.findById(userID);
+      await this._usersService.blockUser(req.user, otherUser);
     }
-    catch(e)
-    {
+    catch (e) {
       return { error: e.message };
     }
     return { userID };
@@ -148,14 +164,12 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Patch('/unblock')
-  async unblockUser(@Body('userID') userID: number, @Req() req: any)
-  {
-    try{
-        const otherUser = await this._usersService.findById(userID);
-        await this._usersService.unblockUser(req.user, otherUser);
+  async unblockUser(@Body('userID') userID: number, @Req() req: any) {
+    try {
+      const otherUser = await this._usersService.findById(userID);
+      await this._usersService.unblockUser(req.user, otherUser);
     }
-    catch(e)
-    {
+    catch (e) {
       return { error: e.message };
     }
     return { userID };
