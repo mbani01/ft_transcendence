@@ -1,5 +1,5 @@
 import { User } from "src/modules/users/entity/user.entity";
-import { Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import { CreateDateColumn,UpdateDateColumn } from "typeorm";
 
 @Entity('Games')
@@ -15,12 +15,15 @@ export class Game
     secondPlayerScore: number;
 
     @ManyToOne(() => User, user => user.gamesAsFirstPlayer)
+    @JoinColumn()
     public firstPlayer: User;
 
     @ManyToOne(() => User, user => user.gamesAsSecondPlayer)
+    @JoinColumn()
     public secondPlayer: User;
 
     @ManyToOne(() => User, user => user.wins)
+    @JoinColumn()
     winner: User;
 
     @Column()
