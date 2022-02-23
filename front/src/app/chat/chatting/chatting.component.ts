@@ -3,6 +3,7 @@ import {ChatService} from "../chat.service";
 import {Message} from "../shared/message.model";
 import {NgForm} from "@angular/forms";
 import {User} from "../../shared/user";
+import {NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-chatting',
@@ -16,6 +17,8 @@ export class ChattingComponent {
   readonly maxMsToShowDate: number = 60 * 60 * 1000; // 1 hour
 
   loading = false;
+
+  @ViewChild('t') tooltip: NgbTooltip;
 
   // private isAllMessage = false;
   // settings = false;
@@ -73,7 +76,13 @@ export class ChattingComponent {
 
   sendMessage(form: NgForm) {
     if (form.value.message) {
-      this.chatService.sendMessage(form.value.message);
+      this.chatService.sendMessage(form.value.message, (err: {error: string}) => {
+        console.log('message error', err);
+        if (err.error) {
+          form.controls['message'].setErrors(err)
+          this.tooltip.open();
+        }
+      });
       form.reset();
     }
   }

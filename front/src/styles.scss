@@ -50,5 +50,14 @@ body {
   //max-width: 360px !important;
 }
 
+::ng-deep .error-tooltip .tooltip-inner {
+  background-color: var(--danger) ;
+
+}
+
+::ng-deep .error-tooltip .arrow::before {
+  border-top-color: var(--danger) ;
+}
+
 
 @import "../node_modules/bootstrap/scss/bootstrap";

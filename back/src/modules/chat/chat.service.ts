@@ -79,7 +79,8 @@ export class ChatService {
   async getRoomByUid(uid: number) {
     return await this._membersRepo.find({
       where: {
-        userID: uid
+        userID: uid,
+        isBaned: false
       }
     })
   }
@@ -312,7 +313,7 @@ export class ChatService {
       }
     });
 
-    if (member) throw new UnauthorizedException('Cannot grant admin to current user!');
+    if (!member) throw new UnauthorizedException('Cannot grant admin to current user!');
     await this._membersRepo.update(member.id, {
       role: 'admin'
     })
@@ -324,7 +325,7 @@ export class ChatService {
         userID, roomID, role: 'admin',
       }
     });
-    if (member) throw new UnauthorizedException('Cannot revoke admin from current user!');
+    if (!member) throw new UnauthorizedException('Cannot revoke admin from current user!');
     await this._membersRepo.update(member.id, {
       role: 'member'
     })
