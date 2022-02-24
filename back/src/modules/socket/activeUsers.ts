@@ -6,9 +6,11 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 14:12:49 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/20 10:30:43 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/24 16:07:39 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+import { elementAt, throwIfEmpty } from "rxjs";
 
 // type user = {
 // 	userId: number;
@@ -19,24 +21,14 @@ export class activeUsers {
 	private users = new Map();
 
 	add(userId: number, socketId: string) {
-		this.users.set(userId, socketId);
-		// this.users.push({userId: UserId, socketId: SocketId});
+		this.users.set(userId, {socketId: socketId, state: "online"});
 	}
 
 	remove(userId: number) {
 		this.users.delete(userId);
-		// this.users = this.users.filter(element => element.userId !== UserId);
 	}
 
-	// removeByUserId(userId: number) {
-	// 	this.users.forEach((value: string, key: string) => {
-	// 		if (value === userId)
-	// 			this.users.delete(key);
-	// 	});
-	// 	// this.users = this.users.filter(element => element.socketId !== socketId);
-	// }
-
-	getSocketId(userId: number) {
+	getSocketId(userId: number): string {
 		return this.users.get(userId);
 	}
 	
@@ -47,6 +39,25 @@ export class activeUsers {
 	
 	isActiveUser(userId: number) {
 		return (this.users.has(userId));
-		// const user = this.users.find(element=> element.userId === UserId);
+	}
+
+	updateState(userId: number, state: string)
+	{
+		this.users.forEach((val, key) => {
+			if (key === userId)
+			{
+				console.log("old State", val.state);
+				val.state = state;
+				console.log("New State", val.state);
+			}
+		});
+	}
+
+	getUserStatus(userId: number): string
+	{
+		const found = this.users.get(userId);
+		if (!found)
+		return "offline";
+		return found.state;
 	}
 }
