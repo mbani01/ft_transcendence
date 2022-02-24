@@ -21,6 +21,13 @@ export class UsersController {
     return await this._usersService.findAll(paginationQuery);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('status')
+  getStatus(@Query("id") userID: number)
+  {
+    return Clients.getUserStatus(userID);
+  }
+
 
   @Post('/update_nickname')
   @UseGuards(JwtAuthGuard)
@@ -183,4 +190,5 @@ export class UsersController {
     const user = await this._usersService.findByUserName(req.user.username);
     return { uid: user.id, name: user.username, img: user.avatar };
   }
+
 }
