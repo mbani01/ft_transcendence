@@ -18,6 +18,7 @@ import {AccountSettingsModule} from "./account-settings/account-settings.module"
 import {MainSocket} from "./socket/MainSocket";
 import {SocketIoModule} from "ngx-socket-io";
 import {GameComponent} from "./game/game.component";
+import {NotifierModule} from "angular-notifier";
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import {GameComponent} from "./game/game.component";
     AppRoutingModule,
     NgbPopoverModule,
     AccountSettingsModule,
-    SocketIoModule
+    SocketIoModule,
+    NotifierModule
   ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, MainSocket],
   bootstrap: [AppComponent]

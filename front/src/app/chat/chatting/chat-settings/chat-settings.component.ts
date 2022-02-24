@@ -8,6 +8,7 @@ import {NgForm} from "@angular/forms";
 import {MainSocket} from "../../../socket/MainSocket";
 import {OAuthService} from "../../../login/oauth.service";
 import {NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
+import {NotifierService} from "angular-notifier";
 
 @Component({
   selector: 'chat-settings',
@@ -33,7 +34,8 @@ export class ChatSettingsComponent {
   constructor(private http: HttpClient,
               public chatService: ChatService,
               private socket: MainSocket,
-              public oauthService: OAuthService)
+              public oauthService: OAuthService,
+              private notifierService: NotifierService)
   {
     this.socket.on('ban', this.onBan);
     this.socket.on('unban', this.onBan);
@@ -53,10 +55,12 @@ export class ChatSettingsComponent {
     this.http.patch(`${environment.apiBaseUrl}/chat/${this.chatService.currChat!.roomID}/update-name`,
       roomNameForm.value).subscribe({
       next: value => {
-
+        this.notifierService.notify('success', 'Room name updated successfully');
       },
       error: err => {
-
+        if (err.error) {
+          this.notifierService.notify('error', err.error);
+        }
       }
     });
   }
@@ -94,6 +98,8 @@ export class ChatSettingsComponent {
       if (!err.error) {
         this.fetchBans();
         this.fetchMembers();
+      } else {
+
       }
     })
   }
@@ -151,6 +157,7 @@ export class ChatSettingsComponent {
     console.log('onBan');
     this.fetchBans();
     this.fetchMembers()
+
   }
   onMute = () => {
     console.log('onMute');
