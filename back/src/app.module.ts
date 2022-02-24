@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GameModule } from './modules/game/game.module';
-import { SocketModule } from './modules/socket/socket.module';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { TwofactorauthModule } from './modules/twofactorauth/2fa.module';
@@ -31,7 +30,6 @@ import Joi from '@hapi/joi';
       // }),
     }),
     GameModule,
-    SocketModule,
     TypeOrmModule.forRoot({
       type: 'postgres', // Since we are using PostgreSQL.
       host: process.env.DB_HOST, // We are devoloping locally.
