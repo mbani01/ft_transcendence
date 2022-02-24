@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/21 17:16:08 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/24 16:34:01 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ export class gameSocketGateway
 		this.server.to(Players[0].id).emit('gameStarted', {GameId: gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: true});
 		this.server.to(Players[1].id).emit('gameStarted', {GameId:gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: false});
 		this.LiveGames()
+		Clients.updateState(Players[0].user.sub, "in a Game");
+		Clients.updateState(Players[1].user.sub, "in a Game");
 	}
 	
 	@SubscribeMessage('watchGame')
@@ -194,7 +196,6 @@ export class gameSocketGateway
 			if (disconnectedPlayer !== undefined) // A Player disconnected
 			{
 				const tmpWinner = game.getPlayers().find(player => player.user.sub !== disconnectedPlayer.user.sub);
-				console.log(tmpWinner);
 				winner = tmpWinner.user;
 				this.server.to(gameInfos.GameId).emit('GameOver', {GameId: gameInfos.GameId, Players: gameInfos.Players, 
 					disconnectedPlayer: disconnectedPlayer.user});
@@ -213,6 +214,8 @@ export class gameSocketGateway
 			this.Games = this.Games.filter(element => element.getGameId() !== gameInfos.GameId);
 			this.server.socketsLeave(gameInfos.GameId); // make all players/watcher leave the room
 			this.LiveGames();
+			Clients.updateState(gameInfos.Players[0].sub, "online");
+			Clients.updateState(gameInfos.Players[1].sub, "online");
 		}
 	}
 
@@ -238,6 +241,15 @@ export class gameSocketGateway
 		this.LiveGames();
 	}
 
+
+	@SubscribeMessage('leftGame')
+	leftGame(@ConnectedSocket() socket: any, @MessageBody() data :any)
+	{
+		const game = this.Games.find(element=> element.isPlayer(socket));
+		this.GameOver(game, socket);
+		this.Games = this.Games.filter(element => element != game);
+	}
+
 	LiveGames()
 	{
 		const res = [];
@@ -245,4 +257,5 @@ export class gameSocketGateway
 			res.push(this.Games[i].getInfos(true));
 		this.server.emit('LiveGames', res);
 	}
+
 }

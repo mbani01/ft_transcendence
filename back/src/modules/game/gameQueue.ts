@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 10:52:22 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/20 11:35:07 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/24 16:33:33 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,7 @@ export class GameQueueService{
 		let removed = false;
 		this.Players = this.Players.filter(element => element !== user);
 		if (this.size !== this.Players.length)
-			{removed = true;
-			console.log("Removed from Queue");}
+			removed = true;
 		this.size = this.Players.length;
 		return removed;
 	}
