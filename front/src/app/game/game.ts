@@ -4,6 +4,7 @@
 import Phaser from 'phaser';
 
 import {MainSocket} from "../socket/MainSocket";
+import {Subject} from "rxjs";
 
 // import * from '@azerion/phaser-web-workers/build/phaser-web-workers';
 let socket: MainSocket;
@@ -14,6 +15,9 @@ let ball_position : {x: number, y: number};
 let isWatcher : boolean = false;
 let isPlayer : boolean = false;
 let gameEnd : boolean = false;
+export const endGame = new Subject<void>();
+
+
 
 // const socket = io("https://server-domain.com");
 
@@ -50,7 +54,7 @@ export function gameOver(obj: any) {
 	if (obj.hasOwnProperty('disconnectedPlayer')) {
 		ball.setVisible(false);
 		game.scene.pause(scene);
-		disconnectedPlayer(obj ,obj.disconnectedPlayer.sub == obj.Players[0].sub);	
+		disconnectedPlayer(obj ,obj.disconnectedPlayer.sub == obj.Players[0].sub);
 	} else {
 		console.log("win", obj);
 		ball.setVisible(false);
@@ -304,7 +308,7 @@ function onHidden() : void
 					// socket.emit("", );
 					clientCounter = 30;
 					clearInterval(hostInterval);
-					
+
 				}
 				hostCounter--;
 			}, 1000)
@@ -509,7 +513,7 @@ function update(this: Phaser.Scene) : void
 	  socket.emit('syncPowerUp', {"GameId":GameId, isHost: isHost, isVisible : powerUpBall.visible, powerUpBall: { x: game.canvas.width / 2, y: game.canvas.height / 2 }});
 	}
   }
-  
+
   if (cursors.down.isDown && !cursors.up.isDown && !isWatcher)
   {
 	local_player.setPosition(local_player.x, local_player.y + PLAYER_SPEED);

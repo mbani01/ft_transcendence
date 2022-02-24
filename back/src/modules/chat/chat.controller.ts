@@ -185,57 +185,6 @@ export class ChatController {
         // return `return all the users in the room with id #${roomId}`;
     }
 
-    // @UseGuards(JwtAuthGuard)
-    // @Patch('/:roomID/unmute/:uid')
-    // async unmuteMember(@Param() params: UnmuteAndUnbanDto, @Req() req) {
-    //     const { roomID, uid } = params;
-    //     try {
-    //     await  this._chaTService.unmuteMember(roomID, uid, req.user);
-    //     } catch (e) {
-    //         return {error: e.message };
-    //     }
-    //     return {roomID, uid};
-    // }
-    //
-    // @UseGuards(JwtAuthGuard)
-    // @Patch('/:roomID/unban/:uid')
-    // async unbanMember(@Param() params: UnmuteAndUnbanDto, @Req() req) {
-    //     const { roomID, uid } = params;
-    //     try {
-    //     await this._chaTService.unbanMember(roomID, uid, req.user);
-    //     } catch (e) {
-    //         return {error: e.message };
-    //     }
-    //     return {roomID, uid};
-    // }
-
-    // @UseGuards(JwtAuthGuard)
-    // @Patch('/:roomID/ban')
-    // async banMemeber(@Param('roomID') roomID: number, @Body('userID') userID: number, @Req() req) { // userID is the id of the user to ban
-    //     const user: User = req.user;
-    //     try {
-    //         await this._chaTService.banMember(roomID, userID, user);
-    //     } catch (e) {
-    //         return { error: e.message };
-    //     }
-    //     return { userID };
-    // }
-
-    // @UseGuards(JwtAuthGuard)
-    // @Patch('/:roomID/mute')
-    // async muteMemeber(@Param('roomID') roomID: number, @Body() body: any, @Req() req) { // userID is the id of the user to ban
-    //     const user: User = req.user;
-    //     const {userID, timeout} = body;
-    //     try {
-    //         await this._chaTService.muteMember(roomID, userID, user);
-    //         const time = setTimeout(this._chaTService.unmuteMember.bind(this._chaTService), timeout, roomID, userID, user);
-    //         this._chaTService.timers.set(`${userID}-${roomID}`, time);
-    //     } catch (e) {
-    //         return {error: e.message};
-    //     }
-    //     return {userID};
-    // }
-
     @UseGuards(JwtAuthGuard)
     @Patch('/:roomID/update-name')
     async updateRoomName(@Param('roomID') roomID: number, @Body('name') newRoomName: string) {
