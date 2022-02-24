@@ -30,7 +30,8 @@
             ],
             "styles": [
               "src/styles.scss",
-              "node_modules/bootstrap-icons/font/bootstrap-icons.css"
+              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+              "node_modules/angular-notifier/styles.scss"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",

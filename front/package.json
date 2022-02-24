@@ -21,6 +21,7 @@
     "@angular/router": "~13.1.0",
     "@nestjs/core": "^8.3.1",
     "@ng-bootstrap/ng-bootstrap": "^11.0.0",
+    "angular-notifier": "^11.0.0",
     "bootstrap": "^4.6.0",
     "bootstrap-icons": "^1.7.2",
     "engine.io-parser": "^5.0.3",
