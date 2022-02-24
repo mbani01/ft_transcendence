@@ -36,7 +36,7 @@ export class AuthController {
   @Get('/oauth_page')
   getOauthPage() {
     return {
-      page: 'https://api.intra.42.fr/oauth/authorize?client_id=802dd62932bab69d1e0168a42ed0567a6b83267c134fb2f62d583c14b2a4ce97&redirect_uri=http%3A%2F%2Flocalhost%3A4200%2Flogin&response_type=code',
+      page: this._authService._configService.get('API_LINK')
     };
   }
 
@@ -71,7 +71,6 @@ export class AuthController {
       if (!isValid2FACode) throw new UnauthorizedException('Invalid 2fa code!');
       this.mappedAccessCodeWithUser.delete(code);
     }
-    console.log('Yes code is valid');
     await this._authService.sendJwtAccessToken(response, userExist, true);
   }
 
