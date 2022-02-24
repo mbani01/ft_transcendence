@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { environment } from "../../environments/environment";
 import { CookieService } from "ngx-cookie-service";
@@ -11,14 +11,13 @@ import { UserInfo } from "./models/UserInfo.model";
   providedIn: 'root'
 })
 export class OAuthService {
-
   private _authorized?: boolean;
   private _is2FA = false;
   // @ts-ignore
   public user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
   constructor(private http: HttpClient, private cookieService: CookieService, private router: Router) {
-    // this.access_token =;
+
     this.http.get<UserInfo>(`${environment.apiBaseUrl}/auth/isAuthorized`).subscribe({
       next: value => {
         this._authorized = true;
