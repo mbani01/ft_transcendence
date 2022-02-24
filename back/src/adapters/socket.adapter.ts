@@ -32,7 +32,7 @@ export class WsAdapter extends IoAdapter {
 				.split('; ')
 				.find((cookie: string) => cookie.startsWith('access_token'))
 				.split('=')[1];
-				decoded = jwt.verify(token, `${process.env.JWT_KEY}`);
+				decoded = jwt.verify(token, String(process.env.JWT_SECRET));
 				socket.user = decoded;
 				console.log(socket.user);
 			}

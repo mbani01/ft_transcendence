@@ -8,7 +8,7 @@ import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { TwofactorauthModule } from './modules/twofactorauth/2fa.module';
 import { ChatModule } from './modules/chat/chat.module';
-import Joi from '@hapi/joi';
+import appConfig from './app.config';
 
 @Module({
   imports: [
@@ -17,6 +17,7 @@ import Joi from '@hapi/joi';
     // }),
     ConfigModule.forRoot({
       isGlobal: true,
+      load: [appConfig]
       // validationSchema: ({
       //   DATABASE_HOST: Joi.required(),
       //   DATABASE_PORT: Joi.number().default(3000),

@@ -11,9 +11,9 @@ export class AuthService {
   async getAccessToken(code: string): Promise<string> {
     const payload = {
       grant_type: "authorization_code",
-      client_id: this._configService.get<string>('API_UID'),
-      client_secret: this._configService.get<string>('API_SECRET'),
-      redirect_uri: this._configService.get<string>('REDIRECT_URI'),
+      client_id: this._configService.get<string>('APP_UID'),
+      client_secret: this._configService.get<string>('APP_SECRET'),
+      redirect_uri: this._configService.get<string>('APP_REDIRECT_URI'),
       code,
     };
 

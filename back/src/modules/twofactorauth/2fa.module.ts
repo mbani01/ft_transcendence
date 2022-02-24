@@ -13,7 +13,7 @@ import { Relation } from '../users/entity/relation.entity';
 
 @Module({
   imports: [PassportModule, TypeOrmModule.forFeature([User, Relation]),JwtModule.register({
-    secret: `${process.env.JWT_KEY}`,
+    secret: String(process.env.JWT_SECRET),
     signOptions: { expiresIn: 60 },
   }),],
   controllers: [TwofactorauthController],
