@@ -314,6 +314,7 @@ export class ChatService {
     });
 
     if (!member) throw new UnauthorizedException('Cannot grant admin to current user!');
+    if (member.role === 'admin') throw new UnauthorizedException('The member is already admin');
     await this._membersRepo.update(member.id, {
       role: 'admin'
     })

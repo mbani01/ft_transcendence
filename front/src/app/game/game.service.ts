@@ -2,7 +2,7 @@ import {Socket} from "ngx-socket-io";
 import {HttpClient} from "@angular/common/http";
 import {MainSocket} from "../socket/MainSocket";
 import {Injectable} from "@angular/core";
-import {socketListening, gameOver, startGame, setSocket} from "./game";
+import {socketListening, gameOver, startGame, setSocket, endGame} from "./game";
 
 export enum GameStat {
   MAIN,
@@ -23,6 +23,7 @@ export class GameService {
   constructor(private socket: MainSocket, private http: HttpClient) {
     socket.on('gameStarted', this.joinGame.bind(this));
     socket.on('GameOver', this.gameOver.bind(this));
+    endGame.subscribe({next: this.leaveGame.bind(this)})
     setSocket(socket);
 
   }
@@ -58,7 +59,6 @@ export class GameService {
   leaveGame() {
     this.stat = GameStat.MAIN;
   }
-
 
   gameOver(obj: any) {
     gameOver(obj);

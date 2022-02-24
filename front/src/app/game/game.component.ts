@@ -27,13 +27,16 @@ export class GameComponent implements OnInit {
 
   powerUpsGame() {
     this.gameService.joinPowerUpQueue();
+    this.startTimer();
   }
 
   startTimer() {
-    // let queueInterval = setInterval(() => this.queueCounter++, 1000);
+    this.queueCounter = 0;
+    this.queueInterval = setInterval(() => this.queueCounter++, 1000);
   }
 
   cancelQueue() {
+    clearInterval(this.queueInterval);
     this.gameService.leaveQueue();
   }
 
@@ -47,5 +50,13 @@ export class GameComponent implements OnInit {
 
   backToMain() {
     this.gameService.stat = GameStat.MAIN;
+  }
+
+  getQueueTimer() {
+    let sec: number | string = this.queueCounter % 60;
+    let min: number | string = Math.floor(this.queueCounter / 60);
+    sec = sec < 10 ? `0${sec}` : sec;
+    min = min < 10 ? `0${min}` : min;
+    return `${min}:${sec}`;
   }
 }
