@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { UsersService } from "../users/users.service";
-import { JwtConstants } from "./constants";
 
 function getJwtFromCoockie(req): string {
   if (!req.headers.cookie) return '';
@@ -19,7 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([getJwtFromCoockie]),
       ignoreExpiration: false,
-      secretOrKey: JwtConstants.jwtSecret,
+      secretOrKey: `${process.env.JWT_KEY}`,
     });
   }
 

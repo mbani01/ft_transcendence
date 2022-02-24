@@ -1,4 +1,5 @@
 import { Injectable, Res } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import axios from "axios";
 import { Response } from "express";
@@ -6,15 +7,13 @@ import { CreateUserDto } from "../users/dto/create-user.dto";
 import { User } from "../users/entity/user.entity";
 @Injectable()
 export class AuthService {
-  constructor(private readonly _jwtService: JwtService) { }
+  constructor(private readonly _jwtService: JwtService, public readonly _configService: ConfigService ) { }
   async getAccessToken(code: string): Promise<string> {
     const payload = {
       grant_type: "authorization_code",
-      client_id:
-        "802dd62932bab69d1e0168a42ed0567a6b83267c134fb2f62d583c14b2a4ce97",
-      client_secret:
-        "90e1a8765ecb7d464e48b23b94843495e261dfa71d7facd9933ab0e1dc0d4096",
-      redirect_uri: "http://localhost:4200/login",
+      client_id: this._configService.get<string>('UID'),
+      client_secret: this._configService.get<string>('SECRET'),
+      redirect_uri: this._configService.get<string>('REDIRECT_URI'),
       code,
     };
 

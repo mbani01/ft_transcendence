@@ -4,7 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { User } from '../users/entity/user.entity';
-import { JwtConstants } from '../auth/constants';
 import { TwofactorauthController } from './2fa.controller';
 import { TwoFactorAuthService } from './2fa.service';
 import { UsersService } from '../users/users.service';
@@ -14,7 +13,7 @@ import { Relation } from '../users/entity/relation.entity';
 
 @Module({
   imports: [PassportModule, TypeOrmModule.forFeature([User, Relation]),JwtModule.register({
-    secret: JwtConstants.jwtSecret,
+    secret: `${process.env.JWT_KEY}`,
     signOptions: { expiresIn: 60 },
   }),],
   controllers: [TwofactorauthController],
