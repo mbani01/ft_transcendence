@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/24 15:13:52 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/24 16:34:01 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ export class gameSocketGateway
 	
 	async startGame(GameQueue: GameQueueService, isDefault: boolean)
 	{
-		console.log("Game Starteed")
 		const Players = GameQueue.getPlayers();
 		const game = new GamePlay(true, Players, isDefault);
 		this.Games.push(game);
@@ -242,6 +241,15 @@ export class gameSocketGateway
 		this.LiveGames();
 	}
 
+
+	@SubscribeMessage('leftGame')
+	leftGame(@ConnectedSocket() socket: any, @MessageBody() data :any)
+	{
+		const game = this.Games.find(element=> element.isPlayer(socket));
+		this.GameOver(game, socket);
+		this.Games = this.Games.filter(element => element != game);
+	}
+
 	LiveGames()
 	{
 		const res = [];
@@ -249,4 +257,5 @@ export class gameSocketGateway
 			res.push(this.Games[i].getInfos(true));
 		this.server.emit('LiveGames', res);
 	}
+
 }
