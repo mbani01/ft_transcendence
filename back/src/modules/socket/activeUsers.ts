@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 14:12:49 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/24 16:07:39 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/24 16:34:18 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,7 @@ export class activeUsers {
 	{
 		this.users.forEach((val, key) => {
 			if (key === userId)
-			{
-				console.log("old State", val.state);
 				val.state = state;
-				console.log("New State", val.state);
-			}
 		});
 	}
 
