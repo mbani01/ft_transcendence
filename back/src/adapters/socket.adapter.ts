@@ -14,7 +14,6 @@ import { IoAdapter } from '@nestjs/platform-socket.io';
 import { Socket } from 'socket.io';
 import { activeUsers } from '../modules/socket/activeUsers';
 import * as jwt from 'jsonwebtoken';
-import { JwtConstants } from 'src/modules/auth/constants';
 
 export interface CustomSocket extends Socket {
 	user: any;
@@ -33,7 +32,7 @@ export class WsAdapter extends IoAdapter {
 				.split('; ')
 				.find((cookie: string) => cookie.startsWith('access_token'))
 				.split('=')[1];
-				decoded = jwt.verify(token, JwtConstants.jwtSecret);
+				decoded = jwt.verify(token, `${process.env.JWT_KEY}`);
 				socket.user = decoded;
 				console.log(socket.user);
 			}
