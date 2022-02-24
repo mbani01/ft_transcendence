@@ -27,6 +27,8 @@ export class ChatSettingsComponent {
   leaveConfirm = false;
 
   activeTab = 'members';
+
+  role: string;
   // roomName = this.chatService.currChat!.name;
   // nickname: any;
   @ViewChild('t') tooltip: NgbTooltip;
@@ -44,6 +46,8 @@ export class ChatSettingsComponent {
     this.fetchMembers();
     this.fetchMutes();
     this.fetchBans();
+
+    this.chatService.getRole(chatService.currChat!.roomID, oauthService.user.uid).then(value => this.role = value);
   }
 
   get name() {
@@ -52,17 +56,21 @@ export class ChatSettingsComponent {
 
   saveName(roomNameForm: NgForm) {
     this.editName = false;
-    this.http.patch(`${environment.apiBaseUrl}/chat/${this.chatService.currChat!.roomID}/update-name`,
-      roomNameForm.value).subscribe({
-      next: value => {
-        this.notifierService.notify('success', 'Room name updated successfully');
-      },
-      error: err => {
-        if (err.error) {
-          this.notifierService.notify('error', err.error);
+    if (roomNameForm.value.name !== '' && this.chatService.currChat!.name !== roomNameForm.value.name) {
+      this.http.patch<{name: string}>(`${environment.apiBaseUrl}/chat/${this.chatService.currChat!.roomID}/update-name`,
+        roomNameForm.value).subscribe({
+        next: value => {
+          console.log(value);
+          this.chatService.currChat!.name = value.name;
+          this.notifierService.notify('success', 'Room name updated successfully');
+        },
+        error: err => {
+          if (err.error) {
+            this.notifierService.notify('error', err.error);
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   savePassword(roomPasswordForm: NgForm) {
@@ -70,10 +78,12 @@ export class ChatSettingsComponent {
     this.http.patch(`${environment.apiBaseUrl}/chat/${this.chatService.currChat!.roomID}/update-password`,
       roomPasswordForm.value).subscribe({
       next: value => {
-
+        this.notifierService.notify('success', 'Room password updated successfully');
       },
       error: err => {
-
+        if (err.error) {
+          this.notifierService.notify('error', err.error);
+        }
       }
     });
 
@@ -86,6 +96,9 @@ export class ChatSettingsComponent {
     }, (err: any) => {
       if (!err.error) {
         this.fetchMutes();
+        this.notifierService.notify('success', `${member.name} is unmuted`);
+      } else {
+        this.notifierService.notify('error', err.error);
       }
     })
   }
@@ -98,8 +111,9 @@ export class ChatSettingsComponent {
       if (!err.error) {
         this.fetchBans();
         this.fetchMembers();
+        this.notifierService.notify('success', `${member.name} is unbanned`);
       } else {
-
+        this.notifierService.notify('error', err.error);
       }
     })
   }
@@ -108,6 +122,7 @@ export class ChatSettingsComponent {
     this.chatService.sendInvite(inviteForm.value, (err: any) => {
       if (err.error) {
         inviteForm.controls['nickname'].setErrors(err);
+        this.notifierService.notify('error', err.error);
         this.tooltip.open();
       }
     });

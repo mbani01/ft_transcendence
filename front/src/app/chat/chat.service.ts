@@ -8,7 +8,8 @@ import {HttpClient} from "@angular/common/http";
 import {NgbDropdown} from "@ng-bootstrap/ng-bootstrap";
 import {Socket} from "ngx-socket-io";
 import {MainSocket} from "../socket/MainSocket";
-import {Observer} from "rxjs";
+import {firstValueFrom, Observer} from "rxjs";
+import {NotifierService} from "angular-notifier";
 
 type ChannelType = 'public' | 'protected' | 'private';
 
@@ -22,7 +23,8 @@ export class ChatService {
   private _settings = false;
   public onReceiveMessage = new EventEmitter<void>();
 
-  constructor(private oauthService: OAuthService, private http: HttpClient, private socket: MainSocket) {
+  constructor(private oauthService: OAuthService, private http: HttpClient, private socket: MainSocket,
+              private notifierService: NotifierService) {
     this.chats = new Map();
     this.oauthService.user$.subscribe({
       next: value => {
@@ -108,11 +110,14 @@ export class ChatService {
       this.socket.emit('chat-leave', {
         roomID: roomID
       }, (data: any) => {
-        if (data.roomID) {
+        if (data.error) {
+          this.notifierService.notify('error', data.error);
+        } else if (data.roomID) {
           if (this.currChat?.roomID == data.roomID) {
             this.currChat = undefined;
           }
           this.chats.delete(data.roomID);
+          this.notifierService.notify('success', `you left the channel`);
         }
       });
     }
@@ -217,6 +222,12 @@ export class ChatService {
       name: value.nickname,
       roomID: this.currChat?.roomID
     }, callback);
+  }
+
+  async getRole(roomID: string, userID: number) {
+    let role = await firstValueFrom(this.http.get<{ role: string }>(
+      `${environment.apiBaseUrl}/chat/${roomID}/role/${userID}`));
+    return role.role;
   }
 
 }

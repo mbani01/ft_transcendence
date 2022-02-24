@@ -8,6 +8,7 @@ import {Socket} from "ngx-socket-io";
 import {ChatService} from "../../chat.service";
 import {MainSocket} from "../../../socket/MainSocket";
 import {Chat} from "../../shared/chat.model";
+import {NotifierService} from "angular-notifier";
 
 @Component({
   selector: 'create-modal',
@@ -22,7 +23,7 @@ export class CreateModalComponent {
   isPublic: boolean = false;
 
   constructor(private ngbModal:NgbModal, private http: HttpClient, private oauthService: OAuthService,
-              private socket: MainSocket, private chatService: ChatService) {
+              private socket: MainSocket, private chatService: ChatService, private notifierService: NotifierService) {
   }
 
   ngOnInit() {
@@ -36,6 +37,7 @@ export class CreateModalComponent {
       if (!value.error) {
         this.createModal.emit(value);
         this.modal.close();
+        this.notifierService.notify('success', `Channel has been created`);
       } else {
         createRoom.form.setErrors(value);
       }

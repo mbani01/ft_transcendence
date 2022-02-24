@@ -4,6 +4,7 @@ import {Message} from "../shared/message.model";
 import {NgForm} from "@angular/forms";
 import {User} from "../../shared/user";
 import {NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
+import {NotifierService} from "angular-notifier";
 
 @Component({
   selector: 'app-chatting',
@@ -23,9 +24,9 @@ export class ChattingComponent {
   // private isAllMessage = false;
   // settings = false;
 
-  constructor(public chatService: ChatService) {
+  constructor(public chatService: ChatService, private notifierService: NotifierService) {
     this.chatService.onReceiveMessage.subscribe(() => setTimeout(this.scrollDown.bind(this)));
-
+    // console.log('role', role);
     if (this.chatService.currChat?.messages.length == 0 && this.chatService.currChat.roomID != '0') {
       this.loading = true;
       this.chatService.loadMessages(this.chatService.currChat, {
@@ -79,6 +80,7 @@ export class ChattingComponent {
       this.chatService.sendMessage(form.value.message, (err: {error: string}) => {
         console.log('message error', err);
         if (err.error) {
+          this.notifierService.notify('error', err.error);
           form.controls['message'].setErrors(err)
           this.tooltip.open();
         }
