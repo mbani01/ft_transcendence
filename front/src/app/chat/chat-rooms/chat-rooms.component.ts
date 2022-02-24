@@ -6,6 +6,7 @@ import {JoinModalComponent} from "./join-modal/join-modal.component";
 import {ChatService} from "../chat.service";
 import {Chat} from "../shared/chat.model";
 import {NgForm} from "@angular/forms";
+import {NotifierService} from "angular-notifier";
 
 @Component({
   selector: 'chat-rooms',
@@ -25,7 +26,8 @@ export class ChatRoomsComponent {
   }
   page: number = 1;
 
-  constructor(private http: HttpClient, private ngbModal: NgbModal, public chatService: ChatService) {
+  constructor(private http: HttpClient, private ngbModal: NgbModal, public chatService: ChatService,
+              private notifierService: NotifierService) {
     this.httpGetChannels();
   }
 
@@ -42,9 +44,12 @@ export class ChatRoomsComponent {
     if (chat.type === "protected") {
       this.openPasswordModal(chat, content);
     } else {
-      this.chatService.joinChannel(chat.roomID!, '', (room: Chat) => {
-        // this.chatService.chats.set(room.roomID, room);
-        // this.chatService.openChat(room.roomID);
+      this.chatService.joinChannel(chat.roomID!, '', (value: any) => {
+        if (value.error) {
+          this.notifierService.notify('error', value.error);
+        } else {
+          this.notifierService.notify('success', 'You joined the channel');
+        }
       });
     }
   }

@@ -7,6 +7,7 @@ import {NgForm} from "@angular/forms";
 import {OAuthService} from "../../login/oauth.service";
 import {BehaviorSubject} from "rxjs";
 import {ERROR} from "@angular/compiler-cli/src/ngtsc/logging/src/console_logger";
+import {NotifierService} from "angular-notifier";
 
 enum UploadStat{NO_UPLOAD, UPLOADING, DONE, ERROR}
 
@@ -29,7 +30,7 @@ export class AccountTabComponent {
   @ViewChild('t') tooltip: NgbTooltip;
   @ViewChild('codeToolTip') codeToolTip: NgbTooltip;
 
-  constructor(private http: HttpClient, public oauthService: OAuthService) {
+  constructor(private http: HttpClient, public oauthService: OAuthService, private notifierService: NotifierService) {
     this.user = oauthService.user$;
   }
 
@@ -39,6 +40,8 @@ export class AccountTabComponent {
       next: value => {
         this.editNickname = false;
         this.user.value.name = nicknameForm.value.nickname;
+        this.notifierService.notify('success', 'Nickname updated successfully');
+
       },
       error: err => {
         nicknameForm.controls['nickname'].setErrors({error: 'nickname already taken'})
@@ -66,6 +69,7 @@ export class AccountTabComponent {
         this.click2FA = false;
         if (value) {
           this.oauthService.enable2FA();
+          this.notifierService.notify('success', 'Two-factor authentication is enabled');
           this.closeQRCode();
         }
       },
@@ -82,6 +86,7 @@ export class AccountTabComponent {
     this.http.get<string>(`${environment.apiBaseUrl}/twofa/turnoff`).subscribe({
       next: value => {
         this.oauthService.disable2FA();
+        this.notifierService.notify('warning', 'Two-factor authentication is disabled');
       }
     });
   }
@@ -120,6 +125,9 @@ export class AccountTabComponent {
             }
           },
           error: err => {
+            if (err.error) {
+              this.notifierService.notify('error', err.error);
+            }
             this.uploadStat = UploadStat.ERROR;
             setTimeout(() => this.uploadStat = UploadStat.NO_UPLOAD, 6900);
           },

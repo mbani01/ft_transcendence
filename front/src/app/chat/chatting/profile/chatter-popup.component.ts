@@ -8,6 +8,7 @@ import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../../environments/environment";
 import {MainSocket} from "../../../socket/MainSocket";
 import {Observable} from "rxjs";
+import {ChatService} from "../../chat.service";
 
 @Component({
   selector: 'chatter-popup',
@@ -21,21 +22,24 @@ export class ChatterPopupComponent {
   myRole: string
   userRole: string;
   constructor(private router: Router, public oauthService: OAuthService, private http: HttpClient,
-              private socket: MainSocket) {
+              private socket: MainSocket, private chatService: ChatService) {
     setTimeout(() => {
       if (this.chatRoom) {
-        this.http.get<{ role: string }>(`${environment.apiBaseUrl}/chat/${this.chatRoom!.roomID}/role/${this.oauthService.user.uid}`).subscribe({
-          next: value => {
-            this.myRole = value.role;
-            console.log('this.userRole', this.myRole);
-          }
-        });
-        this.http.get<{ role: string }>(`${environment.apiBaseUrl}/chat/${this.chatRoom!.roomID}/role/${this.user!.uid}`).subscribe({
-          next: value => {
-            this.userRole = value.role;
-            console.log('this.userRole', this.userRole);
-          }
-        });
+        this.chatService.getRole(this.chatRoom!.roomID, this.oauthService.user.uid).then(value => this.myRole = value);
+        this.chatService.getRole(this.chatRoom!.roomID, this.user!.uid).then(value => this.userRole = value);
+
+        // this.http.get<{ role: string }>(`${environment.apiBaseUrl}/chat/${this.chatRoom!.roomID}/role/${this.oauthService.user.uid}`).subscribe({
+        //   next: value => {
+        //     this.myRole = value.role;
+        //     console.log('this.userRole', this.myRole);
+        //   }
+        // });
+        // this.http.get<{ role: string }>(`${environment.apiBaseUrl}/chat/${this.chatRoom!.roomID}/role/${this.user!.uid}`).subscribe({
+        //   next: value => {
+        //     this.userRole = value.role;
+        //     console.log('this.userRole', this.userRole);
+        //   }
+        // });
 
       }
     });
