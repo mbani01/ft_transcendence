@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {Router} from "@angular/router";
 import {OAuthService} from "./login/oauth.service";
+import {NotifierService} from "angular-notifier";
+import {GameService} from "./game/game.service";
 
 @Component({
   selector: 'app-root',
@@ -9,10 +11,22 @@ import {OAuthService} from "./login/oauth.service";
 })
 export class AppComponent {
   title = 'ft_transcendence';
-  constructor(public router: Router, public oauthService: OAuthService) {
+
+  @ViewChild('gameInvite', { static: true }) gameInviteTmpl: any;
+
+  constructor(public router: Router, public oauthService: OAuthService, public gameService: GameService) {
+    // setTimeout(() => {
+    //   this.notifierService.show({
+    //     message: 'yo',
+    //     type: 'info',
+    //     template: this.customNotificationTmpl,
+    //   });
+    // }, 1000);
   }
 
   ngOnInit() {
-    console.log('isAuthenticated: ' + this.oauthService.isAuthenticated());
+    this.gameService.duelTmpl.next(this.gameInviteTmpl);
+
+    console.log(this.gameInviteTmpl);
   }
 }

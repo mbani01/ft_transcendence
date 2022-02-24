@@ -1,8 +1,13 @@
 import {Socket} from "ngx-socket-io";
 import {HttpClient} from "@angular/common/http";
 import {MainSocket} from "../socket/MainSocket";
-import {Injectable} from "@angular/core";
+import {Injectable, TemplateRef} from "@angular/core";
 import {socketListening, gameOver, startGame, setSocket, endGame} from "./game";
+import {BehaviorSubject} from "rxjs";
+import {NotifierService} from "angular-notifier";
+import {User} from "../shared/user";
+import {OAuthService} from "../login/oauth.service";
+import {Router} from "@angular/router";
 
 export enum GameStat {
   MAIN,
@@ -20,12 +25,17 @@ export class GameService {
   stat: GameStat = GameStat.MAIN;
   liveGames: any[] = [];
 
-  constructor(private socket: MainSocket, private http: HttpClient) {
+  public duelTmpl = new BehaviorSubject<TemplateRef<any> | null>(null);
+
+  constructor(private socket: MainSocket, private http: HttpClient, private notifierService: NotifierService,
+              private oAuthService: OAuthService, private router: Router) {
     socket.on('gameStarted', this.joinGame.bind(this));
     socket.on('GameOver', this.gameOver.bind(this));
+    socket.on('gameInvite', this.gameInvite.bind(this))
+    socket.on('inviteAccepted', this.inviteAccepted.bind(this));
     endGame.subscribe({next: this.endGame.bind(this)})
     setSocket(socket);
-
+    console.log('Game Service');
   }
 
   joinNormalQueue() {
@@ -44,16 +54,11 @@ export class GameService {
   }
 
   joinGame(gameInfo: any) {
-    // setInterval(() => {
-    // this.socket.emit('game/ready');
-
     this.stat = GameStat.GAME;
 
     setTimeout(() => {
       startGame(gameInfo);
     });
-    // socketListening(this.socket);
-    // }, 5000)
   }
 
   endGame() {
@@ -106,5 +111,42 @@ export class GameService {
   leaveGame() {
     this.socket.emit('leftGame');
     this.endGame();
+  }
+
+  gameInvite(user: User) {
+    this.notifierService.show({
+      id: String(user.uid),
+      message: `${user.name} invited you for a game`,
+      type: 'warning',
+      template: this.duelTmpl.value!
+    })
+  }
+
+  acceptInvite(userID: string) {
+    this.socket.emit('acceptInvite', {
+      inviter: userID,
+      invited: this.oAuthService.user.uid
+    }, (err: any) => {
+      if (err.error) {
+        this.notifierService.notify('error', err.error);
+      }
+    })
+    this.notifierService.hide(userID);
+  }
+
+  declineInvite(userID: string) {
+    this.socket.emit('declineInvite', {
+      inviter: userID,
+      invited: this.oAuthService.user.uid
+    })
+    this.notifierService.hide(userID);
+  }
+
+  inviteAccepted(gameInfo: any) {
+    this.router.navigate(['/play']).then(value => {
+      if (value) {
+        this.joinGame(gameInfo);
+      }
+    })
   }
 }
