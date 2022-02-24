@@ -17,12 +17,6 @@ async function bootstrap() {
   }));
   app.setGlobalPrefix('api/v1');
   await app.listen(PORT);
-  console.log(process.env.PORT);
-  console.log(process.env.UID); 
-  console.log(process.env.SECRET); 
-  console.log(process.env.API_LINK); 
-  console.log(process.env.REDIRECT_URI); 
-  console.log(process.env.JWT_KEY); 
   console.log("App Listening on Port : " + PORT);
 }
 bootstrap();
