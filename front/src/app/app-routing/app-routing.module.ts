@@ -11,11 +11,12 @@ import {GameComponent} from "../game/game.component";
 import {FriendsComponent} from "../account-settings/friends/friends.component";
 import {BlockComponent} from "../account-settings/blocks/block.component";
 import {AccountTabComponent} from "../account-settings/account/account-tab.component";
+import {GameGuard} from "../game/game.guard";
 
 const routes: Routes = [
   {path: '', canActivate: [AuthGuard], children: [
     {path: '', redirectTo: 'play', pathMatch: 'full'},
-    {path: 'play', component: GameComponent},
+    {path: 'play', component: GameComponent, canDeactivate: [GameGuard]},
     {path: 'leaderboard', component: LeaderboardComponent},
     {path: 'chat-rooms', component: ChatRoomsComponent},
     {path: 'profile', loadChildren: () => import('src/app/profile/profile.module').then(m => m.ProfileModule)},

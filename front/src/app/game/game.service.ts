@@ -23,7 +23,7 @@ export class GameService {
   constructor(private socket: MainSocket, private http: HttpClient) {
     socket.on('gameStarted', this.joinGame.bind(this));
     socket.on('GameOver', this.gameOver.bind(this));
-    endGame.subscribe({next: this.leaveGame.bind(this)})
+    endGame.subscribe({next: this.endGame.bind(this)})
     setSocket(socket);
 
   }
@@ -56,7 +56,7 @@ export class GameService {
     // }, 5000)
   }
 
-  leaveGame() {
+  endGame() {
     this.stat = GameStat.MAIN;
   }
 
@@ -101,5 +101,10 @@ export class GameService {
       this.liveGames = games;
     })
     this.socket.emit('LiveGamesRequest');
+  }
+
+  leaveGame() {
+    this.socket.emit('leftGame');
+    this.endGame();
   }
 }

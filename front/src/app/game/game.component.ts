@@ -23,6 +23,7 @@ export class GameComponent implements OnInit {
 
   normalGame() {
     this.gameService.joinNormalQueue();
+    this.startTimer();
   }
 
   powerUpsGame() {
