@@ -231,4 +231,9 @@ export class UsersService {
             .where("id = :id", { id: userId })
             .execute();
   }
+
+  async getLeaderBoard()
+  {
+    return  await this._relationsRepo.query("Select * from \"Users\" ORDER BY score DESC;")
+  }
 }
