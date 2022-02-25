@@ -19,6 +19,7 @@ import {MainSocket} from "./socket/MainSocket";
 import {SocketIoModule} from "ngx-socket-io";
 import {GameComponent} from "./game/game.component";
 import {NotifierModule} from "angular-notifier";
+import {UserAvatarComponent} from "./profile/user-avatar/user-avatar.component";
 
 @NgModule({
   declarations: [
@@ -39,7 +40,7 @@ import {NotifierModule} from "angular-notifier";
     SocketIoModule,
     NotifierModule
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, MainSocket],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}, MainSocket],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -5,12 +5,8 @@
       <ng-template #chatterPopup>
         <chatter-popup [user]="friend" [popover]="p"></chatter-popup>
       </ng-template>
-      <div class="avatar my-auto">
-        <img class="rounded-circle w-100 h-100" alt="Cinque Terre" [src]="friend.img">
-        <svg class="status" width="16" height="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="16" cy="16" r="15" stroke="black" stroke-width="1" fill="#00000000" [class]="friend.status"/>
-        </svg>
-      </div>
+<!--      <user-avatar-->
+      <user-avatar [user]="friend" [size]="48"></user-avatar>
       <span class="ml-2 my-auto">
             {{friend.name}}
       </span>

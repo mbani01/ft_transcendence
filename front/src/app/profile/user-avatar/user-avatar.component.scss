@@ -1,0 +1,21 @@
+.avatar {
+  position: relative;
+}
+
+.status {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.online {
+  fill: #08a208;
+}
+
+.offline {
+  fill: #d40404;
+}
+
+.in-game {
+  fill: #F1C40F;
+}

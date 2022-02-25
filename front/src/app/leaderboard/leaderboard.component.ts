@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import {Observable} from "rxjs";
+import {map, Observable} from "rxjs";
 import {LeaderboardPlayer} from "../shared/leaderboard";
 
 @Component({
@@ -14,14 +14,26 @@ export class LeaderboardComponent {
   topPlayers: Observable<LeaderboardPlayer[]>;
   constructor(private http: HttpClient) {
     this.topPlayers = this.getTopPlayers();
+    // this.topPlayers.subscribe({
+    //   next: value => {
+    //     console.log(value);
+    //   }
+    // });
   }
 
   getTopPlayers() {
-    return this.http.get<LeaderboardPlayer[]>(`${environment.apiBaseUrl}/leaderboard`, {
+    return this.http.get<any[]>(`${environment.apiBaseUrl}/game/leaderBoard`, {
       params: {
         sort: 'wins',
         limit: 20
       }
-    })
+    }).pipe(map((value: any[]) => value.map(
+      player => ({
+        uid: player.id,
+        name: player.username,
+        img: player.avatar,
+        wins: player.gamesWon,
+        losses: player.gamesCount - player.gamesWon
+      } as LeaderboardPlayer))));
   }
 }
