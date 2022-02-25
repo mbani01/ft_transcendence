@@ -203,18 +203,18 @@ export class UsersService {
   }
 
   getUserRank(points: number): Rank {
-    if (points < 100)
+    if (points < 10)
       return 'Beginner';
-    else if (points > 100 && points < 200)
+    else if (points >= 10 && points < 20)
       return 'Novice';
-    else if (points > 200 && points < 300)
+    else if (points >= 20 && points < 30)
       return 'Graduate';
-    else if (points > 300 && points < 400)
+    else if (points >= 30 && points < 40)
       return 'Expert';
-    else if (points > 400 && points < 500)
+    else if (points >= 40 && points < 50)
       return 'Master';
-    else if (points > 500 && points < 600)
-      return ' Grand Master';
+    else if (points >= 50 && points < 60)
+      return 'Grand Master';
     return 'Legend';
   }
 
@@ -225,9 +225,10 @@ export class UsersService {
     const oldScore = (await this._usersRepo.findOne(userId)).score;
     const newScore: any = oldScore + Calculatedscore;
     const scoreAsString = String(newScore)
+    console.log("New Score " , newScore);
     await this._usersRepo.createQueryBuilder()
             .update(User)
-            .set({ score: scoreAsString })
+            .set({ score: scoreAsString , rank: this.getUserRank(newScore)})
             .where("id = :id", { id: userId })
             .execute();
   }

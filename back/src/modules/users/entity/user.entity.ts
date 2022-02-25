@@ -72,4 +72,7 @@ export class User {
 
   @Column({type: 'real', default: '0'})
   score: string;
+
+  @Column({default: "Beginner"})
+  rank: string;
 }
