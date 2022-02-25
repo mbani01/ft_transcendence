@@ -9,6 +9,7 @@ import { ICreateRelation, IDeleteRelation, IUpdateRelation } from "./interfaces/
 import { ExtractJwt } from "passport-jwt";
 import fromAuthHeaderWithScheme = ExtractJwt.fromAuthHeaderWithScheme;
 import { Rank } from "./interfaces/stats.interface";
+import { number } from "@hapi/joi";
 
 @Injectable()
 export class UsersService {
@@ -215,5 +216,19 @@ export class UsersService {
     else if (points > 500 && points < 600)
       return ' Grand Master';
     return 'Legend';
+  }
+
+  async saveScore(userId: number, winPoints: number, losePoints, isWinner: boolean)
+  {
+    const points: number = isWinner && 3 || 0;
+    const Calculatedscore: number = points + (Math.abs(winPoints - losePoints) * 0.2);
+    const oldScore = (await this._usersRepo.findOne(userId)).score;
+    const newScore: any = oldScore + Calculatedscore;
+    const scoreAsString = String(newScore)
+    await this._usersRepo.createQueryBuilder()
+            .update(User)
+            .set({ score: scoreAsString })
+            .where("id = :id", { id: userId })
+            .execute();
   }
 }
