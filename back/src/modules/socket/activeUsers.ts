@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 14:12:49 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/24 16:34:18 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/25 20:24:09 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ export class activeUsers {
 	{
 		const found = this.users.get(userId);
 		if (!found)
-		return "offline";
+			return "offline";
 		return found.state;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 10:52:22 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/24 16:33:33 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/25 20:29:16 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,5 +82,10 @@ export class GameQueueService{
 	getId()
 	{
 		return this.id || null;
+	}
+
+	getSenderId()
+	{
+		return this.Players[0].sub;
 	}
 }
