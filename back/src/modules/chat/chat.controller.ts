@@ -105,7 +105,7 @@ export class ChatController {
             "collectionSize": number
             }
         */
-        const rooms = await this._chaTService.findAllRooms();
+        const rooms = await this._chaTService.findAllRooms(like, page);
         let channels = [];
         for (let e of rooms) {
             const currMember = await this._chaTService.getMember({ userID: req.user.id, roomID: e.roomID });
@@ -122,46 +122,6 @@ export class ChatController {
                             name: owner.username,
                             img: owner.avatar
                         }
-                    })
-            }
-        }
-        return { channels, collectionSize: channels.length };
-    }
-
-    @UseGuards(JwtAuthGuard)
-    @Get('dms')
-    async getAllDMs() {
-        /** returns an object with the following properties: 
-         * {
-            "channels": [
-                {
-                  "roomID": number | string,
-                  "name": string,
-                  "type": number,
-                  "owner": {
-                    "uid": number | string,
-                    "name": string,
-                    "img": string
-                  }
-                }
-            ],
-            "collectionSize": number
-            }
-        */
-        const rooms = await this._chaTService.findAllRooms();
-        let channels = [];
-        for (let e of rooms) {
-            if (!e.isChannel) {
-                channels.push(
-                    {
-                        roomID: e.roomID,
-                        name: e.name,
-                        type: e.channelType,
-                        // owner: {
-                        //     uid: req.user.id,
-                        //     name: req.user.username,
-                        //     img: req.user.avatar
-                        // }
                     })
             }
         }

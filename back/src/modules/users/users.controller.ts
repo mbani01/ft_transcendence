@@ -17,7 +17,7 @@ export class UsersController {
   constructor(private readonly _usersService: UsersService) { }
 
   @Get()
-  async getAll(@Query() paginationQuery: PaginationQueryDto) {
+  async getAll(@Query() paginationQuery: any) {
     return await this._usersService.findAll(paginationQuery);
   }
 
