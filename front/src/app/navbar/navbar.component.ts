@@ -28,8 +28,14 @@ export class NavbarComponent implements OnInit {
         username: event.target.value
       }
     }).subscribe({
-      next: value => {
-
+      next: (value: any[]) => {
+        this.users = value.map((user) => {
+          return {
+            uid: user.id,
+            name: user.username,
+            img: user.avatar
+          }
+        });
         console.log('Users', value);
         // this.users = value.map(user => {uid: user.id, name: user.username, img: user.avatar});
         this.loading = false

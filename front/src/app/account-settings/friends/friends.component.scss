@@ -9,3 +9,27 @@
   transition-duration: 0ms;
   background-color: #00000022;
 }
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  position: relative;
+}
+
+.status {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.online {
+  fill: #08a208;
+}
+
+.offline {
+  fill: #d40404;
+}
+
+.in-game {
+  fill: #F1C40F;
+}

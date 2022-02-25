@@ -198,7 +198,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     if (otherUserClient)
       otherUserClient.join(String(newDM.roomID));
     client.join(String(newDM.roomID));
-    return newDM;
+    let oUser = await this._chatService._userService.findById(otherUser);
+    return {...newDM, users: oUser ? { uid: oUser.id, name: oUser.username, img: oUser.avatar } : undefined};
   }
 
   @SubscribeMessage('ban')

@@ -26,7 +26,7 @@ export class ChattingComponent {
 
   constructor(public chatService: ChatService, private notifierService: NotifierService) {
     this.chatService.onReceiveMessage.subscribe(() => setTimeout(this.scrollDown.bind(this)));
-    // console.log('role', role);
+    console.log('currChat', this.chatService.currChat);
     if (this.chatService.currChat?.messages.length == 0 && this.chatService.currChat.roomID != '0') {
       this.loading = true;
       this.chatService.loadMessages(this.chatService.currChat, {

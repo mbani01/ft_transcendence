@@ -6,6 +6,7 @@ import { Router } from "@angular/router";
 import { User } from "../shared/user";
 import { BehaviorSubject, catchError, Observer, throwError } from "rxjs";
 import { UserInfo } from "./models/UserInfo.model";
+import {NotifierService} from "angular-notifier";
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,8 @@ export class OAuthService {
   // @ts-ignore
   public user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
-  constructor(private http: HttpClient, private cookieService: CookieService, private router: Router) {
+  constructor(private http: HttpClient, private cookieService: CookieService, private router: Router,
+              private notifierService: NotifierService) {
 
     this.http.get<UserInfo>(`${environment.apiBaseUrl}/auth/isAuthorized`).subscribe({
       next: value => {
@@ -34,6 +36,7 @@ export class OAuthService {
         this._authorized = false;
         if (!router.url.startsWith('/login')) {
           this.router.navigate(['login']);
+          this.notifierService.notify('error', 'You are not authorized, Please Login');
         }
       }
     })
@@ -57,15 +60,15 @@ export class OAuthService {
     obs.subscribe({
       next: (value) => {
         // if (value.success) {
-        this.router.navigate(['']);
+        if (value.firstTime) {
+          this.router.navigate(['/account/settings']);
+        } else {
+          this.router.navigate(['']);
+        }
         this._authorized = true;
         if (value.is2FA) {
           this.enable2FA();
         }
-        // } else if (value.is2FA) {
-        //   this._authorized = false;
-        // }
-        // this.cookieService.set('access_token', this.access_token, undefined, '/');
         this.user$.next(value);
         if (observer?.next) {
           observer?.next(value);

@@ -33,7 +33,7 @@
     </form>
   </ng-container>
 
-  <form *ngIf="role === 'admin'" class="flex-column justify-content-center mt-4" #inviteForm="ngForm" (ngSubmit)="sendInvite(inviteForm)">
+  <form *ngIf="chatService.role === 'admin'" class="flex-column justify-content-center mt-4" #inviteForm="ngForm" (ngSubmit)="sendInvite(inviteForm)">
 <!--    <div class="row justify-content-center">-->
 <!--      <button class="btn btn-info col-auto px-4 btn-rounded">Invite a User</button>-->
 <!--    </div>-->
@@ -79,7 +79,7 @@
           </ul>
         </ng-template>
       </li>
-      <ng-container *ngIf="role === 'admin'">
+      <ng-container *ngIf="chatService.role === 'admin'">
       <li ngbNavItem="mutes" class="col">
         <a ngbNavLink class="mutes-nav">Mutes</a>
         <ng-template ngbNavContent>

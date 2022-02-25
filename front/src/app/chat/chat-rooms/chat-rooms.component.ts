@@ -1,5 +1,5 @@
 import {Component, TemplateRef} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {JoinModalComponent} from "./join-modal/join-modal.component";
@@ -18,7 +18,7 @@ export class ChatRoomsComponent {
   selectedChat: Chat;
 
   // @ViewChild('passwordModal') passwordModal: TemplateRef<any>;
-  private like: string;
+  private like: string = '';
   pagination = {
     page: 1,
     collectionSize: 0,
@@ -60,11 +60,12 @@ export class ChatRoomsComponent {
 
   httpGetChannels() {
 
+    let params = new HttpParams().append('page', this.pagination.page);
+    if (this.like !== '') {
+      params.append('like', this.like);
+    }
     this.http.get<{channels: Chat[], collectionSize: number}>(`${environment.apiBaseUrl}/chat/channels`, {
-      params: {
-        like: this.like,
-        page: this.pagination.page
-      }
+      params: params
     }).subscribe(
       {
         next: value => {
