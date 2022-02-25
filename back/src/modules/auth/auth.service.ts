@@ -62,7 +62,7 @@ export class AuthService {
     response
       .cookie("access_token", access_token, {
         httpOnly: true,
-        domain: "localhost", // your domain here!
+        domain: process.env.DOMAIN, // your domain here!
       })
       .send({
         uid: user.id,

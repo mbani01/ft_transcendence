@@ -9,6 +9,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { TwofactorauthModule } from './modules/twofactorauth/2fa.module';
 import { ChatModule } from './modules/chat/chat.module';
 import appConfig from './app.config';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path/posix';
 
 @Module({
   imports: [
