@@ -129,7 +129,7 @@ export class gameSocketGateway
 			return ;
 			//check if user is active
 		if (!Clients.isActiveUser(data.receiverId))
-			return {active: false};
+			return {error: 'user is not online'};
 			// create a private queue with a unique id and add host
 		const QueueId = String(socket.user.sub) + "_" + String(data.receiverId) + '#' + String(Date.now());
 		const expectedPlayers =  [socket.user.sub, data.receiverId];
@@ -153,9 +153,9 @@ export class gameSocketGateway
 			return ;
 		const queue = this.PrivateQueues.find(element => element.getId() === String(data.InvitationId));
 		if (queue === undefined)
-			return {'Error': "Invalid or expired invitation"};
+			return {'error': "Invalid or expired invitation"};
 		if (Clients.getUserStatus(queue.getSenderId()) !== 'online')
-			return {'Error': 'player is not available'};
+			return {'error': 'player is not available'};
 		if (data.isAccepted === true) // Invitation Accepted
 		{
 			queue.addUser(socket);
@@ -165,7 +165,7 @@ export class gameSocketGateway
 		else if (data.isAccepted === false) // Invitation Rejected
 		{
 			const host = queue.getPlayers();
-			this.server.to(host[0].id).emit("invitationRejected", {"InvitationId": data.InvitationId});
+			this.server.to(host[0].id).emit("invitationRejected", {error: `${socket.user.username} reject your invite`});
 		}
 		this.PrivateQueues = this.PrivateQueues.filter(element => element.getId() !== String(data.InvitationId)); // Delete Queue
 	}

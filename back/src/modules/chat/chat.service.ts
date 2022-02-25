@@ -70,9 +70,17 @@ export class ChatService {
 
   async findAllRooms(like: string, page: number) {
     const limit = 10;
-    page = (page * limit) - limit + 1;
-    return await this._roomsRepo.createQueryBuilder("room")
-    .where("room.name like :name", { name: `%${like}%` }).skip(page).limit(10).getMany();;
+    page = (page * limit) - limit;
+    console.log(page, like);
+    let res = await this._roomsRepo.createQueryBuilder("room")
+    .where("room.name like :name", { name: `%${like}%`}).andWhere({
+      channelType: Not('private'),
+          isChannel: true
+    });
+    let count = await res.getCount();
+    res.offset(page).limit(limit);
+    console.log('leng',count);
+    return {rooms: await res.getMany(), len: count};
   }
 
   async getRoomById(roomID: number) {

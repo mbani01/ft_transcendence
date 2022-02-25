@@ -92,17 +92,17 @@ export class UsersController {
       console.log('Stats: \n', otherUser);
       relation = await this._usersService.getRelation(user, otherUser);
       isActive = Clients.isActiveUser(otherUser.id);
-      let totalScore: number = 0;
-      for (let i of otherUser.gamesAsFirstPlayer)
-        totalScore += i.firstPlayerScore;
-      for (let i of otherUser.gamesAsSecondPlayer)
-        totalScore += i.secondPlayerScore;
+      let totalScore: any = 0;
+      // for (let i of otherUser.gamesAsFirstPlayer)
+      //   totalScore += i.firstPlayerScore;
+      // for (let i of otherUser.gamesAsSecondPlayer)
+      //   totalScore += i.secondPlayerScore;
 
       stats = {
         games: otherUser.gamesAsFirstPlayer.length + otherUser.gamesAsSecondPlayer.length,
         wins: otherUser.wins.length,
-        totalScore,
-        rankPoints: this._usersService.getUserRank(totalScore),
+        totalScore: otherUser.score,
+        rankPoints: otherUser.rank,
       };
     }
     catch (e) {

@@ -25,9 +25,11 @@ export class GetMessageQueryDto {
 export class GetAllRoomsQueryDto {
     @IsString()
     @IsNotEmpty()
+    @IsOptional()
     like: string;
 
     @IsNumber()
     @IsPositive()
+    @IsOptional()
     page: number;
 }

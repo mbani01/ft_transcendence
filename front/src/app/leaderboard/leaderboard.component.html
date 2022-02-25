@@ -4,8 +4,8 @@
       <tr>
         <th>Ranking</th>
         <th>Player</th>
-        <th>Games</th>
         <th>Rank</th>
+        <th>Points</th>
       </tr>
     </thead>
     <tbody>
@@ -15,10 +15,10 @@
           <img [src]="user.img" class="rounded-circle mr-3" width="64" height="64" alt="">
           <span class="font-weight-bold">{{user.name}}</span>
         </td>
-        <td>{{user.wins}}/{{user.games}}</td>
         <td>
           {{user.rank}}
         </td>
+        <td>{{user.score}}</td>
       </tr>
     </tbody>
 <!--    <li class="list-group-item d-flex" *ngFor="let user of topPlayers | async">-->

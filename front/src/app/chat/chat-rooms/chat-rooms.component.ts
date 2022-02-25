@@ -61,8 +61,9 @@ export class ChatRoomsComponent {
   httpGetChannels() {
 
     let params = new HttpParams().append('page', this.pagination.page);
+    console.log(this.like);
     if (this.like !== '') {
-      params.append('like', this.like);
+      params = params.append('like', this.like);
     }
     this.http.get<{channels: Chat[], collectionSize: number}>(`${environment.apiBaseUrl}/chat/channels`, {
       params: params
@@ -70,7 +71,7 @@ export class ChatRoomsComponent {
       {
         next: value => {
           this.chats = value.channels;
-          this.pagination.collectionSize = value.channels.length;
+          this.pagination.collectionSize = value.collectionSize;
         }
       }
     );

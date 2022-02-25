@@ -105,12 +105,11 @@ export class ChatController {
             "collectionSize": number
             }
         */
-        const rooms = await this._chaTService.findAllRooms(like, page);
+        const {rooms, len} = await this._chaTService.findAllRooms(like ? like : '', page);
         let channels = [];
         for (let e of rooms) {
             const currMember = await this._chaTService.getMember({ userID: req.user.id, roomID: e.roomID });
-            console.log(currMember);
-            if (e.isChannel && e.channelType !== 'private' && (!currMember || !currMember.isBaned)) {
+            if ((!currMember || !currMember.isBaned)) {
                 const owner = await this._usersService.findById(e.ownerID);
                 channels.push(
                     {
@@ -125,7 +124,7 @@ export class ChatController {
                     })
             }
         }
-        return { channels, collectionSize: channels.length };
+        return { channels, collectionSize: len };
     }
 
     @UseGuards(JwtAuthGuard)
