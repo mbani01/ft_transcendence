@@ -4,5 +4,6 @@ export interface LeaderboardPlayer {
   img: string,
   wins: number,
   games: number,
+  score: string
   rank: string
 }

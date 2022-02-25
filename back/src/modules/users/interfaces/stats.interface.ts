@@ -4,6 +4,6 @@ export type Rank = 'Beginner' | 'Novice' | 'Graduate' | 'Expert' | 'Master' | 'G
 export interface IStats {
     games: number;
     wins: number;
-    totalScore: number;
-    rankPoints: Rank;
+    totalScore: any;
+    rankPoints: string;
 };

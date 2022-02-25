@@ -30,6 +30,7 @@ export class GameService {
     socket.on('gameStarted', this.joinGame.bind(this));
     socket.on('GameOver', this.gameOver.bind(this));
     socket.on('invitedToGame', this.gameInvite.bind(this))
+    socket.on('invitationRejected', this.inviteDeclined.bind(this))
 
     endGame.subscribe({next: this.endGame.bind(this)})
     setSocket(socket);
@@ -138,5 +139,9 @@ export class GameService {
     this.notifierService.hide(invitationID);
   }
 
+  inviteDeclined(err: any) {
+    this.notifierService.notify('error', err.error);
+
+  }
 
 }

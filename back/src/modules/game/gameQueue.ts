@@ -86,6 +86,6 @@ export class GameQueueService{
 
 	getSenderId()
 	{
-		return this.Players[0].sub;
+		return this.Players[0].user.sub;
 	}
 }
