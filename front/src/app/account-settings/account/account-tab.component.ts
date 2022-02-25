@@ -1,6 +1,6 @@
-import {Component, ViewChild} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
-import {HttpClient, HttpEventType, HttpHeaders, HttpParams, HttpRequest} from "@angular/common/http";
+import {HttpClient, HttpEventType, HttpHeaders, HttpParams, HttpRequest, HttpResponse} from "@angular/common/http";
 import {User} from "../../shared/user";
 import {environment} from "../../../environments/environment";
 import {NgForm} from "@angular/forms";
@@ -16,7 +16,7 @@ enum UploadStat{NO_UPLOAD, UPLOADING, DONE, ERROR}
   templateUrl: 'account-tab.component.html',
   styleUrls: ['account-tab.component.scss']
 })
-export class AccountTabComponent {
+export class AccountTabComponent implements OnInit{
   editNickname: boolean;
   UploadStat = UploadStat;
 
@@ -33,6 +33,9 @@ export class AccountTabComponent {
   constructor(private http: HttpClient, public oauthService: OAuthService, private notifierService: NotifierService) {
     this.user = oauthService.user$;
   }
+
+  ngOnInit(): void {
+    }
 
 
   updateNickname(nicknameForm: NgForm) {
@@ -114,14 +117,17 @@ export class AccountTabComponent {
       this.progress = 0;
       let file = files[0];
       let formData = new FormData();
-      formData.append('uploadFile', file, file.name);
+      formData.append('file', file, file.name);
       this.http.post(`${environment.apiBaseUrl}/users/upload_avatar`, formData, {reportProgress: true, observe: 'events'})
         .subscribe({
           next: (event: any) => {
             if (event.type == HttpEventType.UploadProgress) {
               this.progress = Math.round(100 * event.loaded / event.total);
-            } else if (event instanceof HttpRequest) {
-              console.log(event);
+            } else if (event instanceof HttpResponse) {
+              console.log('next2', event);
+              // this.user.value.img = event.body.avatar;
+              // this.user.next(this.user.value);
+              this.ngOnInit();
             }
           },
           error: err => {
@@ -132,6 +138,7 @@ export class AccountTabComponent {
             setTimeout(() => this.uploadStat = UploadStat.NO_UPLOAD, 6900);
           },
           complete: () => {
+
             this.uploadStat = UploadStat.DONE;
             setTimeout(() => this.uploadStat = UploadStat.NO_UPLOAD, 2000);
           }

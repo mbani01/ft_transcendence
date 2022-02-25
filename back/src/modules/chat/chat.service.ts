@@ -164,6 +164,7 @@ export class ChatService {
           }
         });
         otherUser = await this._userService.findById(otherMember[0].userID);
+        room[0].name = otherUser.username;
       }
       delete room[0].password;
       let ownerR = await this._userService.findById(room[0].ownerID);
@@ -341,6 +342,10 @@ export class ChatService {
     await this._membersRepo.update(member.id, {
       role: 'member'
     })
+  }
+
+  downloadUserImage(url, path) {
+
   }
 
 }

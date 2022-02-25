@@ -14,9 +14,9 @@ import { join } from 'path/posix';
 
 @Module({
   imports: [
-    // ServeStaticModule.forRoot({
-    //   rootPath: join("/goinfre/hmoumani/ft_transcendence/front/dist/ft_transcendence/"),
-    // }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname,'../src/')
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig]

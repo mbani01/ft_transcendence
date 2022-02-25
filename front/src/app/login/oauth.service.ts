@@ -23,11 +23,7 @@ export class OAuthService {
     this.http.get<UserInfo>(`${environment.apiBaseUrl}/auth/isAuthorized`).subscribe({
       next: value => {
         this._authorized = true;
-        this.user$.next({
-          uid: value.id,
-          name: value.username,
-          img: value.avatar!
-        });
+        this.user$.next(new User(value.id, value.username));
         if (value.is2FAEnabled) {
           this.enable2FA();
         }
