@@ -69,4 +69,7 @@ export class User {
 
   @OneToMany(() => MessageEntity, room => room.challangedUser)
   challanges: MessageEntity[];
+
+  @Column({type: 'real', default: '0'})
+  score: string;
 }

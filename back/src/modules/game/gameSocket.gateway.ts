@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/24 16:34:01 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/25 11:39:10 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,17 @@ import {GameQueueService} from "./gameQueue"
 import { Clients } from '../../adapters/socket.adapter';
 import { Game } from "./entities/game.entity";
 import {getRepository} from "typeorm";
+import { UsersService } from "../users/users.service";
+import { User } from "../users/entity/user.entity";
+import { Relation } from "../users/entity/relation.entity";
 
 @WebSocketGateway({ cors: true })
 export class gameSocketGateway
 {
+	constructor(
+		private readonly _usersService: UsersService,
+	  ) { }
+	
 	@WebSocketServer()
 	server;
 
@@ -186,6 +193,27 @@ export class gameSocketGateway
             socket.to(String(data.GameId)).emit('focusLose', data);
     }
 	
+
+	UpdateScore(gameInfos, WinnerId, LoserId)
+	{
+		let WinnerScore = 0;
+		let LoserScore = 0;
+		for(let i = 0 ;  i < 2; ++i)
+		{
+			if (gameInfos.Players[i].sub === WinnerId && i === 0)
+			{
+				WinnerScore = gameInfos.score.player1;
+				LoserScore = gameInfos.score.player2;
+			}
+			else if (gameInfos.Players[i].sub === WinnerId && i === 1)
+			{
+				WinnerScore = gameInfos.score.player2;
+				LoserScore = gameInfos.score.player1;
+			}
+		}
+		this._usersService.saveScore(WinnerId, WinnerScore, LoserScore, true);
+		this._usersService.saveScore(LoserId, LoserScore, WinnerScore, false);
+	}
 	
 	async GameOver(game :GamePlay, disconnectedPlayer? :any)
 	{
@@ -193,16 +221,19 @@ export class gameSocketGateway
 		{
 			const gameInfos = game.getInfos();
 			let winner ;
+			let loser ;
 			if (disconnectedPlayer !== undefined) // A Player disconnected
 			{
 				const tmpWinner = game.getPlayers().find(player => player.user.sub !== disconnectedPlayer.user.sub);
 				winner = tmpWinner.user;
+				loser  = disconnectedPlayer.user;
 				this.server.to(gameInfos.GameId).emit('GameOver', {GameId: gameInfos.GameId, Players: gameInfos.Players, 
 					disconnectedPlayer: disconnectedPlayer.user});
 			}
 			else
 			{
 				winner = game.getWinner();
+				loser  = gameInfos.Players.filter(player => player.user !== winner)
 				this.server.to(gameInfos.GameId).emit('GameOver', {GameId: gameInfos.GameId, Players: gameInfos.Players, 
 					Winner: winner});
 			}
@@ -216,6 +247,7 @@ export class gameSocketGateway
 			this.LiveGames();
 			Clients.updateState(gameInfos.Players[0].sub, "online");
 			Clients.updateState(gameInfos.Players[1].sub, "online");
+			this.UpdateScore(gameInfos, winner.sub, loser.sub)
 		}
 	}
 
