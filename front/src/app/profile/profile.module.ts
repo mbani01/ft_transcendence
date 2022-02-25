@@ -7,6 +7,7 @@ import {MatchHistoryComponent} from "./match-history/match-history.component";
 import {DateAgoPipe} from "./pipes/date-ago.pipe";
 import {RankPipe} from "./pipes/rank.pipe";
 import {GameLengthPipe} from "./pipes/game-length.pipe";
+import {UserAvatarComponent} from "./user-avatar/user-avatar.component";
 
 
 
@@ -15,6 +16,7 @@ import {GameLengthPipe} from "./pipes/game-length.pipe";
     ProfileComponent,
     UserInfoComponent,
     MatchHistoryComponent,
+    UserAvatarComponent,
     DateAgoPipe,
     RankPipe,
     GameLengthPipe
@@ -22,7 +24,8 @@ import {GameLengthPipe} from "./pipes/game-length.pipe";
   imports: [
     CommonModule,
     RoutingModule
-  ]
+  ],
+  exports: [UserAvatarComponent]
 })
 export class ProfileModule {
   constructor() {
