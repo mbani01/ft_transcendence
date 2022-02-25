@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/25 20:29:29 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/25 20:35:25 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ export class gameSocketGateway
 		const sockets = await this.server.fetchSockets()
 		sockets.forEach(element=> {
 		if (element.user.sub === parseInt(data.receiverId))
-			this.server.to(element.id).emit('invitedToGame', {InvitationId: QueueId, SenderId: socket.user.sub}); // Invitation sent
+			this.server.to(element.id).emit('invitedToGame', {InvitationId: QueueId, SenderName: socket.user.username}); // Invitation sent
 		});
 	}
 	
