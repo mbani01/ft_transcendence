@@ -33,7 +33,8 @@ export class LeaderboardComponent {
         name: player.username,
         img: player.avatar,
         wins: player.gamesWon,
-        losses: player.gamesCount - player.gamesWon
+        games: player.gamesCount,
+        rank: player.rank
       } as LeaderboardPlayer))));
   }
 }
