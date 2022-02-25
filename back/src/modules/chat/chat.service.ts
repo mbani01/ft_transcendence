@@ -69,8 +69,10 @@ export class ChatService {
   }
 
   async findAllRooms(like: string, page: number) {
+    const limit = 10;
+    page = (page * limit) - limit + 1;
     return await this._roomsRepo.createQueryBuilder("room")
-    .where("room.name like :name", { name: `%${like}%` }).limit(page).getMany();;
+    .where("room.name like :name", { name: `%${like}%` }).skip(page).limit(10).getMany();;
   }
 
   async getRoomById(roomID: number) {
