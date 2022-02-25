@@ -51,15 +51,17 @@ export class GameService {
     this.stat = GameStat.MAIN;
   }
 
+  navigateToPlay() {
+
+  }
   joinGame(gameInfo: any) {
     this.router.navigate(['/play']).then(value => {
-      if (value) {
-        this.stat = GameStat.GAME;
+      console.log('joinGame');
+      this.stat = GameStat.GAME;
 
-        setTimeout(() => {
-          startGame(gameInfo);
-        });
-      }
+      setTimeout(() => {
+        startGame(gameInfo);
+      });
     })
   }
 
