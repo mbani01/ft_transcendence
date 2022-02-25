@@ -40,20 +40,24 @@ export class UsersController {
     }
   }
 
+
   @Post('/upload_avatar')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
-  async updateAvatar(@UploadedFile() file: Express.Multer.File, @Req() req, @Res() res) {
+  async updateAvatar(@UploadedFile() file: any, @Req() req, @Res() res) {
     // console.log(__dirname)
     // const f = fs.writeFile(`/Users/mosan/Documents/last/back/src/assets/avatars/${req.user.id}`, file.buffer, { flag: 'w+' });
-    const avatarPath = `/Users/mosan/Documents/last/back/src/assets/avatars/${req.user.id}.png`;
+    const fullPath = `${__dirname}/../../../src/`;
+    const avatarPath = `assets/avatars/${req.user.id}`;
+    const path = fullPath + avatarPath;
+
     try {
-      fs.writeFileSync(avatarPath, file.buffer, { flag: 'w+' });
+      fs.writeFileSync(path, file.buffer, { flag: 'w+' });
     } catch (e) {
       console.log(e);
     }
     const user = await this._usersService.updateAvatar(req.user.id, avatarPath);
-    res.send(user.avatar);
+    res.send({avatar: user.avatar});
   }
 
   /*
