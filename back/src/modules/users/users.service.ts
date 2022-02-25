@@ -22,9 +22,10 @@ export class UsersService {
     return await this._usersRepo.save(user);
   }
 
-  findAll(paginationQuery: PaginationQueryDto) {
-    const { limit, like } = paginationQuery;
-    return this._usersRepo.find();
+  async findAll(paginationQuery: any) {
+    const { username } = paginationQuery;
+    return await this._usersRepo.createQueryBuilder("user")
+      .where("user.username like :name", { name: `%${username}%` }).limit(10).getMany();
   }
 
   async findById(userId: number): Promise<User> {
