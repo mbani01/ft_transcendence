@@ -18,9 +18,6 @@ let gameEnd : boolean = false;
 export const endGame = new Subject<void>();
 
 
-
-// const socket = io("https://server-domain.com");
-
 function disconnectedPlayer(obj: any, isHostDisconnected: boolean)
 {
 	if (isHostDisconnected) {
@@ -51,6 +48,14 @@ export function gameOver(obj: any) {
 	clearInterval(hostInterval);
 	clearInterval(clientInterval);
 	gameEnd = true;
+	let button = scene.add.text(50, 50, "Go back")
+		.setPadding(10)
+		.setFontSize(40)
+		.setStyle({ backgroundColor: '#8b3cd5' })
+		.setInteractive({ useHandCursor: true })
+		.on('pointerdown', () => endGame.next())
+		.on('pointerover', () => button.setStyle({ fill: '#f39c12' }))
+            .on('pointerout', () => button.setStyle({ fill: '#FFF' }));
 	if (obj.hasOwnProperty('disconnectedPlayer')) {
 		ball.setVisible(false);
 		game.scene.pause(scene);
@@ -298,31 +303,34 @@ function start_game(this: Phaser.Scene) : void
 
 function onHidden() : void
 {
-	if (isPlayer){
-		socket.emit('focusLose', { GameId: GameId, isHost: isHost, focus: false });
-		if (isHost == true) {
-			hostInterval = setInterval(() => {
-				hostText.setText('' + hostCounter);
-				hostText.setFontSize(50);
-				if (hostCounter <= 0) {
-					// socket.emit("", );
-					clientCounter = 30;
-					clearInterval(hostInterval);
+	if (gameEnd == false){
+		if (isPlayer){
+			socket.emit('focusLose', { GameId: GameId, isHost: isHost, focus: false });
+			if (isHost == true) {
+				hostInterval = setInterval(() => {
+					hostText.setText('' + hostCounter);
+					hostText.setFontSize(50);
+					if (hostCounter <= 0) {
+						// socket.emit("", );
+						clientCounter = 30;
+						clearInterval(hostInterval);
 
-				}
-				hostCounter--;
-			}, 1000)
-		} else {
-			clientInterval = setInterval(() => {
-				clientText.setText('' + clientCounter);
-				clientText.setFontSize(50);
-				if (clientCounter <= 0) {
-					// socket.emit("", );
-					clientCounter = 30;
-					clearInterval(clientInterval);
-				}
-				clientCounter--;
-			}, 1000)
+					}
+					hostCounter--;
+				}, 1000)
+			} else {
+				clientInterval = setInterval(() => {
+					clientText.setText('' + clientCounter);
+					clientText.setFontSize(50);
+					if (clientCounter <= 0) {
+						// socket.emit("", );
+						clientCounter = 30;
+						clearInterval(clientInterval);
+					}
+					clientCounter--;
+				}, 1000)
+			}
+			game.scene.pause(scene);
 		}
 	}
   console.log("hidden");
@@ -350,11 +358,13 @@ function onFocus() : void
 				clearInterval(clientInterval);
 			// }, 1000);
 		}
+		game.scene.resume(scene);
 	}
 }
 
 function create (this: Phaser.Scene) : void
 {
+	
 	this.sound.pauseOnBlur = false;
 	game.events.addListener('blur', onHidden);
 	game.events.addListener('focus', onFocus);
@@ -455,15 +465,15 @@ function create (this: Phaser.Scene) : void
 
 function HandleHit(this: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody)
 {
-  if (this.y < ball.y)
-  {
+	if (this.y < ball.y)
+	{
 	ball.setVelocityY(-10 * (this.y - ball.y));
-  }
-  else if (this.y > ball.y)
-  {
+	}
+	else if (this.y > ball.y)
+	{
 	ball.setVelocityY(10 * (ball.y - this.y));
 	console.log("right");
-  }
+	}
 }
 
 function enablePowerUps() : void
