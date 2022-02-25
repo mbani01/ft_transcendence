@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/25 16:14:04 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/25 20:29:29 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,12 +149,12 @@ export class gameSocketGateway
 	InvitationReceived(@ConnectedSocket() socket: any, @MessageBody() data :any)
 	{
 		if (!data || !data.hasOwnProperty('InvitationId') || 
-		!data.hasOwnProperty('isAccepted') ||  !data.hasOwnProperty('SenderId'))
+		!data.hasOwnProperty('isAccepted'))
 			return ;
 		const queue = this.PrivateQueues.find(element => element.getId() === String(data.InvitationId));
 		if (queue === undefined)
 			return {'Error': "Invalid or expired invitation"};
-		if (Clients.getUserStatus(data.senderId) !== 'online')
+		if (Clients.getUserStatus(queue.getSenderId()) !== 'online')
 			return {'Error': 'player is not available'};
 		if (data.isAccepted === true) // Invitation Accepted
 		{
@@ -261,6 +261,7 @@ export class gameSocketGateway
 		const game = this.Games.find(element=> element.isPlayer(socket));
 		this.GameOver(game, socket);
 		this.Games = this.Games.filter(element => element != game);
+		Clients.remove(socket.user.sub);
 	}
 
 	@SubscribeMessage('syncPowerUp')
