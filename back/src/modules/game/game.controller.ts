@@ -1,8 +1,10 @@
-import { Controller, Get, HttpCode, Param, Req, Res} from '@nestjs/common';
+import { Controller, Get, HttpCode, Param, Req, Res, UseGuards} from '@nestjs/common';
 import { Request, Response } from 'express';
 import {getConnection, getRepository} from "typeorm";
 import { User } from '../users/entity/user.entity';
 import { UsersService } from "../users/users.service";
+import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+
 
 
 @Controller('game')
@@ -21,10 +23,12 @@ export class GameController {
 		console.log("users " + user[0].username);
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@Get('leaderBoard')
 	async getLeaderBoard(@Req() request: Request, @Res() res: Response)
 	{
-		return await this._usersService.getLeaderBoard();
+		const result =  await this._usersService.getLeaderBoard();
+		res.send(result);
 	}
 
 }
