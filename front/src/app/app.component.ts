@@ -14,12 +14,12 @@ export class AppComponent {
 
   @ViewChild('gameInvite', { static: true }) gameInviteTmpl: any;
 
-  constructor(public router: Router, public oauthService: OAuthService, public gameService: GameService) {
+  constructor(public router: Router, public oauthService: OAuthService, public gameService: GameService, private notifierService: NotifierService) {
     // setTimeout(() => {
     //   this.notifierService.show({
     //     message: 'yo',
-    //     type: 'info',
-    //     template: this.customNotificationTmpl,
+    //     type: 'warning',
+    //     template: this.gameInviteTmpl,
     //   });
     // }, 1000);
   }
