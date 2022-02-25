@@ -23,9 +23,9 @@ export class UsersService {
   }
 
   async findAll(paginationQuery: any) {
-    const { username } = paginationQuery;
+    const { username, limit } = paginationQuery;
     return await this._usersRepo.createQueryBuilder("user")
-      .where("user.username like :name", { name: `%${username}%` }).limit(10).getMany();
+      .where("user.username like :name", { name: `%${username}%` }).limit(limit).getMany();
   }
 
   async findById(userId: number): Promise<User> {
