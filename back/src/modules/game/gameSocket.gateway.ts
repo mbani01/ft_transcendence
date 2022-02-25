@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/25 20:35:25 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/25 21:46:30 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -260,7 +260,6 @@ export class gameSocketGateway
 			return ; // if user is waiting in queue
 		const game = this.Games.find(element=> element.isPlayer(socket));
 		this.GameOver(game, socket);
-		this.Games = this.Games.filter(element => element != game);
 		Clients.remove(socket.user.sub);
 	}
 
@@ -292,6 +291,13 @@ export class gameSocketGateway
 		for(let i in this.Games)
 			res.push(this.Games[i].getInfos(true));
 		this.server.emit('LiveGames', res);
+	}
+
+	@SubscribeMessage('PlayerTimeout')
+	timeout(@ConnectedSocket() socket: any, @MessageBody() data :any)
+	{
+		const game = this.Games.find(element=> element.isPlayer(socket));
+		this.GameOver(game, socket);
 	}
 
 }
