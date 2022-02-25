@@ -13,7 +13,7 @@ export class GameGuard implements CanDeactivate<any> {
 
   canDeactivate(component: any, currentRoute: ActivatedRouteSnapshot, currentState: RouterStateSnapshot, nextState?: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     if (this.gameService.isQueue() || this.gameService.isGame()) {
-      if (confirm('Are you sure you wana leave the ' + (this.gameService.isGame() ? 'game' : 'queue'))) {
+      if (confirm('Are you sure you want to leave the ' + (this.gameService.isGame() ? 'game' : 'queue'))) {
         if (this.gameService.isQueue())
           this.gameService.leaveQueue();
         else

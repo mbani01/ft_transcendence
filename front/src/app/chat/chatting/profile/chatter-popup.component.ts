@@ -80,7 +80,14 @@ export class ChatterPopupComponent {
   }
 
   invitePlay() {
-
+    this.socket.emit('SendGameInvitation', {
+      receiverId: this.user.uid,
+      isDefaultGame: true
+    }, (err: any) => {
+      if (err.error) {
+        this.notifierService.notify('error', err.error);
+      }
+    })
     this.popover.close();
 
   }
