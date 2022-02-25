@@ -16,7 +16,7 @@
       <button class="btn btn-info col mr-1" (click)="viewProfile()">View Profile</button>
       <button class="btn btn-primary col" (click)="invitePlay()">Invite Play</button>
   </div>
-  <div *ngIf="chatRoom?.isChannel && myRole && myRole !== 'member'" class="row justify-content-around m-0">
+  <div *ngIf="chatRoom?.isChannel && chatService.role !== 'member'" class="row justify-content-around m-0">
     <hr class="bg-light mb-0">
     <div class="row my-2 w-100 d-flex">
       <button class="btn btn-warning m-auto" (click)="mute(hourInput.value, minuteInput.value)">Mute</button>

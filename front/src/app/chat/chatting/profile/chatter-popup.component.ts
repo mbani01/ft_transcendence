@@ -9,6 +9,7 @@ import {environment} from "../../../../environments/environment";
 import {MainSocket} from "../../../socket/MainSocket";
 import {Observable} from "rxjs";
 import {ChatService} from "../../chat.service";
+import {NotifierService} from "angular-notifier";
 
 @Component({
   selector: 'chatter-popup',
@@ -19,33 +20,20 @@ export class ChatterPopupComponent {
   @Input() user: User;
   @Input() chatRoom?: Chat;
   @Input() popover: NgbPopover;
-  myRole: string
   userRole: string;
   constructor(private router: Router, public oauthService: OAuthService, private http: HttpClient,
-              private socket: MainSocket, private chatService: ChatService) {
+              private socket: MainSocket, public chatService: ChatService, private notifierService: NotifierService) {
+    console.log(chatService.role);
     setTimeout(() => {
       if (this.chatRoom) {
-        this.chatService.getRole(this.chatRoom!.roomID, this.oauthService.user.uid).then(value => this.myRole = value);
         this.chatService.getRole(this.chatRoom!.roomID, this.user!.uid).then(value => this.userRole = value);
-
-        // this.http.get<{ role: string }>(`${environment.apiBaseUrl}/chat/${this.chatRoom!.roomID}/role/${this.oauthService.user.uid}`).subscribe({
-        //   next: value => {
-        //     this.myRole = value.role;
-        //     console.log('this.userRole', this.myRole);
-        //   }
-        // });
-        // this.http.get<{ role: string }>(`${environment.apiBaseUrl}/chat/${this.chatRoom!.roomID}/role/${this.user!.uid}`).subscribe({
-        //   next: value => {
-        //     this.userRole = value.role;
-        //     console.log('this.userRole', this.userRole);
-        //   }
-        // });
-
       }
     });
   }
 
   ngAfterContentInit() {
+    console.log(this.chatRoom?.isChannel);
+
     // if (this.chatRoom) {
     //   this.http.get<{ role: string }>(`${environment.apiBaseUrl}/chat/${this.chatRoom!.roomID}/role/${this.user!.uid}`).subscribe({
     //     next: value => {
@@ -62,6 +50,10 @@ export class ChatterPopupComponent {
         roomID: this.chatRoom?.roomID,
         userID: this.user.uid,
         timeout: (+hours * 60 + +minutes) * 60 * 1000
+      }, (err: any) => {
+        if (err.error) {
+          this.notifierService.notify('error', err.error);
+        }
       })
       this.popover.close();
     }
@@ -72,6 +64,10 @@ export class ChatterPopupComponent {
       this.socket.emit('ban', {
         roomID: this.chatRoom?.roomID,
         userID: this.user.uid,
+      }, (err: any) => {
+        if (err.error) {
+          this.notifierService.notify('error', err.error);
+        }
       });
       this.popover.close();
     }

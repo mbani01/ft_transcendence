@@ -17,7 +17,8 @@ type ChannelType = 'public' | 'protected' | 'private';
   providedIn: 'root'
 })
 export class ChatService {
-  public _currChat?: Chat;
+  private _currChat?: Chat;
+  public role?: string;
   public chats: Map<string, Chat>;
   public dropdown: NgbDropdown;
   private _settings = false;
@@ -62,7 +63,10 @@ export class ChatService {
         otherUser: user.uid
       }, (chat: Chat) => {
         if (chat) {
+          chat.messages = [];
           this.currChat = chat;
+
+          console.log(this.currChat);
           this.chats.set(chat.roomID, chat);
         }
       })
@@ -95,6 +99,14 @@ export class ChatService {
   set currChat(value) {
     this._currChat = value;
     this.settings = false;
+    if (this._currChat) {
+      this.getRole(this._currChat.roomID, this.oauthService.user.uid).then(value => {
+        this.role = value;
+        console.log(this.role);
+      });
+    } else {
+      this.role = undefined;
+    }
     // this.showChat();
     // if (value?.messages.length === 0) {
       // this.loadMessages(value);

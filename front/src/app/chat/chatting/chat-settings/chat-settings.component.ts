@@ -28,7 +28,6 @@ export class ChatSettingsComponent {
 
   activeTab = 'members';
 
-  role: string;
   // roomName = this.chatService.currChat!.name;
   // nickname: any;
   @ViewChild('t') tooltip: NgbTooltip;
@@ -46,8 +45,6 @@ export class ChatSettingsComponent {
     this.fetchMembers();
     this.fetchMutes();
     this.fetchBans();
-
-    this.chatService.getRole(chatService.currChat!.roomID, oauthService.user.uid).then(value => this.role = value);
   }
 
   get name() {
