@@ -13,9 +13,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 })
 export class ProfileComponent implements OnInit {
 
-  user: User;
-  matchHistory: MatchHistory[];
-  userInfo: UserInfo;
+  user?: User;
+  userInfo?: UserInfo;
   constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) {
     route.params.subscribe( {
       next: (value) => {
@@ -23,7 +22,7 @@ export class ProfileComponent implements OnInit {
           next: () => {
             this.loadUser(value['id']);
             this.loadUserInfo(value['id']);
-            this.loadMatchHistory(value['id']);
+            // this.loadMatchHistory(value['id']);
           },
           error: (err) => {
             this.router.navigateByUrl('/not-found', {skipLocationChange: true})
@@ -37,7 +36,7 @@ export class ProfileComponent implements OnInit {
   }
 
   loadUserInfo(user: string) {
-    this.http.get<UserInfo>(`${environment.apiBaseUrl}/users/user-info/${user}`).subscribe({
+    this.http.get<any>(`${environment.apiBaseUrl}/users/user-info/${user}`).subscribe({
       next: userInfo => {
         this.userInfo = userInfo;
       },
@@ -56,14 +55,14 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  loadMatchHistory(user: string) {
-    this.http.get<MatchHistory[]>(`${environment.apiBaseUrl}/users/match-history/${user}`).subscribe({
-      next: matchHistory => {
-        this.matchHistory = matchHistory;
-      },
-      error: err => {
-      }
-    });
-  }
+  // loadMatchHistory(user: string) {
+  //   this.http.get<MatchHistory[]>(`${environment.apiBaseUrl}/users/match-history/${user}`).subscribe({
+  //     next: matchHistory => {
+  //       this.matchHistory = matchHistory;
+  //     },
+  //     error: err => {
+  //     }
+  //   });
+  // }
 
 }
