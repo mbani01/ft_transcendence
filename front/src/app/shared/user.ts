@@ -5,7 +5,7 @@ export class User {
   }
 
   get img() {
-    console.log('hello ?');
+    // console.log('hello ?');
     return `/assets/avatars/${this.uid}`;
   }
 
