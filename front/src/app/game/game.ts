@@ -550,7 +550,6 @@ function update(this: Phaser.Scene) : void
 			emitIfGameActive('syncPowerUp', {"GameId":GameId, isHost: isHost, isVisible : powerUpBall.visible, powerUpBall: { x: game.canvas.width / 2, y: game.canvas.height / 2 }});
 		}
 	}
-	console.log("hello world! isWatcher: " + isWatcher);
 	if (cursors.down.isDown && !cursors.up.isDown && !isWatcher) {
 		console.log("hello world! down")
 		local_player.setPosition(local_player.x, local_player.y + PLAYER_SPEED);
@@ -561,4 +560,5 @@ function update(this: Phaser.Scene) : void
 		local_player.setPosition(local_player.x, local_player.y - PLAYER_SPEED)
 		emitIfGameActive('sync', {"GameId":GameId, player: {x: local_player.x, y: local_player.y}, isHost: isHost});
 	}
+	scene.input.keyboard.clearCaptures();
 }
