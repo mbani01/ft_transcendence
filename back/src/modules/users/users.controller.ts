@@ -96,11 +96,6 @@ export class UsersController {
       console.log('Stats: \n', otherUser);
       relation = await this._usersService.getRelation(user, otherUser);
       isActive = Clients.isActiveUser(otherUser.id);
-      let totalScore: any = 0;
-      // for (let i of otherUser.gamesAsFirstPlayer)
-      //   totalScore += i.firstPlayerScore;
-      // for (let i of otherUser.gamesAsSecondPlayer)
-      //   totalScore += i.secondPlayerScore;
 
       stats = {
         games: otherUser.gamesAsFirstPlayer.length + otherUser.gamesAsSecondPlayer.length,
@@ -112,10 +107,9 @@ export class UsersController {
     catch (e) {
       return { error: e.message };
     }
-
-    if (relation.length === 0)
-      return { ...stats, status: (isActive) ? 'on-line' : 'off-line', img: user.img, name: user.username, isFriend: false, isBlocked: false };
-    return { ...stats, status: (isActive) ? 'on-line' : 'off-line', img: user.img, name: user.username, isFriend: relation[0].isFriends, isBlocked: (relation[0].blocker !== null) };
+    if (relation && relation.length === 0)
+      return { ...stats, status: (isActive) ? 'on-line' : 'off-line', img: user.img, name: user.username, isFriend: false, isBlocked: false, Games : {...user.gamesAsFirstPlayer, ...user.gamesAsSecondPlayer} };
+    return { ...stats, status: (isActive) ? 'on-line' : 'off-line', img: user.img, name: user.username, isFriend: relation[0].isFriends, isBlocked: (relation[0].blocker !== null), Games : {...user.gamesAsFirstPlayer, ...user.gamesAsSecondPlayer} };
   }
 
   @UseGuards(JwtAuthGuard)
@@ -189,7 +183,7 @@ export class UsersController {
   async getOne(@Param("id") userId: number, @Req() req): Promise<OutUserDto> {
     if (typeof userId == "number") {
       const user = await this._usersService.findById(userId);
-      return { uid: user.id, name: user.username, img: user.avatar };
+      return { uid: user.id, name: user.username, img: user.avatar};
     }
     const user = await this._usersService.findByUserName(req.user.username);
     return { uid: user.id, name: user.username, img: user.avatar };
