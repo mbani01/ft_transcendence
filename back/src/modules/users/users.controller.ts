@@ -11,6 +11,7 @@ import * as fs from 'fs';
 import { Clients } from "../../adapters/socket.adapter";
 import { User } from "./entity/user.entity";
 import { IStats } from "./interfaces/stats.interface";
+import { array } from "@hapi/joi";
 
 @Controller("users")
 export class UsersController {
@@ -107,9 +108,11 @@ export class UsersController {
     catch (e) {
       return { error: e.message };
     }
+    let Games = []
+    Games = Games.concat(otherUser.gamesAsFirstPlayer, otherUser.gamesAsSecondPlayer);
     if (relation && relation.length === 0)
-      return { ...stats, status: (isActive) ? 'on-line' : 'off-line', img: user.img, name: user.username, isFriend: false, isBlocked: false, Games : {...user.gamesAsFirstPlayer, ...user.gamesAsSecondPlayer} };
-    return { ...stats, status: (isActive) ? 'on-line' : 'off-line', img: user.img, name: user.username, isFriend: relation[0].isFriends, isBlocked: (relation[0].blocker !== null), Games : {...user.gamesAsFirstPlayer, ...user.gamesAsSecondPlayer} };
+      return { ...stats, status: (isActive) ? 'on-line' : 'off-line', img: user.img, name: user.username, isFriend: false, isBlocked: false, Games };
+    return { ...stats, status: (isActive) ? 'on-line' : 'off-line', img: user.img, name: user.username, isFriend: relation[0].isFriends, isBlocked: (relation[0].blocker !== null), Games };
   }
 
   @UseGuards(JwtAuthGuard)
