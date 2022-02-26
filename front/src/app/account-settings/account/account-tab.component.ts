@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
+import {ApplicationRef, ChangeDetectorRef, Component, OnInit, ViewChild} from "@angular/core";
 import {NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
 import {HttpClient, HttpEventType, HttpHeaders, HttpParams, HttpRequest, HttpResponse} from "@angular/common/http";
 import {User} from "../../shared/user";
@@ -8,6 +8,7 @@ import {OAuthService} from "../../login/oauth.service";
 import {BehaviorSubject} from "rxjs";
 import {ERROR} from "@angular/compiler-cli/src/ngtsc/logging/src/console_logger";
 import {NotifierService} from "angular-notifier";
+import {ActivatedRoute, Router} from "@angular/router";
 
 enum UploadStat{NO_UPLOAD, UPLOADING, DONE, ERROR}
 
@@ -30,7 +31,8 @@ export class AccountTabComponent implements OnInit{
   @ViewChild('t') tooltip: NgbTooltip;
   @ViewChild('codeToolTip') codeToolTip: NgbTooltip;
 
-  constructor(private http: HttpClient, public oauthService: OAuthService, private notifierService: NotifierService) {
+  constructor(private http: HttpClient, public oauthService: OAuthService, private notifierService: NotifierService,
+              private router: Router, private route: ActivatedRoute) {
     this.user = oauthService.user$;
   }
 
@@ -127,7 +129,14 @@ export class AccountTabComponent implements OnInit{
               console.log('next2', event);
               // this.user.value.img = event.body.avatar;
               // this.user.next(this.user.value);
-              this.ngOnInit();
+              // this.cdRef.detectChanges();
+              // this.ngOnInit();
+              setTimeout(() => {
+                this.oauthService.reload = true;
+                setTimeout(() => {
+                  this.oauthService.reload = false;
+                })
+              }, 1000);
             }
           },
           error: err => {
