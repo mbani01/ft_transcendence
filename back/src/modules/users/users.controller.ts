@@ -46,6 +46,9 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   async updateAvatar(@UploadedFile() file: any, @Req() req, @Res() res) {
+
+    const upload = await this._usersService.uploadAvatar(file);
+    /*
     // console.log(__dirname)
     // const f = fs.writeFile(`/Users/mosan/Documents/last/back/src/assets/avatars/${req.user.id}`, file.buffer, { flag: 'w+' });
     const fullPath = `${__dirname}/../../../src/`;
@@ -57,8 +60,9 @@ export class UsersController {
     } catch (e) {
       console.log(e);
     }
-    const user = await this._usersService.updateAvatar(req.user.id, avatarPath);
-    res.send({avatar: user.avatar});
+    */
+   const user = await this._usersService.updateAvatar(req.user.id, upload);
+   res.send({avatar: user.avatar});
   }
 
   /*
@@ -199,15 +203,17 @@ export class UsersController {
   }
 
 
-  @UseGuards(JwtAuthGuard)
-  @Post("avatar")
-  async uploadAvatar(@Req() req, @Body() body)
-  {
-    if (!body.hasOwnProperty('avatar'))
-        return {"error": "avatar isn't provided"};
-    const image = await this._usersService.uploadAvatar(body.avatar);
-    const user = this._usersService.updateAvatar(req.user.id, image);
-    return image;
+  // @UseGuards(JwtAuthGuard)
+  // @Post("avatar")
+  // @UseInterceptors(FileInterceptor('file'))
+  // async upload(@UploadedFile() file: any, @Req() req, @Res() res)
+  // {
+  //   const upload = this._usersService.uploadAvatar(file);
+  //   /*
+  //   if (!body.hasOwnProperty('avatar'))
+  //       return {"error": "avatar isn't provided"};
+  //   const image = await this._usersService.uploadAvatar(body.avatar);
+  //   const user = this._usersService.updateAvatar(req.user.id, image);
+  //   return image;*/
+  // // }
   }
-
-}

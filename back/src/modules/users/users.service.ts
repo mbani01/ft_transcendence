@@ -249,7 +249,7 @@ export class UsersService {
   async uploadAvatar(imgBase64)
   {
     try {
-      const image = await this.cloudinary.uploadImage(imgBase64); 
+      const image = await this.cloudinary.uploadFile(imgBase64);
       return image.secure_url || image;
     } catch (error) {
       return error
