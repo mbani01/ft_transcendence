@@ -1,7 +1,7 @@
 
 // import { * } from "node_modules/socket.io-client/dist/socket.io.js";
 // import {io} from "socket.io-client";
-import Phaser from 'phaser';
+import Phaser, { Game } from 'phaser';
 
 import {MainSocket} from "../socket/MainSocket";
 import {Subject} from "rxjs";
@@ -56,14 +56,6 @@ export function gameOver(obj: any) {
 	clearInterval(hostInterval);
 	clearInterval(clientInterval);
 	gameEnd = true;
-	let button = scene.add.text(50, 50, "Go back")
-	.setPadding(10)
-	.setFontSize(40)
-	.setStyle({ backgroundColor: '#8b3cd5' })
-	.setInteractive({ useHandCursor: true })
-	.on('pointerdown', () => endGame.next())
-	.on('pointerover', () => button.setStyle({ fill: '#f39c12' }))
-	.on('pointerout', () => button.setStyle({ fill: '#FFF' }));
 	if (obj.hasOwnProperty('disconnectedPlayer')) {
 		ball.setVisible(false);
 		game.scene.pause(scene);
@@ -196,8 +188,11 @@ export function socketListening () {
 					game.scene.pause(scene);
 					hostText.setText('' + hostCounter);
 					hostText.setFontSize(50);
-					if (hostCounter <= 0)
-					clearInterval(hostInterval);
+					if (hostCounter <= 0){
+						hostText.setText('' + 0);
+						clearInterval(hostInterval);
+						clearInterval(clientInterval);
+					}
 					hostCounter--;
 				}, 1000);
 			} else if (gameEnd == false) {
@@ -207,8 +202,11 @@ export function socketListening () {
 					game.scene.pause(scene);
 					clientText.setText('' + clientCounter);
 					clientText.setFontSize(50);
-					if (clientCounter <= 0)
+					if (clientCounter <= 0) {
+						clientText.setText('' + 0);
+						clearInterval(hostInterval);
 						clearInterval(clientInterval);
+					}
 					clientCounter--;
 				}, 1000);
 			}
@@ -335,10 +333,11 @@ function onHidden() : void
 					hostText.setText('' + hostCounter);
 					hostText.setFontSize(50);
 					if (hostCounter <= 0) {
-						// emitIfGameActive("", );
+						hostText.setText('' + 0);
+						emitIfGameActive("PlayerTimeout", { GameId: GameId });
 						hostCounter = 30;
 						clearInterval(hostInterval);
-
+						clearInterval(clientInterval);
 					}
 					hostCounter--;
 				}, 1000)
@@ -350,8 +349,10 @@ function onHidden() : void
 					clientText.setText('' + clientCounter);
 					clientText.setFontSize(50);
 					if (clientCounter <= 0) {
-						// emitIfGameActive("", );
+						clientText.setText('' + 0);
+						emitIfGameActive("PlayerTimeout", { GameId: GameId });
 						clientCounter = 30;
+						clearInterval(hostInterval);
 						clearInterval(clientInterval);
 					}
 					clientCounter--;
@@ -374,58 +375,57 @@ function onFocus() : void
 				// 	if (hostCounter == 0)
 				clearInterval(hostInterval);
 				// }, 1000);
-
-			} else {
-				// clientInterval = setInterval(() => {
-					// 	clientText.setText('' + clientCounter--);
-					clientCounter = 30;
-					clientText.setFontSize(0);
-					// 	if (clientCounter == 0)
-					clearInterval(clientInterval);
-					// }, 1000);
-				}
-				game.scene.resume(scene);
-			}
+	} else {
+		// clientInterval = setInterval(() => {
+			// 	clientText.setText('' + clientCounter--);
+			clientCounter = 30;
+			clientText.setFontSize(0);
+			// 	if (clientCounter == 0)
+			clearInterval(clientInterval);
+			// }, 1000);
 		}
+		game.scene.resume(scene);
+	}
+}
 
-		function create (this: Phaser.Scene) : void
-		{
+function create (this: Phaser.Scene) : void
+{
 
-			scene = this;
-			cursors = this.input.keyboard.createCursorKeys();
-			this.sound.pauseOnBlur = false;
-			game.events.addListener('blur', onHidden);
-			game.events.addListener('focus', onFocus);
-			clock = this.time;
-			hostText = scene.add.text(scene.sys.canvas.width / 4, 200, '' + hostCounter, {fontSize: '0px', fontFamily: "'Press Start 2P', cursive" });
-			clientText = this.add.text(this.sys.canvas.width / 4 * 3, 200, '' + player2_score, {fontSize: '0px', fontFamily: "'Press Start 2P', cursive" });
-			let line : Phaser.GameObjects.Line = this.add.line(this.sys.canvas.width / 2, this.sys.canvas.height / 2, 0, 0, 0, this.sys.canvas.height, 0xffffff).setLineWidth(5);
-			let mid_circle : Phaser.GameObjects.Arc = this.add.circle(this.sys.canvas.width / 2, this.sys.canvas.height / 2, 100, 0).setStrokeStyle(10, 0xffffff);
-			let left_circle : Phaser.GameObjects.Arc = this.add.circle(-700 / 2, this.sys.canvas.height / 2, 700, 0).setStrokeStyle(10, 0xffffff);
-			let right_circle : Phaser.GameObjects.Arc = this.add.circle(this.sys.canvas.width + 700 / 2, this.sys.canvas.height / 2, 700, 0).setStrokeStyle(10, 0xffffff);
-			player1 = this.physics.add.sprite(this.sys.canvas.width * 3 / 100, this.sys.canvas.height / 2, "bar");
-			player1.setDisplaySize(PLAYER_WIDTH, PLAYER_HEIGHT);
-			player2 = this.physics.add.sprite(this.sys.canvas.width * 97 / 100, this.sys.canvas.height / 2, "bar");
-			player2.setDisplaySize(PLAYER_WIDTH, PLAYER_HEIGHT);
-			if (!isDefaultGame) {
-				powerUpBall = this.physics.add.sprite(this.sys.canvas.width / 2, this.sys.canvas.height / 2, "powerUp");
-				powerUpBall.setDisplaySize(50, 50);
-				powerUpBall.setVisible(false);
-				powerUpBall.setOrigin(0.5, 0.5);
-			}
-			ball = this.physics.add.sprite(this.sys.canvas.width / 2, this.sys.canvas.height / 2, "ball");
-			ball.setDisplaySize(BALL_DIAMETER, BALL_DIAMETER);
-			player1.setCollideWorldBounds(true);
-			player2.setCollideWorldBounds(true);
-			if (isHost){
-				ball.setCollideWorldBounds(true);
-				if (!isDefaultGame){
-					powerUpBall.setCollideWorldBounds(true);
-				}
-			}
-			ball.body.setAllowGravity(false);
-			if (!isDefaultGame){
-	powerUpBall.body.setAllowGravity(false);
+	scene = this;
+	cursors = this.input.keyboard.createCursorKeys();
+	this.sound.pauseOnBlur = false;
+	game.events.addListener('blur', onHidden);
+	game.events.addListener('focus', onFocus);
+	clock = this.time;
+	hostText = scene.add.text(scene.sys.canvas.width / 4, 200, '' + hostCounter, {fontSize: '0px', fontFamily: "'Press Start 2P', cursive" });
+	clientText = this.add.text(this.sys.canvas.width / 4 * 3, 200, '' + player2_score, {fontSize: '0px', fontFamily: "'Press Start 2P', cursive" });
+	let line : Phaser.GameObjects.Line = this.add.line(this.sys.canvas.width / 2, this.sys.canvas.height / 2, 0, 0, 0, this.sys.canvas.height, 0xffffff).setLineWidth(5);
+	let mid_circle : Phaser.GameObjects.Arc = this.add.circle(this.sys.canvas.width / 2, this.sys.canvas.height / 2, 100, 0).setStrokeStyle(10, 0xffffff);
+	let left_circle : Phaser.GameObjects.Arc = this.add.circle(-700 / 2, this.sys.canvas.height / 2, 700, 0).setStrokeStyle(10, 0xffffff);
+	let right_circle : Phaser.GameObjects.Arc = this.add.circle(this.sys.canvas.width + 700 / 2, this.sys.canvas.height / 2, 700, 0).setStrokeStyle(10, 0xffffff);
+	player1 = this.physics.add.sprite(this.sys.canvas.width * 3 / 100, this.sys.canvas.height / 2, "bar");
+	player1.setDisplaySize(PLAYER_WIDTH, PLAYER_HEIGHT);
+	player2 = this.physics.add.sprite(this.sys.canvas.width * 97 / 100, this.sys.canvas.height / 2, "bar");
+	player2.setDisplaySize(PLAYER_WIDTH, PLAYER_HEIGHT);
+	if (!isDefaultGame) {
+		powerUpBall = this.physics.add.sprite(this.sys.canvas.width / 2, this.sys.canvas.height / 2, "powerUp");
+		powerUpBall.setDisplaySize(50, 50);
+		powerUpBall.setVisible(false);
+		powerUpBall.setOrigin(0.5, 0.5);
+	}
+	ball = this.physics.add.sprite(this.sys.canvas.width / 2, this.sys.canvas.height / 2, "ball");
+	ball.setDisplaySize(BALL_DIAMETER, BALL_DIAMETER);
+	player1.setCollideWorldBounds(true);
+	player2.setCollideWorldBounds(true);
+	if (isHost){
+		ball.setCollideWorldBounds(true);
+		if (!isDefaultGame){
+			powerUpBall.setCollideWorldBounds(true);
+		}
+	}
+	ball.body.setAllowGravity(false);
+	if (!isDefaultGame){
+		powerUpBall.body.setAllowGravity(false);
 	}
 	player1.body.setAllowGravity(false);
 	player2.body.setAllowGravity(false);
@@ -436,33 +436,33 @@ function onFocus() : void
 	keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
 	keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
 	ball.body.world.on('worldbounds', function(this : Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, body: Phaser.Physics.Arcade.Body, up: boolean, down: boolean, left: boolean, right: boolean) {
-	if (body.gameObject === this && isHost) {
-		scene.physics.world.removeCollider(player1_collider);
-		scene.physics.world.removeCollider(player2_collider);
-		ball.setAcceleration(0);
-		if (right)
-		{
-		// scene.sound.play("bip");
-		player1_score_obj.setText('' + ++player1_score);
-		emitIfGameActive('syncRound', { GameId: GameId, player1_score: player1_score, player2_score: player2_score});
-		ball.body.velocity.setTo(0, 0);
-		ball.setPosition(scene.sys.canvas.width / 2, scene.sys.canvas.height / 2);
-		clock.delayedCall(1000, start_game, [], scene);
-		}
-		else if (left)
-		{
-		// scene.sound.play("bip");
-		player2_score_obj.setText('' + ++player2_score);
-		emitIfGameActive('syncRound', { GameId: GameId, player1_score: player1_score, player2_score: player2_score});
-		ball.body.velocity.setTo(0, 0);
-		ball.setPosition(scene.sys.canvas.width / 2, scene.sys.canvas.height / 2);
-		clock.delayedCall(1000, start_game, [], scene);
-		}
-		else if (down || up)
-		{
-		// scene.sound.play("bip");
-		}
-	}
+		if (body.gameObject === this && isHost) {
+			scene.physics.world.removeCollider(player1_collider);
+			scene.physics.world.removeCollider(player2_collider);
+			ball.setAcceleration(0);
+			if (right)
+			{
+				// scene.sound.play("bip");
+				player1_score_obj.setText('' + ++player1_score);
+				emitIfGameActive('syncRound', { GameId: GameId, player1_score: player1_score, player2_score: player2_score});
+				ball.body.velocity.setTo(0, 0);
+				ball.setPosition(scene.sys.canvas.width / 2, scene.sys.canvas.height / 2);
+				clock.delayedCall(1000, start_game, [], scene);
+			}
+			else if (left)
+			{
+				// scene.sound.play("bip");
+				player2_score_obj.setText('' + ++player2_score);
+				emitIfGameActive('syncRound', { GameId: GameId, player1_score: player1_score, player2_score: player2_score});
+				ball.body.velocity.setTo(0, 0);
+				ball.setPosition(scene.sys.canvas.width / 2, scene.sys.canvas.height / 2);
+				clock.delayedCall(1000, start_game, [], scene);
+			}
+			else if (down || up)
+			{
+			// scene.sound.play("bip");
+			}
+		}		
 	}, ball);
 
 	player1_score_obj = this.add.text(this.sys.canvas.width / 4, 20, '' + player1_score, {fontSize: '0px', fontFamily: "'Press Start 2P', cursive" });
@@ -488,7 +488,7 @@ function onFocus() : void
 	if (!isDefaultGame)
 	this.time.delayedCall(5000, showPowerUp, [], this);
 
-  socketListening();
+	socketListening();
 }
 
 function HandleHit(this: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody)

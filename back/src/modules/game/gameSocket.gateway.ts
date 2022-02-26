@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/26 16:23:47 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/26 21:33:45 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,13 @@ export class gameSocketGateway
 	{
 		if (data.GameId && this.isPlayer(socket, String(data.GameId)))
 			socket.to(String(data.GameId)).emit("sync", data);
+	}
+
+	@SubscribeMessage('syncCounter')
+	syncCounter(@ConnectedSocket() socket: any, @MessageBody() data :any)
+	{
+		if (data.GameId && this.isPlayer(socket, String(data.GameId)))
+			socket.to(String(data.GameId)).emit("syncCounter", data);
 	}
 
 	@SubscribeMessage('syncBall')
