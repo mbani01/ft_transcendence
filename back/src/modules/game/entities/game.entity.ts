@@ -14,16 +14,18 @@ export class Game
     @Column()
     secondPlayerScore: number;
 
+    @Column("int")
     @ManyToOne(() => User, user => user.gamesAsFirstPlayer)
-    @JoinColumn()
+    @JoinColumn({name: "firstPlayer"})
     public firstPlayer: User;
 
+    @Column("int")
     @ManyToOne(() => User, user => user.gamesAsSecondPlayer)
-    @JoinColumn()
+    @JoinColumn({name : "secondPlayer"})
     public secondPlayer: User;
 
     @ManyToOne(() => User, user => user.wins)
-    @JoinColumn()
+    @JoinColumn({name : "winner"})
     winner: User;
 
     @Column()

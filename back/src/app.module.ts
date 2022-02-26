@@ -14,9 +14,9 @@ import { join } from 'path/posix';
 
 @Module({
   imports: [
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname,'../src/')
-    }),
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname,'../src/')
+    // }),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig]
