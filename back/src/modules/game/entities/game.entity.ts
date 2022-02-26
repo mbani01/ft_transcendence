@@ -24,9 +24,10 @@ export class Game
     @JoinColumn({name : "secondPlayer"})
     public secondPlayer: User;
 
+    @Column("int")
     @ManyToOne(() => User, user => user.wins)
     @JoinColumn({name : "winner"})
-    winner: User;
+    public winner: User;
 
     @Column()
     isDefault: boolean;
