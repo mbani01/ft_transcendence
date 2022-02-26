@@ -1,3 +1,4 @@
+import {MatchHistory} from "./match-history.model";
 
 type STATUS = 'on-line' | 'off-line' | 'in-game'
 
@@ -19,5 +20,7 @@ export class UserInfo {
   isFriend: boolean;
 
   isBlocked: boolean;
+
+  Games: MatchHistory[];
 }
 

@@ -213,7 +213,7 @@ export function socketListening () {
 				}, 1000);
 			}
 		}
-		else if (game.hasFocus == true && !gameEnd) {
+		else if (!document.hidden && !gameEnd) {
 			game.scene.resume(scene);
 		}
 		if (obj.focus == true) {
@@ -297,7 +297,7 @@ let clientText : any;
 
 function preload (this: Phaser.Scene) : void
 {
-	
+
 	this.load.image("bar", "assets/bar.png");
 	this.load.image("powerUp", "assets/pokeball.png");
 	this.load.image("ball", "assets/whiteBall.png");
@@ -338,7 +338,7 @@ function onHidden() : void
 						// emitIfGameActive("", );
 						hostCounter = 30;
 						clearInterval(hostInterval);
-						
+
 					}
 					hostCounter--;
 				}, 1000)
@@ -374,7 +374,7 @@ function onFocus() : void
 				// 	if (hostCounter == 0)
 				clearInterval(hostInterval);
 				// }, 1000);
-				
+
 			} else {
 				// clientInterval = setInterval(() => {
 					// 	clientText.setText('' + clientCounter--);
@@ -387,10 +387,10 @@ function onFocus() : void
 				game.scene.resume(scene);
 			}
 		}
-		
+
 		function create (this: Phaser.Scene) : void
 		{
-			
+
 			scene = this;
 			cursors = this.input.keyboard.createCursorKeys();
 			this.sound.pauseOnBlur = false;
@@ -554,7 +554,7 @@ function update(this: Phaser.Scene) : void
 		console.log("hello world! down")
 		local_player.setPosition(local_player.x, local_player.y + PLAYER_SPEED);
 		emitIfGameActive('sync', {"GameId":GameId, player: {x: local_player.x, y: local_player.y}, isHost: isHost});
-	  
+
 	} else if (cursors.up.isDown && !cursors.down.isDown && !isWatcher) {
 		console.log("hello world! up")
 		local_player.setPosition(local_player.x, local_player.y - PLAYER_SPEED)

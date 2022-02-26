@@ -31,6 +31,7 @@ export class ChatService {
       next: value => {
         if (value) {
           socket.on('chat-message', this.receiveMessage);
+          socket.on('newDirectMessage', this.newDirectMessage.bind(this));
           this.fetchRooms();
         }
       }
@@ -63,14 +64,17 @@ export class ChatService {
         otherUser: user.uid
       }, (chat: Chat) => {
         if (chat) {
-          chat.messages = [];
-          this.currChat = chat;
-
-          console.log(this.currChat);
-          this.chats.set(chat.roomID, chat);
+          this.newDirectMessage(chat);
         }
       })
     }
+  }
+
+  newDirectMessage(chat: Chat) {
+    chat.messages = [];
+    this.currChat = chat;
+
+    this.chats.set(chat.roomID, chat);
   }
 
   loadMessages(chat: Chat, obs: Partial<Observer<any>>) {
