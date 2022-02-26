@@ -10,6 +10,7 @@ import {MainSocket} from "../../../socket/MainSocket";
 import {Observable} from "rxjs";
 import {ChatService} from "../../chat.service";
 import {NotifierService} from "angular-notifier";
+import {GameService} from "../../../game/game.service";
 
 @Component({
   selector: 'chatter-popup',
@@ -22,7 +23,8 @@ export class ChatterPopupComponent {
   @Input() popover: NgbPopover;
   userRole: string;
   constructor(private router: Router, public oauthService: OAuthService, private http: HttpClient,
-              private socket: MainSocket, public chatService: ChatService, private notifierService: NotifierService) {
+              private socket: MainSocket, public chatService: ChatService, private notifierService: NotifierService,
+              private gameService: GameService) {
     console.log(chatService.role);
     setTimeout(() => {
       if (this.chatRoom) {
@@ -80,14 +82,7 @@ export class ChatterPopupComponent {
   }
 
   invitePlay() {
-    this.socket.emit('SendGameInvitation', {
-      receiverId: this.user.uid,
-      isDefaultGame: true
-    }, (err: any) => {
-      if (err.error) {
-        this.notifierService.notify('error', err.error);
-      }
-    })
+    this.gameService.invitePlay(this.user);
     this.popover.close();
 
   }
