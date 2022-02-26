@@ -113,8 +113,8 @@ export class UsersController {
     Games = Games.concat(otherUser.gamesAsFirstPlayer, otherUser.gamesAsSecondPlayer);
     for(let i of Games)
     {
-      i.firstPlayerInfos = (await this._usersService.findBasicInfoById(i.firstPlayer));
-      i.secondPlayerInfos = await this._usersService.findBasicInfoById(i.secondPlayer);
+      i.firstPlayer = (await this._usersService.findBasicInfoById(i.firstPlayer))[0];
+      i.secondPlayer = (await this._usersService.findBasicInfoById(i.secondPlayer))[0];
     }
     if (relation && relation.length === 0)
       return { ...stats, status: (isActive) ? 'on-line' : 'off-line', img: user.img, name: user.username, isFriend: false, isBlocked: false, Games };
