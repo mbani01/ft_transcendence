@@ -12,6 +12,7 @@ export enum GameStat {
   NORMAL_QUEUE,
   CUSTOM_QUEUE,
   GAME,
+  GAME_OVER,
   LIVE_GAMES
 }
 
@@ -71,6 +72,7 @@ export class GameService {
   }
 
   gameOver(obj: any) {
+    this.stat = GameStat.GAME_OVER;
     gameOver(obj);
   }
   spectateGame(roomID: string) {
@@ -82,15 +84,19 @@ export class GameService {
   }
 
   isMain() {
-    return this.stat == GameStat.MAIN;
+    return this.stat === GameStat.MAIN;
   }
 
   isQueue() {
-    return this.stat == GameStat.NORMAL_QUEUE || this.stat == GameStat.CUSTOM_QUEUE;
+    return this.stat === GameStat.NORMAL_QUEUE || this.stat === GameStat.CUSTOM_QUEUE;
   }
 
   isGame() {
-    return this.stat == GameStat.GAME;
+    return this.stat === GameStat.GAME;
+  }
+
+  isGameOver() {
+    return this.stat === GameStat.GAME_OVER
   }
 
   watchGame(gameID: string) {
@@ -114,6 +120,7 @@ export class GameService {
   }
 
   leaveGame() {
+    this.stat = GameStat.MAIN;
     this.socket.emit('leftGame');
     this.endGame();
   }

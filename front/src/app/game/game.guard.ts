@@ -17,7 +17,7 @@ export class GameGuard implements CanDeactivate<any> {
         if (this.gameService.isQueue())
           this.gameService.leaveQueue();
         else
-          this.gameService.leaveGame()
+          this.gameService.leaveGame();
         return true;
       } else {
         return false

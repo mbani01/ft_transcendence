@@ -35,8 +35,12 @@
   </ng-template>
 <!--  GAME -->
   <ng-template #gameTemplate>
-    <ng-container *ngIf="gameService.isGame(); else liveTemplate">
-      <div id="phaser" style="overflow: hidden; width: 100%; height: 100%;"></div>
+    <ng-container *ngIf="gameService.isGame() || gameService.isGameOver(); else liveTemplate">
+      <div class="position-relative bg-dark w-100 h-100">
+        <div id="phaser" style="overflow: hidden; width: 100%; height: 100%;"></div>
+        <button *ngIf="gameService.isGameOver()" class="btn btn-primary position-absolute m-auto" style="top: 10px; left: 10px"
+          (click)="backToMain()">Back to main</button>
+      </div>
     </ng-container>
   </ng-template>
   <ng-template #liveTemplate>
