@@ -11,6 +11,8 @@ import { ChatModule } from './modules/chat/chat.module';
 import appConfig from './app.config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path/posix';
+import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
+
 
 @Module({
   imports: [
@@ -47,6 +49,7 @@ import { join } from 'path/posix';
     AuthModule,
     TwofactorauthModule,
     ChatModule,
+    CloudinaryModule
   ],
   controllers: [AppController],
   providers: [AppService],

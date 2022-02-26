@@ -41,6 +41,7 @@
     "@types/uuid": "^8.3.4",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
+    "cloudinary": "^1.28.1",
     "dotenv": "^15.0.1",
     "install": "^0.13.0",
     "joi": "^17.6.0",

@@ -10,18 +10,21 @@ import { ExtractJwt } from "passport-jwt";
 import fromAuthHeaderWithScheme = ExtractJwt.fromAuthHeaderWithScheme;
 import { Rank } from "./interfaces/stats.interface";
 import { number } from "@hapi/joi";
+import { CloudinaryService } from "../cloudinary/cloudinary.service";
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly _usersRepo: Repository<User>,
     @InjectRepository(Relation) public readonly _relationsRepo: Repository<Relation>,
-  ) { }
+    private cloudinary : CloudinaryService,
+    ) { }
+    
 
   async create(userDto: CreateUserDto): Promise<User> {
     const user = this._usersRepo.create(userDto);
     return await this._usersRepo.save(user);
-  }
+   }
 
   async findAll(paginationQuery: any) {
     const { username, limit } = paginationQuery;
@@ -241,5 +244,15 @@ export class UsersService {
   async findBasicInfoById(userId)
   {
     return await this._usersRepo.query("Select id as uid , username as name, avatar as img from \"Users\" where id=$1;", [userId]);
+  }
+
+  async uploadAvatar(imgBase64)
+  {
+    try {
+      const image = await this.cloudinary.uploadImage(imgBase64); 
+      return image.secure_url || image;
+    } catch (error) {
+      return error
+    }
   }
 }

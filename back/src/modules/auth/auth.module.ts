@@ -11,10 +11,12 @@ import { PassportModule } from "@nestjs/passport";
 import { TwoFactorAuthService } from "src/modules/twofactorauth/2fa.service";
 import { Relation } from "../users/entity/relation.entity";
 import { ConfigModule } from "@nestjs/config";
+import { CloudinaryModule } from "../cloudinary/cloudinary.module";
 @Module({
   imports: [
     UsersModule,
     PassportModule,
+    CloudinaryModule,
     TypeOrmModule.forFeature([User, Relation]),
     JwtModule.register({
       secret: "secret",

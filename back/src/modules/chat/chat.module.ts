@@ -9,9 +9,10 @@ import { MembersEntity } from './entities/members.entity';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/entity/user.entity';
 import { Relation } from '../users/entity/relation.entity';
+import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([RoomEntity, MessageEntity, MembersEntity, User, Relation])],
+  imports: [TypeOrmModule.forFeature([RoomEntity, MessageEntity, MembersEntity, User, Relation]), CloudinaryModule],
   providers: [ChatGateway, ChatService, UsersService],
   controllers: [ChatController]
 })
