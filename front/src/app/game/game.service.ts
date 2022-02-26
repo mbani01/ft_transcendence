@@ -6,6 +6,7 @@ import {BehaviorSubject} from "rxjs";
 import {NotifierService} from "angular-notifier";
 import {OAuthService} from "../login/oauth.service";
 import {Router} from "@angular/router";
+import {User} from "../shared/user";
 
 export enum GameStat {
   MAIN,
@@ -149,6 +150,18 @@ export class GameService {
   inviteDeclined(err: any) {
     this.notifierService.notify('error', err.error);
 
+  }
+
+
+  invitePlay(user: User) {
+    this.socket.emit('SendGameInvitation', {
+      receiverId: user.uid,
+      isDefaultGame: true
+    }, (err: any) => {
+      if (err.error) {
+        this.notifierService.notify('error', err.error);
+      }
+    })
   }
 
 }

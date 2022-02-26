@@ -6,18 +6,27 @@
   <div class="col">
     <div class="row h-50 d-flex">
       <span id="nickname" class="">{{user.name}}</span>
-      <button *ngIf="!oauthService.isMe(user)" class="btn btn-{{userInfo.isFriend ? 'warning' : 'info'}} ml-auto mt-auto mb-1" (click)="friend()">
-        <i class="bi bi-person-{{userInfo.isFriend ? 'dash' : 'plus'}}-fill"></i>
-        {{userInfo.isFriend ? 'Remove' : 'Add'}} Friend
-      </button>
+
+      <ng-container *ngIf="!oauthService.isMe(user)">
+        <button class="btn btn-success btn-icon ml-auto mt-auto mb-1 btn-icon" (click)="directMessage()">
+          <i class="bi bi-chat-fill"></i>
+        </button>
+        <button class="btn btn-{{userInfo.isFriend ? 'warning' : 'info'}} btn-icon ml-1 mt-auto mb-1" (click)="friend()">
+          <i class="bi bi-person-{{userInfo.isFriend ? 'dash' : 'plus'}}-fill"></i>
+        </button>
+      </ng-container>
     </div>
     <div class="row h-50">
       <span class="dot"></span>
       <span class="status">{{userInfo.status}}</span>
-      <button *ngIf="!oauthService.isMe(user)" class="btn btn-{{userInfo.isBlocked ? 'warning' : 'danger'}} ml-auto mb-auto mt-1" (click)="block()">
-        <i class="bi bi-x-octagon-fill"></i>
-        {{userInfo.isBlocked ? 'Unblock' : 'Block'}}
-      </button>
+      <ng-container *ngIf="!oauthService.isMe(user)">
+        <button class="btn btn-warning ml-auto mb-auto mt-1 btn-icon" (click)="inviteGame()">
+          <i class="bi bi-joystick"></i>
+        </button>
+        <button class="btn btn-{{userInfo.isBlocked ? 'warning' : 'danger'}} ml-1 mb-auto mt-1 btn-icon" (click)="block()">
+          <i class="bi bi-x-octagon-fill"></i>
+        </button>
+      </ng-container>
     </div>
   </div>
   <div class="col">
