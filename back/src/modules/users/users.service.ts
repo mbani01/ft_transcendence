@@ -237,4 +237,9 @@ export class UsersService {
   {
     return  await this._relationsRepo.query("Select * from \"Users\" ORDER BY score DESC;")
   }
+
+  async findBasicInfoById(userId)
+  {
+    return await this._usersRepo.query("Select id as uid , username as name, avatar as img from \"Users\" where id=$1;", [userId]);
+  }
 }

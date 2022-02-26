@@ -108,8 +108,14 @@ export class UsersController {
     catch (e) {
       return { error: e.message };
     }
+
     let Games = []
     Games = Games.concat(otherUser.gamesAsFirstPlayer, otherUser.gamesAsSecondPlayer);
+    for(let i of Games)
+    {
+      i.firstPlayerInfos = (await this._usersService.findBasicInfoById(i.firstPlayer));
+      i.secondPlayerInfos = await this._usersService.findBasicInfoById(i.secondPlayer);
+    }
     if (relation && relation.length === 0)
       return { ...stats, status: (isActive) ? 'on-line' : 'off-line', img: user.img, name: user.username, isFriend: false, isBlocked: false, Games };
     return { ...stats, status: (isActive) ? 'on-line' : 'off-line', img: user.img, name: user.username, isFriend: relation[0].isFriends, isBlocked: (relation[0].blocker !== null), Games };
