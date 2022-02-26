@@ -15,7 +15,7 @@ export class GameComponent implements OnInit {
   private queueInterval: any;
 
   constructor(private socket: MainSocket, public gameService: GameService, private http: HttpClient) {
-
+    gameService.stat = GameStat.MAIN;
   }
 
   ngOnInit() {
