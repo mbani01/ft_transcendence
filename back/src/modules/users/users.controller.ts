@@ -198,4 +198,16 @@ export class UsersController {
     return { uid: user.id, name: user.username, img: user.avatar };
   }
 
+
+  @UseGuards(JwtAuthGuard)
+  @Post("avatar")
+  async uploadAvatar(@Req() req, @Body() body)
+  {
+    if (!body.hasOwnProperty('avatar'))
+        return {"error": "avatar isn't provided"};
+    const image = await this._usersService.uploadAvatar(body.avatar);
+    const user = this._usersService.updateAvatar(req.user.id, image);
+    return image;
+  }
+
 }

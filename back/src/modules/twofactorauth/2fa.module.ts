@@ -10,12 +10,13 @@ import { UsersService } from '../users/users.service';
 import { AuthService } from '../auth/auth.service';
 import { JwtStrategy } from '../auth/jwt.strategy';
 import { Relation } from '../users/entity/relation.entity';
+import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 
 @Module({
   imports: [PassportModule, TypeOrmModule.forFeature([User, Relation]),JwtModule.register({
     secret: String(process.env.JWT_SECRET),
     signOptions: { expiresIn: 60 },
-  }),],
+  }), CloudinaryModule],
   controllers: [TwofactorauthController],
   providers: [TwoFactorAuthService, UsersService, ConfigService, AuthService, JwtStrategy]
 })
