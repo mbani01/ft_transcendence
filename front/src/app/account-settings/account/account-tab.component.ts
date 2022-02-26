@@ -127,16 +127,7 @@ export class AccountTabComponent implements OnInit{
               this.progress = Math.round(100 * event.loaded / event.total);
             } else if (event instanceof HttpResponse) {
               console.log('next2', event);
-              // this.user.value.img = event.body.avatar;
-              // this.user.next(this.user.value);
-              // this.cdRef.detectChanges();
-              // this.ngOnInit();
-              setTimeout(() => {
-                this.oauthService.reload = true;
-                setTimeout(() => {
-                  this.oauthService.reload = false;
-                })
-              }, 1000);
+              this.user.value.img = event.body.avatar;
             }
           },
           error: err => {
