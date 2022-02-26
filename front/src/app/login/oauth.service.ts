@@ -17,6 +17,8 @@ export class OAuthService {
   // @ts-ignore
   public user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
+  public reload: boolean = false;
+
   constructor(private http: HttpClient, private cookieService: CookieService, private router: Router,
               private notifierService: NotifierService) {
 
