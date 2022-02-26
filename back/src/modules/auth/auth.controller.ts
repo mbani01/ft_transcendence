@@ -16,18 +16,6 @@ import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
-import fs from 'fs';
-import * as request from 'request';
-import {join} from "path";
-
-const download = function(uri, filename, callback){
-  request.head(uri, function(err, res, body){
-    console.log('content-type:', res.headers['content-type']);
-    console.log('content-length:', res.headers['content-length']);
-
-    request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
-  });
-};
 
 @Controller('auth')
 export class AuthController {
@@ -63,7 +51,6 @@ export class AuthController {
       userExist = await this._usersService.findByUserName(newUser.username);
       if (!userExist) {
         userExist = await this._usersService.create(newUser);
-        download(newUser.avatar, join(__dirname, `../../../src/assets/avatars/${userExist.id2}`), ()=>{console.log('done')});
         return await this._authService.sendJwtAccessToken(response, userExist, false);
       }
 
