@@ -17,17 +17,15 @@ export class OAuthService {
   // @ts-ignore
   public user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
+  public reload: boolean = false;
+
   constructor(private http: HttpClient, private cookieService: CookieService, private router: Router,
               private notifierService: NotifierService) {
 
     this.http.get<UserInfo>(`${environment.apiBaseUrl}/auth/isAuthorized`).subscribe({
       next: value => {
         this._authorized = true;
-        this.user$.next({
-          uid: value.id,
-          name: value.username,
-          img: value.avatar!
-        });
+        this.user$.next(new User(value.id, value.username));
         if (value.is2FAEnabled) {
           this.enable2FA();
         }
