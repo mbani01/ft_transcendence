@@ -604,3 +604,5 @@ function update(this: Phaser.Scene) : void
 		emitIfGameActive('sync', {"GameId":GameId, player: {x: local_player.x, y: local_player.y}, isHost: isHost});
 	}
 }
+
+/* 400 commit */ 
