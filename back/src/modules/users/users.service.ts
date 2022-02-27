@@ -17,14 +17,14 @@ export class UsersService {
   constructor(
     @InjectRepository(User) private readonly _usersRepo: Repository<User>,
     @InjectRepository(Relation) public readonly _relationsRepo: Repository<Relation>,
-    private cloudinary : CloudinaryService,
-    ) { }
-    
+    private cloudinary: CloudinaryService,
+  ) { }
+
 
   async create(userDto: CreateUserDto): Promise<User> {
     const user = this._usersRepo.create(userDto);
     return await this._usersRepo.save(user);
-   }
+  }
 
   async findAll(paginationQuery: any) {
     const { username, limit } = paginationQuery;
@@ -195,6 +195,25 @@ export class UsersService {
     })
   }
 
+  async getBlocked(user: User) {
+    let res = [];
+    const blockedFriends = await this._relationsRepo.find({
+      relations: ['userFirst', 'userSecond'],
+      where: {
+        userFirst: user,
+        blocker: user
+      }
+    });
+    for (let blockedFriend of blockedFriends) {
+      res.push({
+        uid: blockedFriend.userSecond.id,
+        name: blockedFriend.userSecond.username,
+        img: blockedFriend.userSecond.avatar
+      })
+    }
+    return res;
+  }
+
   async getRelation(user: User, otherUser: User) {
     return await this._relationsRepo.find({
       relations: ['blocker'],
@@ -221,33 +240,29 @@ export class UsersService {
     return 'Legend';
   }
 
-  async saveScore(userId: number, winPoints: number, losePoints, isWinner: boolean)
-  {
+  async saveScore(userId: number, winPoints: number, losePoints, isWinner: boolean) {
     const points: number = isWinner && 3 || 0;
     const Calculatedscore: number = points + (Math.abs(winPoints - losePoints) * 0.2);
     const oldScore = (await this._usersRepo.findOne(userId)).score;
     const newScore: any = oldScore + Calculatedscore;
     const scoreAsString = String(newScore)
-    console.log("New Score " , newScore);
+    console.log("New Score ", newScore);
     await this._usersRepo.createQueryBuilder()
-            .update(User)
-            .set({ score: scoreAsString , rank: this.getUserRank(newScore)})
-            .where("id = :id", { id: userId })
-            .execute();
+      .update(User)
+      .set({ score: scoreAsString, rank: this.getUserRank(newScore) })
+      .where("id = :id", { id: userId })
+      .execute();
   }
 
-  async getLeaderBoard()
-  {
-    return  await this._relationsRepo.query("Select * from \"Users\" ORDER BY score DESC;")
+  async getLeaderBoard() {
+    return await this._relationsRepo.query("Select * from \"Users\" ORDER BY score DESC;")
   }
 
-  async findBasicInfoById(userId)
-  {
+  async findBasicInfoById(userId) {
     return await this._usersRepo.query("Select id as uid , username as name, avatar as img from \"Users\" where id=$1;", [userId]);
   }
 
-  async uploadAvatar(imgBase64)
-  {
+  async uploadAvatar(imgBase64) {
     try {
       const image = await this.cloudinary.uploadFile(imgBase64);
       return image.secure_url || image;
