@@ -13,10 +13,9 @@ import { Server } from 'socket.io';
 import { CreateMessageColumnDto } from './dto/create-message.dto';
 import { CreateMemberColumn } from './dto/create-member.dto';
 import { Clients, CustomSocket } from 'src/adapters/socket.adapter';
-import {NotFoundException} from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { RoomEntity } from './entities/room.entity';
-import * as bcrypt from 'bcryptjs';
 
 @WebSocketGateway()
 export class ChatGateway
@@ -53,37 +52,50 @@ export class ChatGateway
       */
     let { name, isPublic, password } = createRoomBodyDto;
     try {
-      if (password?.length < 8 || password?.match("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"))
-        return { error: "password too weak" };
+      if (
+        password?.length < 8 ||
+        password?.match('^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$')
+      )
+        return { error: 'password too weak' };
       if (!name.length || name.length > 20)
         return { error: 'name should be between 1 and 20' };
       const channelType = this._chatService.getChannelType(isPublic, password);
 
       /* Bcrypt password */
-    if (channelType === 'protected') {
-      try {
-        await bcrypt.hash(password, 10).catch(reason => {
-          throw reason
-        }).then(value => {
-          password = value;
-        })
-      } catch (reason) {
-        return { error: reason };
+      if (password) {
+        try {
+          await bcrypt
+            .hash(password, 10)
+            .catch((reason) => {
+              throw reason;
+            })
+            .then((value) => {
+              password = value;
+            });
+        } catch (reason) {
+          return { error: reason };
+        }
       }
-    }
 
-      const roomEntity: CreateRoomDto = { name, password, channelType, ownerID: client.user.sub }
-      const user = await this._chatService._userService.findById(client.user.sub);
+      const roomEntity: CreateRoomDto = {
+        name,
+        password,
+        channelType,
+        ownerID: client.user.sub,
+      };
+      const user = await this._chatService._userService.findById(
+        client.user.sub,
+      );
       if (!user) return { error: 'no such user' };
       let newRoom: any;
-        newRoom = await this._chatService.createRoom(roomEntity);
-        await this._chatService.createMember({
-          user,
-          roomID: newRoom.roomID,
-          userID: client.user.sub,
-          password: newRoom.password,
-          role: 'admin',
-        });
+      newRoom = await this._chatService.createRoom(roomEntity);
+      await this._chatService.createMember({
+        user,
+        roomID: newRoom.roomID,
+        userID: client.user.sub,
+        password: newRoom.password,
+        role: 'admin',
+      });
       client.join('' + newRoom.roomID);
       return newRoom;
     } catch (e) {
@@ -97,7 +109,11 @@ export class ChatGateway
     @ConnectedSocket() client: CustomSocket,
   ) {
     try {
-      const { roomID, timestamp: createdAt, message: content } = JSON.parse(data);
+      const {
+        roomID,
+        timestamp: createdAt,
+        message: content,
+      } = JSON.parse(data);
       const userID = client.user.sub;
       const user = await this._chatService.getMember({ roomID, userID });
       if (!(await this._chatService._userService.findById(userID)))
@@ -301,7 +317,7 @@ export class ChatGateway
     try {
       const member = await this._chatService.getMember({
         userID: client.user.sub,
-        roomID
+        roomID,
       });
       if (!member) return { error: 'no such member' };
       if (member.role !== 'admin') return { error: 'you are not the admin' };
@@ -330,11 +346,11 @@ export class ChatGateway
     // first thing we need to destruct the userID, timeout and the roomID from the socket payload { userID: the user to mute, timeout: the time before we can unmute it}
     const { userID, timeout, roomID } = data;
     if (timeout > 2147483647)
-      return { error: 'ghyrha ghyrha bghiti tkhsr hadchi'};
+      return { error: 'ghyrha ghyrha bghiti tkhsr hadchi' };
     try {
       const member = await this._chatService.getMember({
         userID: client.user.sub,
-        roomID
+        roomID,
       });
       if (!member) return { error: 'no such member' };
       if (member.role !== 'admin') return { error: 'you are not the admin' };
@@ -363,7 +379,8 @@ export class ChatGateway
   ) {
     const { roomID, uid } = data;
     try {
-      if (!(await this._chatService.getRoomById(roomID))) return { error: 'no such room' };
+      if (!(await this._chatService.getRoomById(roomID)))
+        return { error: 'no such room' };
       await this._chatService.unmuteMember(roomID, uid);
     } catch (e) {
       return { error: e.message };
@@ -378,7 +395,8 @@ export class ChatGateway
   ) {
     const { roomID, uid } = data;
     try {
-      if (!(await this._chatService.getRoomById(roomID))) return { error: 'no such room' };
+      if (!(await this._chatService.getRoomById(roomID)))
+        return { error: 'no such room' };
       await this._chatService.unbanMember(roomID, uid);
     } catch (e) {
       return { error: e.message };
