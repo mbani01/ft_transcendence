@@ -56,6 +56,7 @@ export function gameOver(obj: any) {
 	clearInterval(hostInterval);
 	clearInterval(clientInterval);
 	gameEnd = true;
+	scene.input.keyboard.clearCaptures();
 	if (obj.hasOwnProperty('disconnectedPlayer')) {
 		ball.setVisible(false);
 		game.scene.pause(scene);
@@ -122,6 +123,27 @@ export function socketListening () {
 	// console.log(socket.id); // x8WIv7-mJelg7on_ALbx
   });
 
+	socket.on("syncCounter", (obj: any) => {
+		console.log(obj);
+		if (isWatcher) {
+			if (!obj.hasOwnProperty('disable')) {
+				if (obj.isHost) {
+					hostText.setFontSize(50);
+					hostText.setText('' + obj.counter);
+				} else {
+					clientText.setFontSize(50);
+					clientText.setText('' + obj.counter);
+				}
+			} else {
+				if (obj.isHost) {
+					hostText.setText('');
+				} else {
+					clientText.setText('');
+				}
+			}
+		}
+	});
+
   // emitIfGameActive('joinDefaultGame', {wsap: '1'});
 
 
@@ -179,61 +201,66 @@ export function socketListening () {
 
 	socket.on('focusLose', (obj: any) => {
 		console.log(obj, game.hasFocus);
-		if (obj.focus == false) {
-			game.scene.pause(scene);
-			if (obj.isHost == true && gameEnd == false) {
-				clearInterval(hostInterval);
-				hostCounter = 30;
-				hostInterval = setInterval(() => {
-					game.scene.pause(scene);
-					hostText.setText('' + hostCounter);
-					hostText.setFontSize(50);
-					if (hostCounter <= 0){
-						hostText.setText('' + 0);
-						clearInterval(hostInterval);
-						clearInterval(clientInterval);
-					}
-					hostCounter--;
-				}, 1000);
-			} else if (gameEnd == false) {
-				clearInterval(clientInterval);
-				clientCounter = 30;
-				clientInterval = setInterval(() => {
-					game.scene.pause(scene);
-					clientText.setText('' + clientCounter);
-					clientText.setFontSize(50);
-					if (clientCounter <= 0) {
-						clientText.setText('' + 0);
-						clearInterval(hostInterval);
-						clearInterval(clientInterval);
-					}
-					clientCounter--;
-				}, 1000);
-			}
-		}
-		else if (!document.hidden && !gameEnd) {
-			game.scene.resume(scene);
-		}
-		if (obj.focus == true) {
-			if (obj.isHost == true) {
-				// hostInterval = setInterval(() => {
-				// hostText.setText('' + hostCounter--);
-					hostCounter = 30;
-					hostText.setFontSize(0);
-				// 	if (hostCounter == 0)
+		if (isPlayer){
+			if (obj.focus == false) {
+				game.scene.pause(scene);
+				if (obj.isHost == true && gameEnd == false) {
 					clearInterval(hostInterval);
-				// }, 1000);
-
-			} else {
-				// clientInterval = setInterval(() => {
-				// 	clientText.setText('' + clientCounter--);
-					clientCounter = 30;
-					clientText.setFontSize(0);
-				// 	if (clientCounter == 0)
+					hostCounter = 30;
+					hostInterval = setInterval(() => {
+						game.scene.pause(scene);
+						hostText.setText('' + hostCounter);
+						hostText.setFontSize(50);
+						if (hostCounter <= 0){
+							hostText.setText('' + 0);
+							clearInterval(hostInterval);
+							clearInterval(clientInterval);
+						}
+						hostCounter--;
+					}, 1000);
+				} else if (gameEnd == false) {
+					isClientPaused = true;
 					clearInterval(clientInterval);
-				// }, 1000);
+					clientCounter = 30;
+					clientInterval = setInterval(() => {
+						game.scene.pause(scene);
+						clientText.setText('' + clientCounter);
+						clientText.setFontSize(50);
+						if (clientCounter <= 0) {
+							clientText.setText('' + 0);
+							clearInterval(hostInterval);
+							clearInterval(clientInterval);
+						}
+						clientCounter--;
+					}, 1000);
+				}
 			}
-		}
+			if (obj.focus == true) {
+				if (obj.isHost == true) {
+					// hostInterval = setInterval(() => {
+						// hostText.setText('' + hostCounter--);
+						hostCounter = 30;
+						hostText.setFontSize(0);
+						// 	if (hostCounter == 0)
+						clearInterval(hostInterval);
+						// }, 1000);
+						
+					} else {
+						isClientPaused = false;
+						// clientInterval = setInterval(() => {
+							// 	clientText.setText('' + clientCounter--);
+							clientCounter = 30;
+							clientText.setFontSize(0);
+							// 	if (clientCounter == 0)
+							clearInterval(clientInterval);
+							// }, 1000);
+						}
+					}
+					console.log("document.hidden " + document.hidden + "gameEnd: " + gameEnd + "isClientPaused: " + isClientPaused);
+					if (obj.focus == true && !document.hidden && !gameEnd && !isClientPaused) {
+						game.scene.resume(scene);
+					}
+				}
 	});
 }
 /*            hello world!          */
@@ -274,13 +301,12 @@ let player1_score_obj : Phaser.GameObjects.Text;
 let player2_score_obj : Phaser.GameObjects.Text;
 let local_player : Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
 let other_player : Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
-let timer_obj : Phaser.GameObjects.Text;
 let player1_score : number = 0;
 let player2_score : number = 0;
 let clock : Phaser.Time.Clock;
 let player1_collider : Phaser.Physics.Arcade.Collider ;
 let player2_collider : Phaser.Physics.Arcade.Collider ;
-
+let isClientPaused : boolean = false;
 let PLAYER_SPEED: number = 20;
 let BALL_SPEED: number = 200;
 let BALL_DIAMETER : number = 50;
@@ -307,7 +333,8 @@ let keyS : Phaser.Input.Keyboard.Key;
 
 function start_game(this: Phaser.Scene) : void
 {
-	ball.setPosition(game.canvas.width /     2, game.canvas.height / 2);
+	if (!isWatcher)
+		ball.setPosition(game.canvas.width / 2, game.canvas.height / 2);
 	(ball.body as Phaser.Physics.Arcade.Body).onWorldBounds = true;
 	if (isHost){
 		ball.body.velocity.setTo(ball_position.x, ball_position.y);
@@ -321,14 +348,14 @@ function start_game(this: Phaser.Scene) : void
 
 function onHidden() : void
 {
-	if (gameEnd == false){
+	if (gameEnd == false && isPlayer){
 		game.scene.pause(scene);
-		if (isPlayer){
 			emitIfGameActive('focusLose', { GameId: GameId, isHost: isHost, focus: false });
 			if (isHost == true) {
 				clearInterval(hostInterval);
 				hostCounter = 30;
 				hostInterval = setInterval(() => {
+					emitIfGameActive("syncCounter", { GameId: GameId, isHost: isHost, data: "hello", counter: hostCounter });
 					game.scene.pause(scene);
 					hostText.setText('' + hostCounter);
 					hostText.setFontSize(50);
@@ -345,6 +372,7 @@ function onHidden() : void
 				clearInterval(clientInterval);
 				clientCounter = 30;
 				clientInterval = setInterval(() => {
+					emitIfGameActive("syncCounter", { GameId: GameId, isHost: isHost, data: "hello", counter: clientCounter });
 					game.scene.pause(scene);
 					clientText.setText('' + clientCounter);
 					clientText.setFontSize(50);
@@ -358,7 +386,6 @@ function onHidden() : void
 					clientCounter--;
 				}, 1000)
 			}
-		}
 	}
 	console.log("hidden");
 }
@@ -368,6 +395,7 @@ function onFocus() : void
 	if(isPlayer && !gameEnd){
 		emitIfGameActive('focusLose', { GameId: GameId, isHost: isHost, focus: true });
 		if (isHost == true) {
+			emitIfGameActive("syncCounter", { GameId: GameId, isHost: isHost, disable: true });
 			// hostInterval = setInterval(() => {
 				// hostText.setText('' + hostCounter--);
 				hostCounter = 30;
@@ -375,22 +403,23 @@ function onFocus() : void
 				// 	if (hostCounter == 0)
 				clearInterval(hostInterval);
 				// }, 1000);
-	} else {
-		// clientInterval = setInterval(() => {
-			// 	clientText.setText('' + clientCounter--);
+		} else {
+			emitIfGameActive("syncCounter", { GameId: GameId, isHost: isHost, disable: true });
+				// clientInterval = setInterval(() => {
+					// 	clientText.setText('' + clientCounter--);
 			clientCounter = 30;
 			clientText.setFontSize(0);
 			// 	if (clientCounter == 0)
 			clearInterval(clientInterval);
 			// }, 1000);
 		}
-		game.scene.resume(scene);
+		if (!isClientPaused)
+			game.scene.resume(scene);
 	}
 }
 
 function create (this: Phaser.Scene) : void
 {
-
 	scene = this;
 	cursors = this.input.keyboard.createCursorKeys();
 	this.sound.pauseOnBlur = false;
@@ -446,8 +475,10 @@ function create (this: Phaser.Scene) : void
 				player1_score_obj.setText('' + ++player1_score);
 				emitIfGameActive('syncRound', { GameId: GameId, player1_score: player1_score, player2_score: player2_score});
 				ball.body.velocity.setTo(0, 0);
-				ball.setPosition(scene.sys.canvas.width / 2, scene.sys.canvas.height / 2);
-				clock.delayedCall(1000, start_game, [], scene);
+				if (!isWatcher){
+					ball.setPosition(scene.sys.canvas.width / 2, scene.sys.canvas.height / 2);
+					clock.delayedCall(1000, start_game, [], scene);
+				}
 			}
 			else if (left)
 			{
@@ -455,8 +486,10 @@ function create (this: Phaser.Scene) : void
 				player2_score_obj.setText('' + ++player2_score);
 				emitIfGameActive('syncRound', { GameId: GameId, player1_score: player1_score, player2_score: player2_score});
 				ball.body.velocity.setTo(0, 0);
-				ball.setPosition(scene.sys.canvas.width / 2, scene.sys.canvas.height / 2);
-				clock.delayedCall(1000, start_game, [], scene);
+				if (!isWatcher){
+					ball.setPosition(scene.sys.canvas.width / 2, scene.sys.canvas.height / 2);
+					clock.delayedCall(1000, start_game, [], scene);
+				}
 			}
 			else if (down || up)
 			{
@@ -560,5 +593,4 @@ function update(this: Phaser.Scene) : void
 		local_player.setPosition(local_player.x, local_player.y - PLAYER_SPEED)
 		emitIfGameActive('sync', {"GameId":GameId, player: {x: local_player.x, y: local_player.y}, isHost: isHost});
 	}
-	scene.input.keyboard.clearCaptures();
 }

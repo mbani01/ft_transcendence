@@ -28,7 +28,7 @@ export class activeUsers {
 		this.users.delete(userId);
 	}
 
-	getSocketId(userId: number): string {
+	getSocketId(userId: number): any {
 		return this.users.get(userId);
 	}
 	

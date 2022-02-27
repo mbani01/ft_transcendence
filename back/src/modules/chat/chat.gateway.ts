@@ -10,6 +10,7 @@ import { RoomEntity } from './entities/room.entity';
 import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 import {User} from "../users/entity/user.entity";
 import {UnmuteAndUnbanDto} from "./dto/params.dto";
+import {Not} from "typeorm";
 
 @WebSocketGateway()
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -42,11 +43,14 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         }
       */
     const { name, isPublic, password } = createRoomBodyDto;
-    if (password?.length < 8)
+    if (password?.length < 8 || password.match(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/))
       return { error: "password too weak" };
+    if (!name.length || name.length > 20)
+      return  { error: "name should be between 1 and 20" };
     const channelType = this._chatService.getChannelType(isPublic, password);
     const roomEntity: CreateRoomDto = { name, password, channelType, ownerID: client.user.sub }
     const user = await this._chatService._userService.findById(client.user.sub);
+    if (!user) return { error: 'no such user' };
     let newRoom: any;
     try {
       newRoom = await this._chatService.createRoom(roomEntity);
@@ -73,12 +77,18 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const { roomID, timestamp: createdAt, message: content } = JSON.parse(data);
     const userID = client.user.sub;
     const user = await this._chatService.getMember({ roomID, userID });
+    if (!(await this._chatService._userService.findById(userID))) return { error: 'no such user' };
     if (user.isBaned || user.isMuted)
       return { error: (user.isBaned) ? 'you are banned': 'you are muted' };
     const message: CreateMessageColumnDto = { roomID, createdAt, content, userID: +userID }
     const room = await this._chatService.getRoomById(roomID);
     if (!room) throw new NotFoundException('room not found');
-    await this._chatService.createMessage(message);
+    try {
+      await this._chatService.createMessage(message);
+    } catch (e)
+    {
+      return  { error: e.message };
+    }
     const outData = {
       roomID,
       sender: {
@@ -89,7 +99,21 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       message: message.content,
       timestamp: message.createdAt,
     };
-    this.server.to("" + roomID).emit('chat-message', outData);
+    let relations = await this._chatService._userService._relationsRepo.find({
+      relations: ["userSecond", "blocker", "userFirst"],
+      where: {
+      userSecond: await  this._chatService._userService.findById(client.user.sub)}});
+    if (relations.length)
+      relations = relations.filter(rel => rel.blocker !== null);
+    let socketsArr = [];
+    for (let relation of relations) {
+      const sockets = await this.server.in(Clients.getSocketId(relation.userFirst.id).socketId).fetchSockets();
+      sockets[0].join("U"+userID);
+      socketsArr.push(sockets[0]);
+    }
+    this.server.to("" + roomID).except("U"+userID).emit('chat-message', outData);
+    for (let socket of socketsArr)
+      socket.leave("U"+userID);
   }
 
   // @UseGuards(JwtAuthGuard)
@@ -98,6 +122,9 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const { roomID, password } = createMemberDto;
     const userID = client.user.sub;
     const user = await this._chatService._userService.findById(userID);
+    if (!user) return { error: 'no such user' };
+    const room = await this._chatService.getRoomById(roomID);
+    if (!room) return { error: 'no such room' };
     const member: CreateMemberColumn = {
       user,
       roomID,
@@ -111,7 +138,6 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     catch (e) {
       return { error: e.message };
     }
-    const room = await this._chatService.getRoomById(roomID);
     client.join("" + roomID);
     return room;
   }
@@ -126,16 +152,14 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     const user = client.user;
     const roomID = data.roomID;
+    if (!(await this._chatService.getRoomById(roomID)))
+      return  { error: 'no such room' };
     try {
       await this._chatService.removeMemberFromRoom(roomID, user.sub);
       this.server.to(String(roomID)).emit('chat-leave', { name: user.username });
-      // console.log('deleted members: \n')
-      // console.log(members);
-      // console.log('----------------------------------------------------------------');
     } catch (e) {
       return { error: e.message };
     }
-
     client.leave(String(roomID));
 
     /** out:
@@ -177,10 +201,9 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     } catch (e) {
       return { error: e.message };
     }
-    const res = await this.server.fetchSockets();
-    const otherUserClient = res.find(clt => clt.id === Clients.getSocketId(user.id));
-    if (otherUserClient)
-      otherUserClient.join(String(roomID));
+    const otherUserClient = await this.server.in(Clients.getSocketId(user.id).socketId).fetchSockets();
+    if (otherUserClient.length)
+      otherUserClient[0].join(String(roomID));
   }
 
   @SubscribeMessage('chat-conversation')
@@ -193,13 +216,17 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       return { error: e.message };
     }
 
-    const res = await this.server.fetchSockets();
-    const otherUserClient = res.find(clt => clt.id === Clients.getSocketId(otherUser));
-    if (otherUserClient)
-      otherUserClient.join(String(newDM.roomID));
-    client.join(String(newDM.roomID));
+    const otherUserClient = await this.server.in(Clients.getSocketId(otherUser).socketId).fetchSockets();
+    // const otherUserClient = res.find(clt => clt.id === Clients.getSocketId(otherUser).socketId);
     let oUser = await this._chatService._userService.findById(otherUser);
-    return {...newDM, users: oUser ? { uid: oUser.id, name: oUser.username, img: oUser.avatar } : undefined};
+    let newChat = {...newDM, users: oUser ? { uid: oUser.id, name: oUser.username, img: oUser.avatar } : undefined};
+    console.log('otherUserClient ', otherUserClient);
+    if (otherUserClient.length) {
+      otherUserClient[0].emit('newDirectMessage', newChat);
+      otherUserClient[0].join(String(newDM.roomID));
+    }
+    client.join(String(newDM.roomID));
+    return newChat;
   }
 
   @SubscribeMessage('ban')
