@@ -4,13 +4,9 @@ import { Server } from 'socket.io'
 import { CreateMessageColumnDto } from './dto/create-message.dto';
 import { CreateMemberColumn } from './dto/create-member.dto';
 import { Clients, CustomSocket } from 'src/adapters/socket.adapter';
-import {Body, Injectable, NotFoundException, Param, Patch, Req, UseGuards} from '@nestjs/common';
+import {NotFoundException} from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { RoomEntity } from './entities/room.entity';
-import {JwtAuthGuard} from "../auth/jwt-auth.guard";
-import {User} from "../users/entity/user.entity";
-import {UnmuteAndUnbanDto} from "./dto/params.dto";
-import {Not} from "typeorm";
 import * as bcrypt from "bcryptjs";
 
 @WebSocketGateway()
@@ -246,7 +242,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   async banMember(@ConnectedSocket() client: CustomSocket, @MessageBody() data: any) { // userID is the id of the user to ban
     const {roomID, userID} = data;
     try {
-      const member = await  this._chatService.getMember({userID: client.user.sub});
+      const member = await  this._chatService.getMember({userID: client.user.sub, roomID: roomID});
       if (member.role !== 'admin')
           return { error: 'you are not the admin' };
       const room = await  this._chatService.getRoomById(roomID);
