@@ -27,8 +27,12 @@ export class GameController {
 	@Get('leaderBoard')
 	async getLeaderBoard(@Req() request: Request, @Res() res: Response)
 	{
-		const result =  await this._usersService.getLeaderBoard();
-		res.send(result);
+		try {
+			const result =  await this._usersService.getLeaderBoard();
+			res.send(result);
+		} catch (error) {
+			res.send({"error": "Unexcpected error"})
+		}
 	}
 
 }
