@@ -165,6 +165,8 @@ export class ChatController {
     @Param('roomID') roomID: number,
     @Body('name') newRoomName: string,
   ) {
+    if (!newRoomName.length || newRoomName.length > 20)
+      return { error: 'name should be between 1 and 20' };
     try {
       await this._chaTService.updateRoomName(roomID, newRoomName);
     } catch (e) {
@@ -180,6 +182,11 @@ export class ChatController {
     @Param('roomID') roomID: number,
     @Body('password') newRoomPassword: string,
   ) {
+    if (
+      newRoomPassword?.length < 8 ||
+      newRoomPassword?.match('^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$')
+    )
+      return { error: 'password too weak' };
     try {
       await this._chaTService.updateRoomPassword(roomID, newRoomPassword);
     } catch (e) {
