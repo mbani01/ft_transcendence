@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/26 21:33:45 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/27 15:02:44 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,10 +148,18 @@ export class gameSocketGateway
 		const sockets = await this.server.fetchSockets()
 		sockets.forEach(element=> {
 		if (element.user.sub === parseInt(data.receiverId))
+		{
 			this.server.to(element.id).emit('invitedToGame', {InvitationId: QueueId, SenderName: socket.user.username}); // Invitation sent
+			setTimeout(this.expireInvitation.bind(this), 30000, QueueId);
+		}
 		});
 	}
 	
+	expireInvitation(QueueId)
+	{
+		this.PrivateQueues = this.PrivateQueues.filter(element => element.getId() !== String(QueueId));
+	}
+
 	@SubscribeMessage('GameInvitationReceived')
 	InvitationReceived(@ConnectedSocket() socket: any, @MessageBody() data :any)
 	{
@@ -159,6 +167,7 @@ export class gameSocketGateway
 		!data.hasOwnProperty('isAccepted'))
 			return ;
 		const queue = this.PrivateQueues.find(element => element.getId() === String(data.InvitationId));
+		console.log(queue);
 		if (queue === undefined)
 			return {'error': "Invalid or expired invitation"};
 		if (Clients.getUserStatus(queue.getSenderId()) !== 'online')
