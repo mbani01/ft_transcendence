@@ -20,6 +20,7 @@ import { WebSocketServer } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 import { ChatGateway } from './chat.gateway';
 import * as bcrypt from 'bcryptjs';
+import {Clients} from "../../adapters/socket.adapter";
 
 @Injectable()
 export class ChatService {
@@ -195,6 +196,7 @@ export class ChatService {
               uid: otherUser.id,
               name: otherUser.username,
               img: otherUser.avatar,
+              status: Clients.getUserStatus(otherUser.id)
             }
           : undefined,
       });

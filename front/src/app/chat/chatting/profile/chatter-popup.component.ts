@@ -119,4 +119,14 @@ export class ChatterPopupComponent {
     }
   }
 
+  getStatusColor() {
+    if (this.user.status === 'online') {
+      return '#00D04E'
+    } else if (this.user.status === 'in-game') {
+      return '#D4AA04';
+    } else {
+      return '#d40404';
+    }
+  }
+
 }

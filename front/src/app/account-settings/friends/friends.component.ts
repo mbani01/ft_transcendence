@@ -13,10 +13,10 @@ import {Chat} from "../../chat/shared/chat.model";
   styleUrls: ['friends.component.scss']
 })
 export class FriendsComponent {
-  friends = new BehaviorSubject<(User&{status: string})[]>([]);
+  friends = new BehaviorSubject<(User)[]>([]);
 
   constructor(private http: HttpClient, private oauthService: OAuthService, private chatService: ChatService) {
-    this.http.get<(User&{status: string})[]>(`${environment.apiBaseUrl}/users/friends`).subscribe({
+    this.http.get<(User)[]>(`${environment.apiBaseUrl}/users/friends`).subscribe({
       next: value => {
         console.log(value);
         value[0].status = 'online';

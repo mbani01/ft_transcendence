@@ -1,6 +1,6 @@
 import {MatchHistory} from "./match-history.model";
+import {STATUS} from "../../shared/user";
 
-type STATUS = 'on-line' | 'off-line' | 'in-game'
 
 export class UserInfo {
   games: number;

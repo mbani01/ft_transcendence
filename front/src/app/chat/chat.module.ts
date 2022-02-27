@@ -21,6 +21,7 @@ import {environment} from "../../environments/environment";
 import {CreateModalComponent} from "./chat-rooms/create-modal/create-modal.component";
 import {ChatSettingsComponent} from "./chatting/chat-settings/chat-settings.component";
 import {OrderByUnreadPipe} from "./chat-list-component/orderByUnread.pipe";
+import {ProfileModule} from "../profile/profile.module";
 
 // const config: SocketIoConfig = {url: environment.chatSocketUri, options: {}}
 
@@ -49,7 +50,8 @@ import {OrderByUnreadPipe} from "./chat-list-component/orderByUnread.pipe";
         NgbPaginationModule,
         FormsModule,
         // SocketIoModule.forRoot(config),
-        NgbNavModule
+        NgbNavModule,
+        ProfileModule
     ],
     exports: [
         ChatComponent,
