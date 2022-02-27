@@ -18,8 +18,8 @@ import { CloudinaryModule } from "../cloudinary/cloudinary.module";
     PassportModule,
     CloudinaryModule,
     TypeOrmModule.forFeature([User, Relation]),
-    JwtModule.register({
-      secret: "secret",
+    JwtModule.registerAsync({
+      useFactory: () => {return {secret: process.env.JWT_SECRET}}
       // signOptions: { expiresIn: 60 },
     }),
   ],
