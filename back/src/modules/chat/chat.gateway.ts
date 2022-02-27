@@ -16,7 +16,7 @@ import { Clients, CustomSocket } from 'src/adapters/socket.adapter';
 import { NotFoundException } from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { RoomEntity } from './entities/room.entity';
-
+import * as bcrypt from 'bcryptjs';
 @WebSocketGateway()
 export class ChatGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect

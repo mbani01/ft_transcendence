@@ -124,7 +124,7 @@ export class GameService {
     this.stat = GameStat.MAIN;
     this.socket.emit('leftGame');
     this.endGame();
-    this.leftTab();
+    leftTab();
   }
 
   gameInvite(invite: {InvitationId: string, SenderName: string}) {
