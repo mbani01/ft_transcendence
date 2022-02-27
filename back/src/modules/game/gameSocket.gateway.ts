@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/27 15:02:44 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/27 16:54:50 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,14 +145,18 @@ export class gameSocketGateway
 			return ;
 		this.PrivateQueues.push(Queue);
 			// Get receiver socket and send invitation event
-		const sockets = await this.server.fetchSockets()
-		sockets.forEach(element=> {
-		if (element.user.sub === parseInt(data.receiverId))
-		{
-			this.server.to(element.id).emit('invitedToGame', {InvitationId: QueueId, SenderName: socket.user.username}); // Invitation sent
-			setTimeout(this.expireInvitation.bind(this), 30000, QueueId);
+		try {
+			const sockets = await this.server.fetchSockets()
+			sockets.forEach(element=> {
+			if (element.user.sub === parseInt(data.receiverId))
+			{
+				this.server.to(element.id).emit('invitedToGame', {InvitationId: QueueId, SenderName: socket.user.username}); // Invitation sent
+				setTimeout(this.expireInvitation.bind(this), 30000, QueueId);
+			}
+			});
+		} catch (error) {
+			return {"error": "Unexpected Error"};
 		}
-		});
 	}
 	
 	expireInvitation(QueueId)
@@ -257,16 +261,20 @@ export class gameSocketGateway
 					Winner: winner});
 			}
 			const gameRepo = getRepository(Game);
-			const gamedata = await gameRepo.create({id: gameInfos.GameId, firstPlayer:gameInfos.Players[0].sub, 
-				firstPlayerScore: gameInfos.score.player1, secondPlayer: gameInfos.Players[1].sub, 
-			secondPlayerScore: gameInfos.score.player2, winner: winner.sub, isDefault: gameInfos.isDefault});
-				await gameRepo.save(gamedata);
-			this.Games = this.Games.filter(element => element.getGameId() !== gameInfos.GameId);
-			this.server.socketsLeave(gameInfos.GameId); // make all players/watcher leave the room
-			this.LiveGames();
-			Clients.updateState(gameInfos.Players[0].sub, "online");
-			Clients.updateState(gameInfos.Players[1].sub, "online");
-			this.UpdateScore(gameInfos, winner.sub, loser.sub)
+			try {
+				const gamedata = await gameRepo.create({id: gameInfos.GameId, firstPlayer:gameInfos.Players[0].sub, 
+					firstPlayerScore: gameInfos.score.player1, secondPlayer: gameInfos.Players[1].sub, 
+				secondPlayerScore: gameInfos.score.player2, winner: winner.sub, isDefault: gameInfos.isDefault});
+					await gameRepo.save(gamedata);
+				this.Games = this.Games.filter(element => element.getGameId() !== gameInfos.GameId);
+				this.server.socketsLeave(gameInfos.GameId); // make all players/watcher leave the room
+				this.LiveGames();
+				Clients.updateState(gameInfos.Players[0].sub, "online");
+				Clients.updateState(gameInfos.Players[1].sub, "online");
+				this.UpdateScore(gameInfos, winner.sub, loser.sub)
+			} catch (error) {
+				return {"error": "Unexpected Error"};
+			}
 		}
 	}
 
