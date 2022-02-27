@@ -16,12 +16,11 @@ import {ChatRoomsComponent} from "./chat-rooms/chat-rooms.component";
 import {JoinModalComponent} from "./chat-rooms/join-modal/join-modal.component";
 import {FormsModule} from "@angular/forms";
 import {ChatterPopupComponent} from "./chatting/profile/chatter-popup.component";
-import {SocketIoConfig, SocketIoModule} from "ngx-socket-io";
-import {environment} from "../../environments/environment";
 import {CreateModalComponent} from "./chat-rooms/create-modal/create-modal.component";
 import {ChatSettingsComponent} from "./chatting/chat-settings/chat-settings.component";
 import {OrderByUnreadPipe} from "./chat-list-component/orderByUnread.pipe";
 import {ProfileModule} from "../profile/profile.module";
+import {UserAvatarComponent} from "./user-avatar/user-avatar.component";
 
 // const config: SocketIoConfig = {url: environment.chatSocketUri, options: {}}
 
@@ -38,24 +37,23 @@ import {ProfileModule} from "../profile/profile.module";
     CreateModalComponent,
     ChatterPopupComponent,
     ChatSettingsComponent,
-    OrderByUnreadPipe
+    OrderByUnreadPipe,
+    UserAvatarComponent
   ],
     imports: [
-        CommonModule,
-        // NgbModule,
-        NgbDropdownModule,
-        NgbPopoverModule,
-        NgbTooltipModule,
-        NgbTimepickerModule,
-        NgbPaginationModule,
-        FormsModule,
-        // SocketIoModule.forRoot(config),
-        NgbNavModule,
-        ProfileModule
+      CommonModule,
+      NgbDropdownModule,
+      NgbPopoverModule,
+      NgbTooltipModule,
+      NgbTimepickerModule,
+      NgbPaginationModule,
+      FormsModule,
+      NgbNavModule
     ],
     exports: [
-        ChatComponent,
-        ChatterPopupComponent
+      ChatComponent,
+      ChatterPopupComponent,
+      UserAvatarComponent
     ]
 })
 export class ChatModule {}

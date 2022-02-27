@@ -19,7 +19,7 @@ import {MainSocket} from "./socket/MainSocket";
 import {SocketIoModule} from "ngx-socket-io";
 import {GameComponent} from "./game/game.component";
 import {NotifierModule} from "angular-notifier";
-import {UserAvatarComponent} from "./profile/user-avatar/user-avatar.component";
+import {UserAvatarComponent} from "./chat/user-avatar/user-avatar.component";
 
 @NgModule({
   declarations: [
