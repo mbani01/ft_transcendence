@@ -13,21 +13,9 @@ import { Server } from 'socket.io';
 import { CreateMessageColumnDto } from './dto/create-message.dto';
 import { CreateMemberColumn } from './dto/create-member.dto';
 import { Clients, CustomSocket } from 'src/adapters/socket.adapter';
-import {
-  Body,
-  Injectable,
-  NotFoundException,
-  Param,
-  Patch,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import {NotFoundException} from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { RoomEntity } from './entities/room.entity';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { User } from '../users/entity/user.entity';
-import { UnmuteAndUnbanDto } from './dto/params.dto';
-import { Not } from 'typeorm';
 
 @WebSocketGateway()
 export class ChatGateway
@@ -62,21 +50,25 @@ export class ChatGateway
           "password"?: string
         }
       */
-    const { name, isPublic, password } = createRoomBodyDto;
-    if (
-      password?.length < 8 ||
-      password.match(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/)
-    )
-      return { error: 'password too weak' };
+    let { name, isPublic, password } = createRoomBodyDto;
+    if (password?.length < 8 || password?.match("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"))
+      return { error: "password too weak" };
     if (!name.length || name.length > 20)
       return { error: 'name should be between 1 and 20' };
     const channelType = this._chatService.getChannelType(isPublic, password);
-    const roomEntity: CreateRoomDto = {
-      name,
-      password,
-      channelType,
-      ownerID: client.user.sub,
-    };
+
+    /* Bcrypt password */
+    // try {
+    //   await bcrypt.hash(password, 10).catch(reason => {
+    //     throw reason
+    //   }).then(value => {
+    //     password = value;
+    //   })
+    // } catch (reason) {
+    //   return { error: reason };
+    // }
+
+    const roomEntity: CreateRoomDto = { name, password, channelType, ownerID: client.user.sub }
     const user = await this._chatService._userService.findById(client.user.sub);
     if (!user) return { error: 'no such user' };
     let newRoom: any;

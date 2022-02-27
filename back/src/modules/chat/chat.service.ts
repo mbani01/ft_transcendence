@@ -15,6 +15,7 @@ import { User } from "../users/entity/user.entity";
 import { WebSocketServer } from "@nestjs/websockets";
 import { Server } from "socket.io";
 import { ChatGateway } from "./chat.gateway";
+import * as bcrypt from "bcryptjs";
 
 @Injectable()
 export class ChatService {
@@ -46,7 +47,7 @@ export class ChatService {
     const room = await this.getRoomById(newMember.roomID);
     if (!room) throw new NotFoundException(`no such room`);
     if (room.channelType === 'protected') {
-      if (newMember.password !== room.password)
+      if (!bcrypt.compareSync(newMember.password, room.password))
         throw new UnauthorizedException('Wrong password');
     }
     delete newMember.password;
@@ -272,7 +273,6 @@ export class ChatService {
         isBaned: true
       }
     })
-    console.log(bannedMembers);
     for (let member of bannedMembers) {
       bannedMembersArray.push({
         uid: member.user.id,
