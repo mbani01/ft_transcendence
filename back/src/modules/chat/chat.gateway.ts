@@ -51,41 +51,41 @@ export class ChatGateway
         }
       */
     let { name, isPublic, password } = createRoomBodyDto;
-    if (password?.length < 8 || password?.match("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"))
-      return { error: "password too weak" };
-    if (!name.length || name.length > 20)
-      return { error: 'name should be between 1 and 20' };
-    const channelType = this._chatService.getChannelType(isPublic, password);
-
-    /* Bcrypt password */
-    // try {
-    //   await bcrypt.hash(password, 10).catch(reason => {
-    //     throw reason
-    //   }).then(value => {
-    //     password = value;
-    //   })
-    // } catch (reason) {
-    //   return { error: reason };
-    // }
-
-    const roomEntity: CreateRoomDto = { name, password, channelType, ownerID: client.user.sub }
-    const user = await this._chatService._userService.findById(client.user.sub);
-    if (!user) return { error: 'no such user' };
-    let newRoom: any;
     try {
-      newRoom = await this._chatService.createRoom(roomEntity);
-      await this._chatService.createMember({
-        user,
-        roomID: newRoom.roomID,
-        userID: client.user.sub,
-        password: newRoom.password,
-        role: 'admin',
-      });
+      if (password?.length < 8 || password?.match("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"))
+        return { error: "password too weak" };
+      if (!name.length || name.length > 20)
+        return { error: 'name should be between 1 and 20' };
+      const channelType = this._chatService.getChannelType(isPublic, password);
+
+      /* Bcrypt password */
+      // try {
+      //   await bcrypt.hash(password, 10).catch(reason => {
+      //     throw reason
+      //   }).then(value => {
+      //     password = value;
+      //   })
+      // } catch (reason) {
+      //   return { error: reason };
+      // }
+
+      const roomEntity: CreateRoomDto = { name, password, channelType, ownerID: client.user.sub }
+      const user = await this._chatService._userService.findById(client.user.sub);
+      if (!user) return { error: 'no such user' };
+      let newRoom: any;
+        newRoom = await this._chatService.createRoom(roomEntity);
+        await this._chatService.createMember({
+          user,
+          roomID: newRoom.roomID,
+          userID: client.user.sub,
+          password: newRoom.password,
+          role: 'admin',
+        });
+      client.join('' + newRoom.roomID);
+      return newRoom;
     } catch (e) {
       return { error: e.message };
     }
-    client.join('' + newRoom.roomID);
-    return newRoom;
   }
 
   // @UseGuards(JwtAuthGuard)
@@ -94,59 +94,59 @@ export class ChatGateway
     @MessageBody() data: any,
     @ConnectedSocket() client: CustomSocket,
   ) {
-    const { roomID, timestamp: createdAt, message: content } = JSON.parse(data);
-    const userID = client.user.sub;
-    const user = await this._chatService.getMember({ roomID, userID });
-    if (!(await this._chatService._userService.findById(userID)))
-      return { error: 'no such user' };
-    if (user.isBaned || user.isMuted)
-      return { error: user.isBaned ? 'you are banned' : 'you are muted' };
-    const message: CreateMessageColumnDto = {
-      roomID,
-      createdAt,
-      content,
-      userID: +userID,
-    };
-    const room = await this._chatService.getRoomById(roomID);
-    if (!room) throw new NotFoundException('room not found');
     try {
+      const { roomID, timestamp: createdAt, message: content } = JSON.parse(data);
+      const userID = client.user.sub;
+      const user = await this._chatService.getMember({ roomID, userID });
+      if (!(await this._chatService._userService.findById(userID)))
+        return { error: 'no such user' };
+      if (user.isBaned || user.isMuted)
+        return { error: user.isBaned ? 'you are banned' : 'you are muted' };
+      const message: CreateMessageColumnDto = {
+        roomID,
+        createdAt,
+        content,
+        userID: +userID,
+      };
+      const room = await this._chatService.getRoomById(roomID);
+      if (!room) throw new NotFoundException('room not found');
       await this._chatService.createMessage(message);
+      const outData = {
+        roomID,
+        sender: {
+          uid: userID,
+          name: client.user.username,
+          img: client.user.img,
+        },
+        message: message.content,
+        timestamp: message.createdAt,
+      };
+      let relations = await this._chatService._userService._relationsRepo.find({
+        relations: ['userSecond', 'blocker', 'userFirst'],
+        where: {
+          userSecond: await this._chatService._userService.findById(
+            client.user.sub,
+          ),
+        },
+      });
+      if (relations.length)
+        relations = relations.filter((rel) => rel.blocker !== null);
+      let socketsArr = [];
+      for (let relation of relations) {
+        const sockets = await this.server
+          .in(Clients.getSocketId(relation.userFirst.id).socketId)
+          .fetchSockets();
+        sockets[0].join('U' + userID);
+        socketsArr.push(sockets[0]);
+      }
+      this.server
+        .to('' + roomID)
+        .except('U' + userID)
+        .emit('chat-message', outData);
+      for (let socket of socketsArr) socket.leave('U' + userID);
     } catch (e) {
       return { error: e.message };
     }
-    const outData = {
-      roomID,
-      sender: {
-        uid: userID,
-        name: client.user.username,
-        img: client.user.img,
-      },
-      message: message.content,
-      timestamp: message.createdAt,
-    };
-    let relations = await this._chatService._userService._relationsRepo.find({
-      relations: ['userSecond', 'blocker', 'userFirst'],
-      where: {
-        userSecond: await this._chatService._userService.findById(
-          client.user.sub,
-        ),
-      },
-    });
-    if (relations.length)
-      relations = relations.filter((rel) => rel.blocker !== null);
-    let socketsArr = [];
-    for (let relation of relations) {
-      const sockets = await this.server
-        .in(Clients.getSocketId(relation.userFirst.id).socketId)
-        .fetchSockets();
-      sockets[0].join('U' + userID);
-      socketsArr.push(sockets[0]);
-    }
-    this.server
-      .to('' + roomID)
-      .except('U' + userID)
-      .emit('chat-message', outData);
-    for (let socket of socketsArr) socket.leave('U' + userID);
   }
 
   // @UseGuards(JwtAuthGuard)
@@ -156,25 +156,25 @@ export class ChatGateway
     @MessageBody() createMemberDto: any,
   ) {
     const { roomID, password } = createMemberDto;
-    const userID = client.user.sub;
-    const user = await this._chatService._userService.findById(userID);
-    if (!user) return { error: 'no such user' };
-    const room = await this._chatService.getRoomById(roomID);
-    if (!room) return { error: 'no such room' };
-    const member: CreateMemberColumn = {
-      user,
-      roomID,
-      userID: +userID,
-      password,
-      role: 'member',
-    };
     try {
+      const userID = client.user.sub;
+      const user = await this._chatService._userService.findById(userID);
+      if (!user) return { error: 'no such user' };
+      const room = await this._chatService.getRoomById(roomID);
+      if (!room) return { error: 'no such room' };
+      const member: CreateMemberColumn = {
+        user,
+        roomID,
+        userID: +userID,
+        password,
+        role: 'member',
+      };
       await this._chatService.createMember(member);
+      client.join('' + roomID);
+      return room;
     } catch (e) {
       return { error: e.message };
     }
-    client.join('' + roomID);
-    return room;
   }
 
   @SubscribeMessage('chat-leave')
@@ -187,32 +187,29 @@ export class ChatGateway
       "roomID": number | string,
     }
     */
-
-    const user = client.user;
-    const roomID = data.roomID;
-    if (!(await this._chatService.getRoomById(roomID)))
-      return { error: 'no such room' };
     try {
+      const user = client.user;
+      const roomID = data.roomID;
+      if (!(await this._chatService.getRoomById(roomID)))
+        return { error: 'no such room' };
       await this._chatService.removeMemberFromRoom(roomID, user.sub);
       this.server
         .to(String(roomID))
         .emit('chat-leave', { name: user.username });
+      client.leave(String(roomID));
+      return { roomID };
     } catch (e) {
       return { error: e.message };
     }
-    client.leave(String(roomID));
-
     /** out:
     {
       "roomID": number,
     }
-  
     error:
     {
       "error": string,
     }
      */
-    return { roomID };
   }
 
   @SubscribeMessage('chat-room-invite')
@@ -228,17 +225,16 @@ export class ChatGateway
          "timestamp": Date
      } 
      */
-
-    // first thing to do is destruct the username and the room id from the data object
-    const { name, roomID } = data;
-    // now lets check if we have a user with such name in the data base
-    const user = await this._chatService._userService.findByUserName(name);
-    if (!user) return { error: 'no such user' };
-    // the same for room we need to check if we have a room with such id in the data base
-    const room = await this._chatService.getRoomById(roomID);
-    if (!room) return { error: 'no such room' };
-    // here we will create a member in this room
     try {
+      // first thing to do is destruct the username and the room id from the data object
+      const { name, roomID } = data;
+      // now lets check if we have a user with such name in the data base
+      const user = await this._chatService._userService.findByUserName(name);
+      if (!user) return { error: 'no such user' };
+      // the same for room we need to check if we have a room with such id in the data base
+      const room = await this._chatService.getRoomById(roomID);
+      if (!room) return { error: 'no such room' };
+      // here we will create a member in this room
       await this._chatService.createMember({
         user,
         roomID,
@@ -246,14 +242,14 @@ export class ChatGateway
         password: room.password,
         role: 'member',
       });
+      // we need to join the the user to the socket server in he is on-line
+      const otherUserClient = await this.server
+        .in(Clients.getSocketId(user.id).socketId)
+        .fetchSockets(); // this method gives us all the connected socket to the server
+      if (otherUserClient.length) otherUserClient[0].join(String(roomID));
     } catch (e) {
       return { error: e.message };
     }
-    // we need to join the the user to the socket server in he is on-line
-    const otherUserClient = await this.server
-      .in(Clients.getSocketId(user.id).socketId)
-      .fetchSockets(); // this method gives us all the connected socket to the server
-    if (otherUserClient.length) otherUserClient[0].join(String(roomID));
   }
 
   @SubscribeMessage('chat-conversation')
@@ -261,10 +257,10 @@ export class ChatGateway
     // the first thing to do is destcrut the other user from the payload
     const { otherUser } = data;
     // now lets check if we have this user in the data base and create the DM
-    let oUser = await this._chatService._userService.findById(otherUser);
-    if (!oUser) return { error: 'no such user' };
     let newDM: RoomEntity;
     try {
+      let oUser = await this._chatService._userService.findById(otherUser);
+      if (!oUser) return { error: 'no such user' };
       newDM = await this._chatService.createDM(
         {
           isChannel: false,
@@ -273,26 +269,25 @@ export class ChatGateway
         },
         { userID1: client.user.sub, userID2: otherUser },
       );
+      // after the DM is created we need to join the user to it
+      const otherUserClient = await this.server
+        .in(Clients.getSocketId(otherUser).socketId)
+        .fetchSockets();
+      let newChat = {
+        ...newDM,
+        users: oUser
+          ? { uid: oUser.id, name: oUser.username, img: oUser.avatar }
+          : undefined,
+      };
+      if (otherUserClient.length) {
+        otherUserClient[0].emit('newDirectMessage', newChat);
+        otherUserClient[0].join(String(newDM.roomID));
+      }
+      client.join(String(newDM.roomID));
+      return newChat;
     } catch (e) {
       return { error: e.message };
     }
-
-    // after the DM is created we need to join the user to it
-    const otherUserClient = await this.server
-      .in(Clients.getSocketId(otherUser).socketId)
-      .fetchSockets();
-    let newChat = {
-      ...newDM,
-      users: oUser
-        ? { uid: oUser.id, name: oUser.username, img: oUser.avatar }
-        : undefined,
-    };
-    if (otherUserClient.length) {
-      otherUserClient[0].emit('newDirectMessage', newChat);
-      otherUserClient[0].join(String(newDM.roomID));
-    }
-    client.join(String(newDM.roomID));
-    return newChat;
   }
 
   @SubscribeMessage('ban')
@@ -315,15 +310,15 @@ export class ChatGateway
       if (room.ownerID === userID)
         return { error: "you can't ban the room owner" };
       await this._chatService.banMember(roomID, userID);
+      // after the user is stored in the DB as banned we need to leave it from the room
+      this.server.to(String(roomID)).emit('ban', { roomID, userID });
+      const otherUserClient = await this.server
+        .in(Clients.getSocketId(userID).socketId)
+        .fetchSockets();
+      if (otherUserClient.length) otherUserClient[0].leave(String(roomID));
     } catch (e) {
       return { error: e.message };
     }
-    // after the user is stored in the DB as banned we need to leave it from the room
-    this.server.to(String(roomID)).emit('ban', { roomID, userID });
-    const otherUserClient = await this.server
-      .in(Clients.getSocketId(userID).socketId)
-      .fetchSockets();
-    if (otherUserClient.length) otherUserClient[0].leave(String(roomID));
   }
 
   @SubscribeMessage('mute')
@@ -366,8 +361,8 @@ export class ChatGateway
     @MessageBody() data: any,
   ) {
     const { roomID, uid } = data;
-    if (!(await this._chatService.getRoomById(roomID))) return { error: 'no such room' };
     try {
+      if (!(await this._chatService.getRoomById(roomID))) return { error: 'no such room' };
       await this._chatService.unmuteMember(roomID, uid);
     } catch (e) {
       return { error: e.message };
@@ -381,8 +376,8 @@ export class ChatGateway
     @MessageBody() data: any,
   ) {
     const { roomID, uid } = data;
-    if (!(await this._chatService.getRoomById(roomID))) return { error: 'no such room' };
     try {
+      if (!(await this._chatService.getRoomById(roomID))) return { error: 'no such room' };
       await this._chatService.unbanMember(roomID, uid);
     } catch (e) {
       return { error: e.message };
