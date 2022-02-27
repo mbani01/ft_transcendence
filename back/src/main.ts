@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { WsAdapter } from './adapters/socket.adapter';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
   const PORT = process.env.PORT || 3000;
@@ -16,6 +17,7 @@ async function bootstrap() {
     }
   }));
   app.setGlobalPrefix('api/v1');
+  app.useGlobalFilters(new HttpExceptionFilter());
   await app.listen(PORT);
   console.log("App Listening on Port : " + PORT);
 }

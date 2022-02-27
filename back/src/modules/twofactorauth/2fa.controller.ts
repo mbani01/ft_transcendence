@@ -3,7 +3,6 @@ import {
   Body,
   Controller,
   Get,
-  Param,
   Post,
   Req,
   Res,
@@ -41,38 +40,20 @@ export class TwofactorauthController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/turnon')
-  async trunOn2FA(@Body() twoFACode: any, @Req() req) {
+  async trunOn2FA(@Body() twoFACode: TwoFACodeDto, @Req() req) {
     const { code } = twoFACode
     const user = req.user;
-    console.log('user\'s secret:', user.twoFASecret);
     const isValidCode = this._twoFAService.is2FactorAuthCodeValid(code, user.twoFASecret);
-    if (!isValidCode) {
-      // this._usersService.unSet2FASecret(user.id);
-      throw new UnauthorizedException('Invalid authentication code');
-    }
+    if (!isValidCode) throw new UnauthorizedException('Invalid authentication code');
     await this._usersService.enable2FactorAuth(user.id);
     return true;
   }
 
-  // TODO: implement turn-off  functionality for 2fa.
   @UseGuards(JwtAuthGuard)
   @Get('turnoff')
   turnOff2FA(@Req() req) {
     const user = req.user;
     if (!user.is2FAEnabled) throw new BadRequestException('2-Factor-Authentication is not enabled!');
     this._usersService.unSet2FASecret(user.id);
-  }
-
-  @Post('authenticate/:id')
-  async authenticate(
-    @Param('id') id: number,
-    @Body() { code }: TwoFACodeDto,
-  ) {
-    const user = await this._usersService.findById(id);
-    const isValidCode = this._twoFAService.is2FactorAuthCodeValid(code, user.twoFASecret);
-    if (!isValidCode)
-      throw new UnauthorizedException('Invalid authentication code');
-
-    return true;
   }
 }
