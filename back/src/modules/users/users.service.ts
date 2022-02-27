@@ -26,10 +26,10 @@ export class UsersService {
     return await this._usersRepo.save(user);
   }
 
-  async findAll(paginationQuery: any) {
-    const { username, limit } = paginationQuery;
+  async findAll(UsersQuery: any) {
+    const { like, limit } = UsersQuery;
     return await this._usersRepo.createQueryBuilder("user")
-      .where("user.username like :name", { name: `%${username}%` }).limit(limit).getMany();
+      .where("user.username like :name", { name: `%${like}%` }).limit(limit).getMany();
   }
 
   async findById(userId: number): Promise<User> {
