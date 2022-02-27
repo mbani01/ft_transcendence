@@ -1,26 +1,44 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody, OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect, ConnectedSocket, WebSocketServer } from '@nestjs/websockets';
+import {
+  WebSocketGateway,
+  SubscribeMessage,
+  MessageBody,
+  OnGatewayInit,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  ConnectedSocket,
+  WebSocketServer,
+} from '@nestjs/websockets';
 import { ChatService } from './chat.service';
-import { Server } from 'socket.io'
+import { Server } from 'socket.io';
 import { CreateMessageColumnDto } from './dto/create-message.dto';
 import { CreateMemberColumn } from './dto/create-member.dto';
 import { Clients, CustomSocket } from 'src/adapters/socket.adapter';
-import {Body, Injectable, NotFoundException, Param, Patch, Req, UseGuards} from '@nestjs/common';
+import {
+  Body,
+  Injectable,
+  NotFoundException,
+  Param,
+  Patch,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { RoomEntity } from './entities/room.entity';
-import {JwtAuthGuard} from "../auth/jwt-auth.guard";
-import {User} from "../users/entity/user.entity";
-import {UnmuteAndUnbanDto} from "./dto/params.dto";
-import {Not} from "typeorm";
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { User } from '../users/entity/user.entity';
+import { UnmuteAndUnbanDto } from './dto/params.dto';
+import { Not } from 'typeorm';
 
 @WebSocketGateway()
-export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-
-  constructor(private readonly _chatService: ChatService) { }
+export class ChatGateway
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
+  constructor(private readonly _chatService: ChatService) {}
   @WebSocketServer()
   public server: Server;
 
   afterInit(server: any) {
-    console.log('Gateway Inited')
+    console.log('Gateway Inited');
   }
 
   handleDisconnect(client: any) {
@@ -29,12 +47,14 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   async handleConnection(client: CustomSocket, ...args: any[]) {
     const rooms = await this._chatService.getRoomByUid(client.user.sub);
-    for (let room of rooms)
-      client.join("" + room.roomID)
+    for (let room of rooms) client.join('' + room.roomID);
   }
 
   @SubscribeMessage('create-channel')
-  async createChannel(@MessageBody() createRoomBodyDto: any, @ConnectedSocket() client: CustomSocket) {
+  async createChannel(
+    @MessageBody() createRoomBodyDto: any,
+    @ConnectedSocket() client: CustomSocket,
+  ) {
     /** Request
      *  {
           "name": string, // channel's name
@@ -43,12 +63,20 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         }
       */
     const { name, isPublic, password } = createRoomBodyDto;
-    if (password?.length < 8 || password.match(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/))
-      return { error: "password too weak" };
+    if (
+      password?.length < 8 ||
+      password.match(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/)
+    )
+      return { error: 'password too weak' };
     if (!name.length || name.length > 20)
-      return  { error: "name should be between 1 and 20" };
+      return { error: 'name should be between 1 and 20' };
     const channelType = this._chatService.getChannelType(isPublic, password);
-    const roomEntity: CreateRoomDto = { name, password, channelType, ownerID: client.user.sub }
+    const roomEntity: CreateRoomDto = {
+      name,
+      password,
+      channelType,
+      ownerID: client.user.sub,
+    };
     const user = await this._chatService._userService.findById(client.user.sub);
     if (!user) return { error: 'no such user' };
     let newRoom: any;
@@ -59,35 +87,40 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         roomID: newRoom.roomID,
         userID: client.user.sub,
         password: newRoom.password,
-        role: 'admin'
-      }
-      )
-    }
-    catch (e) {
+        role: 'admin',
+      });
+    } catch (e) {
       return { error: e.message };
     }
-    client.join("" + newRoom.roomID);
+    client.join('' + newRoom.roomID);
     return newRoom;
   }
 
   // @UseGuards(JwtAuthGuard)
   @SubscribeMessage('chat-message')
-  async message(@MessageBody() data: any,
-    @ConnectedSocket() client: CustomSocket) {
+  async message(
+    @MessageBody() data: any,
+    @ConnectedSocket() client: CustomSocket,
+  ) {
     const { roomID, timestamp: createdAt, message: content } = JSON.parse(data);
     const userID = client.user.sub;
     const user = await this._chatService.getMember({ roomID, userID });
-    if (!(await this._chatService._userService.findById(userID))) return { error: 'no such user' };
+    if (!(await this._chatService._userService.findById(userID)))
+      return { error: 'no such user' };
     if (user.isBaned || user.isMuted)
-      return { error: (user.isBaned) ? 'you are banned': 'you are muted' };
-    const message: CreateMessageColumnDto = { roomID, createdAt, content, userID: +userID }
+      return { error: user.isBaned ? 'you are banned' : 'you are muted' };
+    const message: CreateMessageColumnDto = {
+      roomID,
+      createdAt,
+      content,
+      userID: +userID,
+    };
     const room = await this._chatService.getRoomById(roomID);
     if (!room) throw new NotFoundException('room not found');
     try {
       await this._chatService.createMessage(message);
-    } catch (e)
-    {
-      return  { error: e.message };
+    } catch (e) {
+      return { error: e.message };
     }
     const outData = {
       roomID,
@@ -100,25 +133,36 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       timestamp: message.createdAt,
     };
     let relations = await this._chatService._userService._relationsRepo.find({
-      relations: ["userSecond", "blocker", "userFirst"],
+      relations: ['userSecond', 'blocker', 'userFirst'],
       where: {
-      userSecond: await  this._chatService._userService.findById(client.user.sub)}});
+        userSecond: await this._chatService._userService.findById(
+          client.user.sub,
+        ),
+      },
+    });
     if (relations.length)
-      relations = relations.filter(rel => rel.blocker !== null);
+      relations = relations.filter((rel) => rel.blocker !== null);
     let socketsArr = [];
     for (let relation of relations) {
-      const sockets = await this.server.in(Clients.getSocketId(relation.userFirst.id).socketId).fetchSockets();
-      sockets[0].join("U"+userID);
+      const sockets = await this.server
+        .in(Clients.getSocketId(relation.userFirst.id).socketId)
+        .fetchSockets();
+      sockets[0].join('U' + userID);
       socketsArr.push(sockets[0]);
     }
-    this.server.to("" + roomID).except("U"+userID).emit('chat-message', outData);
-    for (let socket of socketsArr)
-      socket.leave("U"+userID);
+    this.server
+      .to('' + roomID)
+      .except('U' + userID)
+      .emit('chat-message', outData);
+    for (let socket of socketsArr) socket.leave('U' + userID);
   }
 
   // @UseGuards(JwtAuthGuard)
   @SubscribeMessage('join')
-  async join(@ConnectedSocket() client: CustomSocket, @MessageBody() createMemberDto: any) {
+  async join(
+    @ConnectedSocket() client: CustomSocket,
+    @MessageBody() createMemberDto: any,
+  ) {
     const { roomID, password } = createMemberDto;
     const userID = client.user.sub;
     const user = await this._chatService._userService.findById(userID);
@@ -130,20 +174,22 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       roomID,
       userID: +userID,
       password,
-      role: 'member'
+      role: 'member',
     };
     try {
       await this._chatService.createMember(member);
-    }
-    catch (e) {
+    } catch (e) {
       return { error: e.message };
     }
-    client.join("" + roomID);
+    client.join('' + roomID);
     return room;
   }
 
   @SubscribeMessage('chat-leave')
-  async leave(@ConnectedSocket() client: CustomSocket, @MessageBody() data: any) {
+  async leave(
+    @ConnectedSocket() client: CustomSocket,
+    @MessageBody() data: any,
+  ) {
     /**data:
     {
       "roomID": number | string,
@@ -153,10 +199,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const user = client.user;
     const roomID = data.roomID;
     if (!(await this._chatService.getRoomById(roomID)))
-      return  { error: 'no such room' };
+      return { error: 'no such room' };
     try {
       await this._chatService.removeMemberFromRoom(roomID, user.sub);
-      this.server.to(String(roomID)).emit('chat-leave', { name: user.username });
+      this.server
+        .to(String(roomID))
+        .emit('chat-leave', { name: user.username });
     } catch (e) {
       return { error: e.message };
     }
@@ -176,7 +224,11 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   @SubscribeMessage('chat-room-invite')
-  async roomInvite(@ConnectedSocket() client: CustomSocket, @MessageBody() data: any) {
+  async roomInvite(
+    @ConnectedSocket() client: CustomSocket,
+    @MessageBody() data: any,
+  ) {
+    // this is the input data
     /** data:
      {
          "uid": number | string,
@@ -185,42 +237,64 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
      } 
      */
 
+    // first thing to do is destruct the username and the room id from the data object
     const { name, roomID } = data;
+    // now lets check if we have a user with such name in the data base
     const user = await this._chatService._userService.findByUserName(name);
-    if (!user)
-      return { error: 'no such user' };
+    if (!user) return { error: 'no such user' };
+    // the same for room we need to check if we have a room with such id in the data base
+    const room = await this._chatService.getRoomById(roomID);
+    if (!room) return { error: 'no such room' };
+    // here we will create a member in this room
     try {
-      const room = await this._chatService.getRoomById(roomID);
       await this._chatService.createMember({
         user,
         roomID,
         userID: user.id,
         password: room.password,
-        role: 'member'
+        role: 'member',
       });
     } catch (e) {
       return { error: e.message };
     }
-    const otherUserClient = await this.server.in(Clients.getSocketId(user.id).socketId).fetchSockets();
-    if (otherUserClient.length)
-      otherUserClient[0].join(String(roomID));
+    // we need to join the the user to the socket server in he is on-line
+    const otherUserClient = await this.server
+      .in(Clients.getSocketId(user.id).socketId)
+      .fetchSockets(); // this method gives us all the connected socket to the server
+    if (otherUserClient.length) otherUserClient[0].join(String(roomID));
   }
 
   @SubscribeMessage('chat-conversation')
   async DM(@ConnectedSocket() client: CustomSocket, @MessageBody() data: any) {
+    // the first thing to do is destcrut the other user from the payload
     const { otherUser } = data;
+    // now lets check if we have this user in the data base and create the DM
+    let oUser = await this._chatService._userService.findById(otherUser);
+    if (!oUser) return { error: 'no such user' };
     let newDM: RoomEntity;
     try {
-      newDM = await this._chatService.createDM({ isChannel: false, channelType: 'private', name: `DM${client.user.sub}${otherUser}` }, { userID1: client.user.sub, userID2: otherUser });
+      newDM = await this._chatService.createDM(
+        {
+          isChannel: false,
+          channelType: 'private',
+          name: `DM${client.user.sub}${otherUser}`,
+        },
+        { userID1: client.user.sub, userID2: otherUser },
+      );
     } catch (e) {
       return { error: e.message };
     }
 
-    const otherUserClient = await this.server.in(Clients.getSocketId(otherUser).socketId).fetchSockets();
-    // const otherUserClient = res.find(clt => clt.id === Clients.getSocketId(otherUser).socketId);
-    let oUser = await this._chatService._userService.findById(otherUser);
-    let newChat = {...newDM, users: oUser ? { uid: oUser.id, name: oUser.username, img: oUser.avatar } : undefined};
-    console.log('otherUserClient ', otherUserClient);
+    // after the DM is created we need to join the user to it
+    const otherUserClient = await this.server
+      .in(Clients.getSocketId(otherUser).socketId)
+      .fetchSockets();
+    let newChat = {
+      ...newDM,
+      users: oUser
+        ? { uid: oUser.id, name: oUser.username, img: oUser.avatar }
+        : undefined,
+    };
     if (otherUserClient.length) {
       otherUserClient[0].emit('newDirectMessage', newChat);
       otherUserClient[0].join(String(newDM.roomID));
@@ -230,68 +304,95 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   @SubscribeMessage('ban')
-  async banMember(@ConnectedSocket() client: CustomSocket, @MessageBody() data: any) { // userID is the id of the user to ban
-    const {roomID, userID} = data;
+  async banMember(
+    @ConnectedSocket() client: CustomSocket,
+    @MessageBody() data: any,
+  ) {
+    // userID is the id of the user to ban
+    const { roomID, userID } = data;
     try {
-      const member = await  this._chatService.getMember({userID: client.user.sub});
-      if (member.role !== 'admin')
-          return { error: 'you are not the admin' };
-      const room = await  this._chatService.getRoomById(roomID);
+      const member = await this._chatService.getMember({
+        userID: client.user.sub,
+      });
+      if (!member) return { error: 'no such member' };
+      if (member.role !== 'admin') return { error: 'you are not the admin' };
+
+      const room = await this._chatService.getRoomById(roomID);
+      if (!room) return { error: 'no such room' };
       if (room.ownerID === userID)
-          return { error: 'you can\'t ban the room owner'};
+        return { error: "you can't ban the room owner" };
       await this._chatService.banMember(roomID, userID);
     } catch (e) {
-        return { error: e.message };
+      return { error: e.message };
     }
-    this.server.to(String(roomID)).emit('ban', {roomID, userID})
-    const res = await this.server.fetchSockets();
-    const otherUserClient = res.find(clt => clt.id === Clients.getSocketId(userID));
-    if (otherUserClient)
-      otherUserClient.leave(String(roomID));
+    // after the user is stored in the DB as banned we need to leave it from the room
+    this.server.to(String(roomID)).emit('ban', { roomID, userID });
+    const otherUserClient = await this.server
+      .in(Clients.getSocketId(userID).socketId)
+      .fetchSockets();
+    if (otherUserClient.length) otherUserClient[0].leave(String(roomID));
   }
 
   @SubscribeMessage('mute')
-  async muteMember(@ConnectedSocket() client: CustomSocket, @MessageBody() data: any) { // userID is the id of the user to ban
-    const {userID, timeout, roomID} = data;
+  async muteMember(
+    @ConnectedSocket() client: CustomSocket,
+    @MessageBody() data: any,
+  ) {
+    // first thing we need to destruct the userID, timeout and the roomID from the socket payload { userID: the user to mute, timeout: the time before we can unmute it}
+    const { userID, timeout, roomID } = data;
+    if (timeout > 2147483647)
+      return { error: 'ghyrha ghyrha bghiti tkhsr hadchi'};
     try {
-      const member = await  this._chatService.getMember({userID: client.user.sub});
-      if (member.role !== 'admin')
-        return { error: 'you are not the admin' };
-      const room = await  this._chatService.getRoomById(roomID);
+      const member = await this._chatService.getMember({
+        userID: client.user.sub,
+      });
+      if (!member) return { error: 'no such member' };
+      if (member.role !== 'admin') return { error: 'you are not the admin' };
+
+      const room = await this._chatService.getRoomById(roomID);
+      if (!room) return { error: 'no such room' };
       if (room.ownerID === userID)
-        return { error: 'you can\'t mute the room owner'};
+        return { error: "you can't mute the room owner" };
       await this._chatService.muteMember(roomID, userID);
+      // here we set a timeout to unmute the user
       const time = setTimeout(() => {
         this._chatService.unmuteMember(roomID, userID);
-        this.server.to(String(roomID)).emit('unmute', {roomID, userID});
+        this.server.to(String(roomID)).emit('unmute', { roomID, userID });
       }, timeout);
       this._chatService.timers.set(`${userID}-${roomID}`, time);
     } catch (e) {
       return { error: e.message };
     }
-    this.server.to(String(roomID)).emit('mute', {roomID, userID})
+    this.server.to(String(roomID)).emit('mute', { roomID, userID });
   }
 
-
   @SubscribeMessage('unmute')
-  async unmuteMember(@ConnectedSocket() client: CustomSocket, @MessageBody() data: any) {
+  async unmuteMember(
+    @ConnectedSocket() client: CustomSocket,
+    @MessageBody() data: any,
+  ) {
     const { roomID, uid } = data;
+    if (!(await this._chatService.getRoomById(roomID))) return { error: 'no such room' };
     try {
-      await  this._chatService.unmuteMember(roomID, uid);
+      await this._chatService.unmuteMember(roomID, uid);
     } catch (e) {
       return { error: e.message };
     }
-    this.server.to(String(roomID)).emit('unmute', {roomID, uid})
+    this.server.to(String(roomID)).emit('unmute', { roomID, uid });
   }
 
   @SubscribeMessage('unban')
-  async unbanMember(@ConnectedSocket() client: CustomSocket, @MessageBody() data: any) {
+  async unbanMember(
+    @ConnectedSocket() client: CustomSocket,
+    @MessageBody() data: any,
+  ) {
     const { roomID, uid } = data;
+    if (!(await this._chatService.getRoomById(roomID))) return { error: 'no such room' };
     try {
       await this._chatService.unbanMember(roomID, uid);
     } catch (e) {
       return { error: e.message };
     }
-    this.server.to(String(roomID)).emit('unban', {roomID, uid})
+    this.server.to(String(roomID)).emit('unban', { roomID, uid });
   }
 }
