@@ -25,7 +25,8 @@ export class NavbarComponent implements OnInit {
     this.loading = true;
     this.http.get<any[]>(`${environment.apiBaseUrl}/users`, {
       params: {
-        username: event.target.value
+        like: event.target.value,
+        limit: 5
       }
     }).subscribe({
       next: (value: any[]) => {
