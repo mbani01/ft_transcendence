@@ -273,7 +273,6 @@ export class ChatService {
         isBaned: true
       }
     })
-    console.log(bannedMembers);
     for (let member of bannedMembers) {
       bannedMembersArray.push({
         uid: member.user.id,

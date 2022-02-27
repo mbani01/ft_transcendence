@@ -24,8 +24,7 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get('status')
-  getStatus(@Query("id") userID: number)
-  {
+  getStatus(@Query("id") userID: number) {
     return Clients.getUserStatus(userID);
   }
 
@@ -61,8 +60,8 @@ export class UsersController {
       console.log(e);
     }
     */
-   const user = await this._usersService.updateAvatar(req.user.id, upload);
-   res.send({avatar: user.avatar});
+    const user = await this._usersService.updateAvatar(req.user.id, upload);
+    res.send({ avatar: user.avatar });
   }
 
   /*
@@ -115,8 +114,7 @@ export class UsersController {
 
     let Games = []
     Games = Games.concat(otherUser.gamesAsFirstPlayer, otherUser.gamesAsSecondPlayer);
-    for(let i of Games)
-    {
+    for (let i of Games) {
       i.firstPlayer = (await this._usersService.findBasicInfoById(i.firstPlayer))[0];
       i.secondPlayer = (await this._usersService.findBasicInfoById(i.secondPlayer))[0];
     }
@@ -192,11 +190,22 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('/blocks')
+  async getBlocked(@Req() req: any) {
+    try {
+      const user = req.user;
+      return await this._usersService.getBlocked(user);
+    } catch (e) {
+      return { error: e.message };
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get("/:id")
   async getOne(@Param("id") userId: number, @Req() req): Promise<OutUserDto> {
     if (typeof userId == "number") {
       const user = await this._usersService.findById(userId);
-      return { uid: user.id, name: user.username, img: user.avatar};
+      return { uid: user.id, name: user.username, img: user.avatar };
     }
     const user = await this._usersService.findByUserName(req.user.username);
     return { uid: user.id, name: user.username, img: user.avatar };
@@ -216,4 +225,4 @@ export class UsersController {
   //   const user = this._usersService.updateAvatar(req.user.id, image);
   //   return image;*/
   // // }
-  }
+}
