@@ -31,7 +31,13 @@ export class ChatController {
             }
             ]
          */
-        return await this._chaTService.getMessages(roomID, req.user);
+        try {
+            return await this._chaTService.getMessages(roomID, req.user);
+        }
+        catch (e)
+        {
+            return { error: e.message };
+        }
     }
 
     @UseGuards(JwtAuthGuard)
@@ -144,6 +150,7 @@ export class ChatController {
         // return `return all the users in the room with id #${roomId}`;
     }
 
+    // we should validate the name
     @UseGuards(JwtAuthGuard)
     @Patch('/:roomID/update-name')
     async updateRoomName(@Param('roomID') roomID: number, @Body('name') newRoomName: string) {
@@ -156,6 +163,7 @@ export class ChatController {
         return { name: newRoomName };
     }
 
+    // we should validate the password
     @UseGuards(JwtAuthGuard)
     @Patch('/:roomID/update-password')
     async updateRoomPassword(@Param('roomID') roomID: number, @Body('password') newRoomPassword: string) {
