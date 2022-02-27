@@ -15,6 +15,7 @@ import { TwoFactorAuthService } from '../twofactorauth/2fa.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
+import { CreateAuthPaginationDto } from './dto/create-auth.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Controller('auth')
@@ -41,7 +42,7 @@ export class AuthController {
   }
 
   @Post('/access_token')
-  async authenticate(@Query() paginationQuery: any, @Res() response: Response) {
+  async authenticate(@Query() paginationQuery: CreateAuthPaginationDto, @Res() response: Response) {
     const { code, twoFactorAuth } = paginationQuery;
     console.log(code);
     let userExist;

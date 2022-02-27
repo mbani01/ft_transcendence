@@ -22,7 +22,6 @@ export const endGame = new Subject<void>();
 function disconnectedPlayer(obj: any, isHostDisconnected: boolean)
 {
 	if (isHostDisconnected) {
-		console.log("host Disco", obj);
 		scene.add.text(game.canvas.width / 6.35, game.canvas.height / 2.1, obj.Players[0].username + ' disconnected', {
 			fontSize: '30px',
 			fontFamily: "'Press Start 2P', cursive"
@@ -32,7 +31,6 @@ function disconnectedPlayer(obj: any, isHostDisconnected: boolean)
 			fontFamily: "'Press Start 2P', cursive"
 		});
 	} else {
-		console.log("not host Disco", obj);
 		scene.add.text(game.canvas.width / 1.82, game.canvas.height / 2.1, obj.Players[1].username +' disconnected', {
 			fontSize: '30px',
 			fontFamily: "'Press Start 2P', cursive"
@@ -44,11 +42,16 @@ function disconnectedPlayer(obj: any, isHostDisconnected: boolean)
 	}
 }
 
+export function leftTab()
+{
+	game = undefined;
+}
+
 function emitIfGameActive(event : string, data: any)
 {
 	if (!gameEnd){
 		socket.emit(event, data);
-		console.log("emited", gameEnd);
+		// console.log("emited", gameEnd);
 	}
 }
 
@@ -124,7 +127,6 @@ export function socketListening () {
   });
 
 	socket.on("syncCounter", (obj: any) => {
-		console.log(obj);
 		if (isWatcher) {
 			if (!obj.hasOwnProperty('disable')) {
 				if (obj.isHost) {
@@ -185,11 +187,11 @@ export function socketListening () {
 	powerUpBall.setVisible(obj.isVisible);
 	if (obj.hasOwnProperty('collided')) {
 	  if (obj.collided == 1) {
-		player1.setDisplaySize(player1.displayWidth, player1.displayHeight * 1.5);
+		player1.setDisplaySize(player1.displayWidth, PLAYER_HEIGHT * 1.5);
 		// scene.time.delayedCall(10000, showPowerUp, [], player1);
 		scene.time.delayedCall(5000, resetPlayerSize, [], player1);
 	  } else {
-		player2.setDisplaySize(player2.displayWidth, player2.displayHeight * 1.5);
+		player2.setDisplaySize(player2.displayWidth, PLAYER_HEIGHT * 1.5);
 		// scene.time.delayedCall(10000, showPowerUp, [], player2);
 		scene.time.delayedCall(5000, resetPlayerSize, [], player2);
 	  }
@@ -533,7 +535,6 @@ function HandleHit(this: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody)
 	else if (this.y > ball.y)
 	{
 	ball.setVelocityY(10 * (ball.y - this.y));
-	console.log("right");
 	}
 }
 
@@ -555,7 +556,7 @@ function setPowerUp(this: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody)
 	emitIfGameActive('syncPowerUp', {"GameId":GameId, 'collided': 1});
   else
 	emitIfGameActive('syncPowerUp', {"GameId":GameId, 'collided': 2});
-  this.setDisplaySize(this.displayWidth, this.displayHeight * 1.5);
+  this.setDisplaySize(this.displayWidth, PLAYER_HEIGHT * 1.5);
   powerUpBall.setPosition(-200, -200);
   powerUpBall.setVelocity(0);
   powerUpBall.setVisible(false);
@@ -584,12 +585,10 @@ function update(this: Phaser.Scene) : void
 		}
 	}
 	if (cursors.down.isDown && !cursors.up.isDown && !isWatcher) {
-		console.log("hello world! down")
 		local_player.setPosition(local_player.x, local_player.y + PLAYER_SPEED);
 		emitIfGameActive('sync', {"GameId":GameId, player: {x: local_player.x, y: local_player.y}, isHost: isHost});
 
 	} else if (cursors.up.isDown && !cursors.down.isDown && !isWatcher) {
-		console.log("hello world! up")
 		local_player.setPosition(local_player.x, local_player.y - PLAYER_SPEED)
 		emitIfGameActive('sync', {"GameId":GameId, player: {x: local_player.x, y: local_player.y}, isHost: isHost});
 	}

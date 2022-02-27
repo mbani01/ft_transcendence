@@ -62,7 +62,6 @@ export class ChatGateway
         return { error: 'name should be between 1 and 20' };
       const channelType = this._chatService.getChannelType(isPublic, password);
 
-      let bcryptPassword: string;
       /* Bcrypt password */
       if (password) {
         try {
@@ -72,7 +71,7 @@ export class ChatGateway
               throw reason;
             })
             .then((value) => {
-              bcryptPassword = value;
+              password = value;
             });
         } catch (reason) {
           return { error: reason };
@@ -81,7 +80,7 @@ export class ChatGateway
 
       const roomEntity: CreateRoomDto = {
         name,
-        password: bcryptPassword,
+        password,
         channelType,
         ownerID: client.user.sub,
       };
@@ -95,7 +94,7 @@ export class ChatGateway
         user,
         roomID: newRoom.roomID,
         userID: client.user.sub,
-        password: password,
+        password: newRoom.password,
         role: 'admin',
       });
       client.join('' + newRoom.roomID);
