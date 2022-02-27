@@ -62,8 +62,11 @@ export class ChatService {
     } else {
       this.socket.emit('chat-conversation', {
         otherUser: user.uid
-      }, (chat: Chat) => {
-        if (chat) {
+      }, (chat: Chat & {error: string}) => {
+        if (!chat.error) {
+          chat.messages = [];
+          this.currChat = chat;
+          console.log(this.currChat);
           this.newDirectMessage(chat);
         }
       })
@@ -71,9 +74,6 @@ export class ChatService {
   }
 
   newDirectMessage(chat: Chat) {
-    chat.messages = [];
-    this.currChat = chat;
-
     this.chats.set(chat.roomID, chat);
   }
 

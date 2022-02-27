@@ -112,6 +112,7 @@ export class ChatService {
     })
     for (let message of messages) {
       const user = await this._userService.findById(message.userID);
+      if (!user) throw  new NotFoundException('no such user');
       if (blocker.find(el => el.userSecond.id === user.id))
         continue;
       res.push({
@@ -185,12 +186,18 @@ export class ChatService {
 
   async createDM(dm: CreateDMDto, usersIDs: any) {
     // Create a DM.
+    const user1 = await this._userService.findById(usersIDs.userID1);
+    const user2 = await this._userService.findById(usersIDs.userID2);
+    const room = await  this._roomsRepo.find({where:
+          {
+            name: [`DM${user2.id}${user1.id}`,`DM${user1.id}${user2.id}`] ,
+            isChannel: false
+          }});
+    if (room.length) return  room[0];
     const newDM = this._roomsRepo.create(dm);
     await this._roomsRepo.save(newDM);
 
     // Create the Members that going to join the dm.
-    const user1 = await this._userService.findById(usersIDs.userID1);
-    const user2 = await this._userService.findById(usersIDs.userID2);
     await this.createMember({ user: user1, userID: usersIDs.userID1, roomID: newDM.roomID, password: newDM.password, role: 'member' });
     await this.createMember({ user: user2, userID: usersIDs.userID2, roomID: newDM.roomID, password: newDM.password, role: 'member' });
     newDM.name = user2.username;
@@ -319,12 +326,14 @@ export class ChatService {
   }
 
   async makeAdmin(roomID: number, userID: number, currUser: User) {
+    const room = await  this._roomsRepo.find({roomID});
+    if (room.length === 0) throw new NotFoundException('room not found');
+    if (room[0].ownerID !== currUser.id) throw new UnauthorizedException('your are not the room owner!');
     const member = await this._membersRepo.findOne({
       where: {
         userID, roomID, role: 'member',
       }
     });
-
     if (!member) throw new UnauthorizedException('Cannot grant admin to current user!');
     if (member.role === 'admin') throw new UnauthorizedException('The member is already admin');
     await this._membersRepo.update(member.id, {
@@ -333,12 +342,15 @@ export class ChatService {
   }
 
   async revokeAdmin(roomID: number, userID: number, currUser: User) {
+    const room = await  this._roomsRepo.find({roomID});
+    if (room.length === 0) throw new NotFoundException('room not found');
+    if (room[0].ownerID !== currUser.id) throw new UnauthorizedException('your are not the room owner!');
     const member = await this._membersRepo.findOne({
       where: {
         userID, roomID, role: 'admin',
       }
     });
-    if (!member) throw new UnauthorizedException('Cannot revoke admin from current user!');
+    if (!member) throw new NotFoundException('no such member');
     await this._membersRepo.update(member.id, {
       role: 'member'
     })
