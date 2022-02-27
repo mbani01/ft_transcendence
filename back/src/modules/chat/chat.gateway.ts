@@ -305,6 +305,7 @@ export class ChatGateway
     try {
       const member = await this._chatService.getMember({
         userID: client.user.sub,
+        roomID
       });
       if (!member) return { error: 'no such member' };
       if (member.role !== 'admin') return { error: 'you are not the admin' };
@@ -337,6 +338,7 @@ export class ChatGateway
     try {
       const member = await this._chatService.getMember({
         userID: client.user.sub,
+        roomID
       });
       if (!member) return { error: 'no such member' };
       if (member.role !== 'admin') return { error: 'you are not the admin' };
