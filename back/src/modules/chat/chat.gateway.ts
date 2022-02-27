@@ -16,6 +16,7 @@ import { Clients, CustomSocket } from 'src/adapters/socket.adapter';
 import { NotFoundException } from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { RoomEntity } from './entities/room.entity';
+import * as bcrypt from 'bcryptjs';
 
 @WebSocketGateway()
 export class ChatGateway
@@ -61,6 +62,7 @@ export class ChatGateway
         return { error: 'name should be between 1 and 20' };
       const channelType = this._chatService.getChannelType(isPublic, password);
 
+      let bcryptPassword: string;
       /* Bcrypt password */
       if (password) {
         try {
@@ -70,7 +72,7 @@ export class ChatGateway
               throw reason;
             })
             .then((value) => {
-              password = value;
+              bcryptPassword = value;
             });
         } catch (reason) {
           return { error: reason };
@@ -79,7 +81,7 @@ export class ChatGateway
 
       const roomEntity: CreateRoomDto = {
         name,
-        password,
+        password: bcryptPassword,
         channelType,
         ownerID: client.user.sub,
       };
@@ -93,7 +95,7 @@ export class ChatGateway
         user,
         roomID: newRoom.roomID,
         userID: client.user.sub,
-        password: newRoom.password,
+        password: password,
         role: 'admin',
       });
       client.join('' + newRoom.roomID);
