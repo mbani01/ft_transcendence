@@ -15,7 +15,7 @@ export class BlockComponent {
   blockList = new BehaviorSubject<User[]>([]);
 
   constructor(private http: HttpClient, private oauthService: OAuthService, private notifierService: NotifierService) {
-    this.http.get<User[]>(`${environment.apiBaseUrl}/users/${oauthService.user.uid}/block`).subscribe({
+    this.http.get<User[]>(`${environment.apiBaseUrl}/users/blocks`).subscribe({
       next: value => {
         this.blockList.next(value);
       }
@@ -23,7 +23,7 @@ export class BlockComponent {
   }
 
   unblock(block: User) {
-    this.http.post(`${environment.apiBaseUrl}/users/unblock`, {
+    this.http.patch(`${environment.apiBaseUrl}/users/unblock`, {
       userID: block.uid
     }).subscribe({
       next: value => {
