@@ -88,7 +88,6 @@ export class ChatGateway
     }
   }
 
-  // @UseGuards(JwtAuthGuard)
   @SubscribeMessage('chat-message')
   async message(
     @MessageBody() data: any,
@@ -149,7 +148,6 @@ export class ChatGateway
     }
   }
 
-  // @UseGuards(JwtAuthGuard)
   @SubscribeMessage('join')
   async join(
     @ConnectedSocket() client: CustomSocket,
