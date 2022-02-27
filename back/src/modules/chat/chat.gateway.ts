@@ -43,8 +43,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
           "password"?: string
         }
       */
-    if (password?.length < 8 || password.match(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/))
     let { name, isPublic, password } = createRoomBodyDto;
+    if (password?.length < 8 || password.match("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"))
       return { error: "password too weak" };
     if (!name.length || name.length > 20)
       return  { error: "name should be between 1 and 20" };
