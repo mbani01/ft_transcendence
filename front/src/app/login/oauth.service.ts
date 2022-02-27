@@ -4,9 +4,10 @@ import { environment } from "../../environments/environment";
 import { CookieService } from "ngx-cookie-service";
 import { Router } from "@angular/router";
 import { User } from "../shared/user";
-import { BehaviorSubject, catchError, Observer, throwError } from "rxjs";
+import { BehaviorSubject, Observer } from "rxjs";
 import { UserInfo } from "./models/UserInfo.model";
 import {NotifierService} from "angular-notifier";
+import {MainSocket} from "../socket/MainSocket";
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class OAuthService {
   public reload: boolean = false;
 
   constructor(private http: HttpClient, private cookieService: CookieService, private router: Router,
-              private notifierService: NotifierService) {
+              private notifierService: NotifierService, private socket: MainSocket) {
 
     this.http.get<UserInfo>(`${environment.apiBaseUrl}/auth/isAuthorized`).subscribe({
       next: value => {
@@ -57,7 +58,8 @@ export class OAuthService {
     });
     obs.subscribe({
       next: (value) => {
-        // if (value.success) {
+        this.socket.connect();
+
         if (value.firstTime) {
           this.router.navigate(['/account/settings']);
         } else {
