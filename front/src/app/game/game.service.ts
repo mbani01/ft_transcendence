@@ -30,7 +30,6 @@ export class GameService {
   constructor(private socket: MainSocket, private http: HttpClient, private notifierService: NotifierService,
               private oAuthService: OAuthService, private router: Router) {
     socket.on('gameStarted', this.joinGame.bind(this));
-    socket.on('GameOver', this.gameOver.bind(this));
     socket.on('invitedToGame', this.gameInvite.bind(this))
     socket.on('invitationRejected', this.inviteDeclined.bind(this))
 
@@ -61,6 +60,7 @@ export class GameService {
     this.router.navigate(['/play']).then(value => {
       console.log('joinGame');
       this.stat = GameStat.GAME;
+      this.socket.on('GameOver', this.gameOver.bind(this));
 
       setTimeout(() => {
         startGame(gameInfo);
@@ -70,6 +70,7 @@ export class GameService {
 
   endGame() {
     this.stat = GameStat.MAIN;
+    this.socket.removeListener('GameOver');
   }
 
   gameOver(obj: any) {
@@ -105,6 +106,7 @@ export class GameService {
       GameId: gameID
     }, (obj: any) => {
       this.stat = GameStat.GAME
+      this.socket.on('GameOver', this.gameOver.bind(this));
       setTimeout(() => {
         startGame(obj);
       });
