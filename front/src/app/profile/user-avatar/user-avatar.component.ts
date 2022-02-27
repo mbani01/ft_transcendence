@@ -7,7 +7,7 @@ import {User} from "../../shared/user";
   styleUrls: ['user-avatar.component.scss']
 })
 export class UserAvatarComponent {
-  @Input() user: User & {status: string};
+  @Input() user: User;
   @Input() size = 48;
 
   getViewBox() {

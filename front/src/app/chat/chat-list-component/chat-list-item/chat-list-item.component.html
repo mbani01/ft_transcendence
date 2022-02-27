@@ -1,7 +1,10 @@
-<a class="list-group-item py-3 px-2 justify-content-between">
-  <img width="40" height="40" class="rounded-circle mr-3" alt="Cinque Terre"
-       [src]="chat.isChannel ? '/assets/channel-icon.png' : getUser().img">
-  <b>{{ chat.name }}</b>
+<a class="list-group-item py-3 px-2 d-flex">
+  <img *ngIf="chat.isChannel; else userAvatar" width="40" height="40" class="rounded-circle mr-3" alt="Cinque Terre"
+       src="/assets/channel-icon.png">
+  <ng-template #userAvatar>
+    <user-avatar class="mr-3" [size]="40" [user]="getUser()"></user-avatar>
+  </ng-template>
+  <b class="my-auto">{{ chat.name }}</b>
   <div class="mr-1 float-right mt-1">
     <span class="badge bg-danger text-white rounded-circle my-auto"  *ngIf="chat.unread > 0">{{ chat.unread }}</span>
   </div>

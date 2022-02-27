@@ -17,8 +17,8 @@
       </ng-container>
     </div>
     <div class="row h-50">
-      <span class="dot"></span>
-      <span class="status">{{userInfo.status}}</span>
+      <span class="dot" [ngStyle]="{'background-color': getStatusColor()}"></span>
+      <span class="status" [ngStyle]="{'color': getStatusColor()}">{{userInfo.status}}</span>
       <ng-container *ngIf="!oauthService.isMe(user)">
         <button class="btn btn-warning ml-auto mb-auto mt-1 btn-icon" (click)="inviteGame()">
           <i class="bi bi-joystick"></i>

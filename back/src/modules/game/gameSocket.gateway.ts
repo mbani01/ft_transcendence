@@ -52,8 +52,8 @@ export class gameSocketGateway
 		this.server.to(Players[0].id).emit('gameStarted', {GameId: gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: true});
 		this.server.to(Players[1].id).emit('gameStarted', {GameId:gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: false});
 		this.LiveGames()
-		Clients.updateState(Players[0].user.sub, "in a Game");
-		Clients.updateState(Players[1].user.sub, "in a Game");
+		Clients.updateState(Players[0].user.sub, "in-game");
+		Clients.updateState(Players[1].user.sub, "in-game");
 	}
 	
 	@SubscribeMessage('watchGame')

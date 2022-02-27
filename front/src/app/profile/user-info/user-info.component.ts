@@ -108,4 +108,14 @@ export class UserInfoComponent implements OnInit {
   inviteGame() {
     this.gameService.invitePlay(this.user);
   }
+
+  getStatusColor() {
+    if (this.userInfo.status === 'online') {
+      return '#00D04E'
+    } else if (this.userInfo.status === 'in-game') {
+      return '#D4AA04';
+    } else {
+      return '#d40404';
+    }
+  }
 }

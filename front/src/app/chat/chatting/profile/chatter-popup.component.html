@@ -6,8 +6,8 @@
         <span class="font-weight-bold h-50">{{user.name}}</span>
       </div>
       <div class="row h-50">
-        <span class="dot  "></span>
-        <span class="status mt-0">Online</span>
+        <span class="dot" [ngStyle]="{'background-color': getStatusColor()}"></span>
+        <span class="status mt-0" [ngStyle]="{'color': getStatusColor()}">{{user.status}}</span>
       </div>
     </div>
 

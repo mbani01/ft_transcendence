@@ -100,8 +100,8 @@ export class UsersController {
       i.secondPlayer = (await this._usersService.findBasicInfoById(i.secondPlayer))[0];
     }
     if (relation && relation.length === 0)
-      return { ...stats, status: (isActive) ? 'on-line' : 'off-line', img: user.img, name: user.username, isFriend: false, isBlocked: false, Games };
-    return { ...stats, status: (isActive) ? 'on-line' : 'off-line', img: user.img, name: user.username, isFriend: relation[0].isFriends, isBlocked: (relation[0].blocker !== null), Games };
+      return { ...stats, status: Clients.getUserStatus(userID), img: user.img, name: user.username, isFriend: false, isBlocked: false, Games };
+    return { ...stats, status: Clients.getUserStatus(userID), img: user.img, name: user.username, isFriend: relation[0].isFriends, isBlocked: (relation[0].blocker !== null), Games };
   }
 
   @UseGuards(JwtAuthGuard)
