@@ -44,6 +44,17 @@ function disconnectedPlayer(obj: any, isHostDisconnected: boolean)
 
 export function leftTab()
 {
+	isWatcher = false;
+	isPlayer = false;
+	socket.removeListener("syncCounter");
+	socket.removeListener("syncRound");
+	socket.removeListener("sync");
+	socket.removeListener("syncBall");
+	socket.removeListener("syncPowerUp");
+	socket.removeListener("focusLose");
+	// socket.emit(); // emit watcher left tab
+	if (game != undefined)
+		game.destroy();
 	game = undefined;
 }
 
@@ -56,18 +67,17 @@ function emitIfGameActive(event : string, data: any)
 }
 
 export function gameOver(obj: any) {
+	console.log("game over", obj);
 	clearInterval(hostInterval);
 	clearInterval(clientInterval);
 	gameEnd = true;
 	scene.input.keyboard.clearCaptures();
 	if (obj.hasOwnProperty('disconnectedPlayer')) {
 		ball.setVisible(false);
-		game.scene.pause(scene);
 		disconnectedPlayer(obj ,obj.disconnectedPlayer.sub == obj.Players[0].sub);
 	} else {
 		console.log("win", obj);
 		ball.setVisible(false);
-		game.scene.pause(scene);
 		if (obj.Winner.sub != obj.Players[0].sub) {
 			scene.add.text(game.canvas.width / 5.5, game.canvas.height / 2.1, obj.Players[0].username + ' lost', {
 				fontSize: '30px',
@@ -88,7 +98,7 @@ export function gameOver(obj: any) {
 			});
 		}
 	}
-	game = undefined;
+	setTimeout(leftTab, 1000);
 }
 
 export function setSocket(s: MainSocket) {
@@ -116,7 +126,6 @@ export function startGame(obj: any) {
 	console.log("joined");
 	isDefaultGame = obj.isDefaultGame;
 	// console.log(obj);
-
 }
 export function socketListening () {
   console.log("Listening Socket");
@@ -127,7 +136,7 @@ export function socketListening () {
   });
 
 	socket.on("syncCounter", (obj: any) => {
-		if (isWatcher) {
+		if (isWatcher && game != undefined) {
 			if (!obj.hasOwnProperty('disable')) {
 				if (obj.isHost) {
 					hostText.setFontSize(50);
@@ -151,9 +160,10 @@ export function socketListening () {
 
   socket.on("syncRound", (obj: any) => {
 	// console.log("hello", obj);
-	player1_score_obj.setText('' + obj.player1_score);
-	player2_score_obj.setText('' + obj.player2_score);
-
+	if (game != undefined) {
+		player1_score_obj.setText('' + obj.player1_score);
+		player2_score_obj.setText('' + obj.player2_score);
+	}
   });
 
   socket.on('sync', (obj: any) => {
@@ -202,7 +212,6 @@ export function socketListening () {
   });
 
 	socket.on('focusLose', (obj: any) => {
-		console.log(obj, game.hasFocus);
 		if (isPlayer){
 			if (obj.focus == false) {
 				game.scene.pause(scene);
@@ -320,6 +329,8 @@ let hostText : any;
 let clientInterval : any;
 let clientCounter : number = 30;
 let clientText : any;
+let ballVelocity : number[] = [600, -600];
+let powerUpVelocity : number[] = [1000, -1000];
 
 function preload (this: Phaser.Scene) : void
 {
@@ -339,7 +350,7 @@ function start_game(this: Phaser.Scene) : void
 		ball.setPosition(game.canvas.width / 2, game.canvas.height / 2);
 	(ball.body as Phaser.Physics.Arcade.Body).onWorldBounds = true;
 	if (isHost){
-		ball.body.velocity.setTo(ball_position.x, ball_position.y);
+		ball.body.velocity.setTo(ballVelocity[Math.floor(Math.random() * 2)], ballVelocity[Math.floor(Math.random() * 2)]);
 		ball.setBounce(1);
 		this.physics.add.collider(ball, player1, HandleHit, undefined, player1);
 		this.physics.add.collider(ball, player2, HandleHit, undefined, player2);
@@ -350,44 +361,44 @@ function start_game(this: Phaser.Scene) : void
 
 function onHidden() : void
 {
-	if (gameEnd == false && isPlayer){
+	if (gameEnd == false && isPlayer && game != undefined){
 		game.scene.pause(scene);
-			emitIfGameActive('focusLose', { GameId: GameId, isHost: isHost, focus: false });
-			if (isHost == true) {
-				clearInterval(hostInterval);
-				hostCounter = 30;
-				hostInterval = setInterval(() => {
-					emitIfGameActive("syncCounter", { GameId: GameId, isHost: isHost, data: "hello", counter: hostCounter });
-					game.scene.pause(scene);
-					hostText.setText('' + hostCounter);
-					hostText.setFontSize(50);
-					if (hostCounter <= 0) {
-						hostText.setText('' + 0);
-						emitIfGameActive("PlayerTimeout", { GameId: GameId });
-						hostCounter = 30;
-						clearInterval(hostInterval);
-						clearInterval(clientInterval);
-					}
-					hostCounter--;
-				}, 1000)
-			} else {
-				clearInterval(clientInterval);
-				clientCounter = 30;
-				clientInterval = setInterval(() => {
-					emitIfGameActive("syncCounter", { GameId: GameId, isHost: isHost, data: "hello", counter: clientCounter });
-					game.scene.pause(scene);
-					clientText.setText('' + clientCounter);
-					clientText.setFontSize(50);
-					if (clientCounter <= 0) {
-						clientText.setText('' + 0);
-						emitIfGameActive("PlayerTimeout", { GameId: GameId });
-						clientCounter = 30;
-						clearInterval(hostInterval);
-						clearInterval(clientInterval);
-					}
-					clientCounter--;
-				}, 1000)
-			}
+		emitIfGameActive('focusLose', { GameId: GameId, isHost: isHost, focus: false });
+		if (isHost == true) {
+			clearInterval(hostInterval);
+			hostCounter = 30;
+			hostInterval = setInterval(() => {
+				emitIfGameActive("syncCounter", { GameId: GameId, isHost: isHost, data: "hello", counter: hostCounter });
+				game.scene.pause(scene);
+				hostText.setText('' + hostCounter);
+				hostText.setFontSize(50);
+				if (hostCounter <= 0) {
+					hostText.setText('' + 0);
+					emitIfGameActive("PlayerTimeout", { GameId: GameId });
+					hostCounter = 30;
+					clearInterval(hostInterval);
+					clearInterval(clientInterval);
+				}
+				hostCounter--;
+			}, 1000)
+		} else {
+			clearInterval(clientInterval);
+			clientCounter = 30;
+			clientInterval = setInterval(() => {
+				emitIfGameActive("syncCounter", { GameId: GameId, isHost: isHost, data: "hello", counter: clientCounter });
+				game.scene.pause(scene);
+				clientText.setText('' + clientCounter);
+				clientText.setFontSize(50);
+				if (clientCounter <= 0) {
+					clientText.setText('' + 0);
+					emitIfGameActive("PlayerTimeout", { GameId: GameId });
+					clientCounter = 30;
+					clearInterval(hostInterval);
+					clearInterval(clientInterval);
+				}
+				clientCounter--;
+			}, 1000)
+		}
 	}
 	console.log("hidden");
 }
@@ -541,7 +552,7 @@ function HandleHit(this: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody)
 function enablePowerUps() : void
 {
   if (isHost)
-	powerUpBall.setVelocity(1000);
+	powerUpBall.setVelocity(powerUpVelocity[Math.floor(Math.random() * 2)], powerUpVelocity[Math.floor(Math.random() * 2)]);
   powerUpBall.setBounce(1);
 }
 
@@ -573,7 +584,7 @@ function showPowerUp(this: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody)
 
 function update(this: Phaser.Scene) : void
 {
-
+	// console.log("isHost: " + isHost + "isPlayer: " + isPlayer + " isWatcher: " + isWatcher);
 	if (isHost)
 		emitIfGameActive('syncBall', {"GameId":GameId, isVisible : false, isHost: isHost, ball: { x: ball.x, y: ball.y }});
 	if (isHost && !isDefaultGame){
