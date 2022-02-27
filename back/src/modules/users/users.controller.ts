@@ -1,25 +1,20 @@
-import { BadRequestException, Body, Controller, Get, Param, Patch, Post, Query, Req, Res, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post, Query, Req, Res, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { join } from "path";
-import { PaginationQueryDto } from "src/common/dto/pagination-query.dto";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
-import { OutUserInfoDto } from "./dto/out-user-info.dto";
 import { OutUserDto } from "./dto/out-user.dto";
-import { UpdateUserNameDto } from "./dto/update-body.dto";
 import { UsersService } from "./users.service";
-import * as fs from 'fs';
 import { Clients } from "../../adapters/socket.adapter";
 import { User } from "./entity/user.entity";
 import { IStats } from "./interfaces/stats.interface";
-import { array } from "@hapi/joi";
+import { getUserQueryDto } from "./dto/get-users-query.dto";
 
 @Controller("users")
 export class UsersController {
   constructor(private readonly _usersService: UsersService) { }
 
   @Get()
-  async getAll(@Query() paginationQuery: any) {
-    return await this._usersService.findAll(paginationQuery);
+  async getAll(@Query() usersQuery: getUserQueryDto) {
+    return await this._usersService.findAll(usersQuery);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -47,19 +42,6 @@ export class UsersController {
   async updateAvatar(@UploadedFile() file: any, @Req() req, @Res() res) {
 
     const upload = await this._usersService.uploadAvatar(file);
-    /*
-    // console.log(__dirname)
-    // const f = fs.writeFile(`/Users/mosan/Documents/last/back/src/assets/avatars/${req.user.id}`, file.buffer, { flag: 'w+' });
-    const fullPath = `${__dirname}/../../../src/`;
-    const avatarPath = `assets/avatars/${req.user.id}`;
-    const path = fullPath + avatarPath;
-
-    try {
-      fs.writeFileSync(path, file.buffer, { flag: 'w+' });
-    } catch (e) {
-      console.log(e);
-    }
-    */
     const user = await this._usersService.updateAvatar(req.user.id, upload);
     res.send({ avatar: user.avatar });
   }
@@ -97,7 +79,6 @@ export class UsersController {
     let stats: IStats;
     try {
       otherUser = await this._usersService.findById(userID);
-      console.log('Stats: \n', otherUser);
       relation = await this._usersService.getRelation(user, otherUser);
       isActive = Clients.isActiveUser(otherUser.id);
 
@@ -210,19 +191,4 @@ export class UsersController {
     const user = await this._usersService.findByUserName(req.user.username);
     return { uid: user.id, name: user.username, img: user.avatar };
   }
-
-
-  // @UseGuards(JwtAuthGuard)
-  // @Post("avatar")
-  // @UseInterceptors(FileInterceptor('file'))
-  // async upload(@UploadedFile() file: any, @Req() req, @Res() res)
-  // {
-  //   const upload = this._usersService.uploadAvatar(file);
-  //   /*
-  //   if (!body.hasOwnProperty('avatar'))
-  //       return {"error": "avatar isn't provided"};
-  //   const image = await this._usersService.uploadAvatar(body.avatar);
-  //   const user = this._usersService.updateAvatar(req.user.id, image);
-  //   return image;*/
-  // // }
 }
