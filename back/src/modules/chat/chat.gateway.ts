@@ -16,6 +16,7 @@ import { Clients, CustomSocket } from 'src/adapters/socket.adapter';
 import {NotFoundException} from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { RoomEntity } from './entities/room.entity';
+import * as bcrypt from 'bcryptjs';
 
 @WebSocketGateway()
 export class ChatGateway
@@ -58,15 +59,17 @@ export class ChatGateway
     const channelType = this._chatService.getChannelType(isPublic, password);
 
     /* Bcrypt password */
-    // try {
-    //   await bcrypt.hash(password, 10).catch(reason => {
-    //     throw reason
-    //   }).then(value => {
-    //     password = value;
-    //   })
-    // } catch (reason) {
-    //   return { error: reason };
-    // }
+    if (channelType === 'protected') {
+      try {
+        await bcrypt.hash(password, 10).catch(reason => {
+          throw reason
+        }).then(value => {
+          password = value;
+        })
+      } catch (reason) {
+        return { error: reason };
+      }
+    }
 
     const roomEntity: CreateRoomDto = { name, password, channelType, ownerID: client.user.sub }
     const user = await this._chatService._userService.findById(client.user.sub);
