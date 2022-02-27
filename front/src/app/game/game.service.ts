@@ -1,7 +1,7 @@
 import {HttpClient} from "@angular/common/http";
 import {MainSocket} from "../socket/MainSocket";
 import {Injectable, TemplateRef} from "@angular/core";
-import {gameOver, startGame, setSocket, endGame} from "./game";
+import {gameOver, startGame, setSocket, endGame, leftTab} from "./game";
 import {BehaviorSubject} from "rxjs";
 import {NotifierService} from "angular-notifier";
 import {OAuthService} from "../login/oauth.service";
@@ -124,6 +124,7 @@ export class GameService {
     this.stat = GameStat.MAIN;
     this.socket.emit('leftGame');
     this.endGame();
+    this.leftTab();
   }
 
   gameInvite(invite: {InvitationId: string, SenderName: string}) {
