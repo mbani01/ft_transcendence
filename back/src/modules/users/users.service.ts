@@ -1,15 +1,12 @@
 import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { PaginationQueryDto } from "src/common/dto/pagination-query.dto";
 import { Repository } from "typeorm";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { Relation } from "./entity/relation.entity";
 import { User } from "./entity/user.entity";
 import { ICreateRelation, IDeleteRelation, IUpdateRelation } from "./interfaces/create-relation.interface";
 import { ExtractJwt } from "passport-jwt";
-import fromAuthHeaderWithScheme = ExtractJwt.fromAuthHeaderWithScheme;
 import { Rank } from "./interfaces/stats.interface";
-import { number } from "@hapi/joi";
 import { CloudinaryService } from "../cloudinary/cloudinary.service";
 
 @Injectable()
