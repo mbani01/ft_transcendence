@@ -57,7 +57,7 @@ export class AuthService {
     return userData;
   }
 
-  async sendJwtAccessToken(@Res() response: Response, user: User, is2fa: boolean) {
+  async sendJwtAccessToken(@Res() response: Response, user: User, is2fa: boolean, isFirstTime: boolean) {
     const { access_token } = await this.loginJWT(user, is2fa);
     response
       .cookie("access_token", access_token, {
@@ -67,7 +67,8 @@ export class AuthService {
       .send({
         uid: user.id,
         name: user.username,
-        img: user.avatar
+        img: user.avatar,
+        firstTime: isFirstTime,
       });
   }
 
