@@ -18,10 +18,6 @@ import {
   ParamsDto,
   UnmuteAndUnbanDto,
 } from './dto/params.dto';
-import { WebSocketServer } from '@nestjs/websockets';
-import { Server } from 'socket.io';
-import { Clients } from '../../adapters/socket.adapter';
-import { createJwtProvider } from '@nestjs/jwt/dist/jwt.providers';
 
 @Controller('chat')
 export class ChatController {
@@ -124,6 +120,7 @@ export class ChatController {
             roomID: e.roomID,
             name: e.name,
             type: e.channelType,
+            nOfMembers: await this._chaTService.getNumberOfMembersInRoom(e.roomID),
             owner: {
               uid: e.ownerID,
               name: owner.username,
