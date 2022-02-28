@@ -51,8 +51,8 @@ export class gameSocketGateway
 		Players[0].GameId = gameInfos.GameId;
 		Players[1].GameId = gameInfos.GameId;
 		this.joinGameRoom(gameInfos.GameId, Players);
-		this.server.to(Players[0].id).emit('gameStarted', {GameId: gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: true});
-		this.server.to(Players[1].id).emit('gameStarted', {GameId:gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: false});
+		this.server.to(Players[0].id).emit('gameStarted', {GameId: gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: true, imageUser1: Players[0].user.img, imageUser2: Players[1].user.img, nameUser1: Players[0].user.username, nameUser2: Players[1].user.username});
+		this.server.to(Players[1].id).emit('gameStarted', {GameId:gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: false, imageUser1: Players[0].user.img, imageUser2: Players[1].user.img, nameUser1: Players[0].user.username, nameUser2: Players[1].user.username});
 		this.LiveGames()
 		Clients.updateState(Players[0].user.sub, "in-game");
 		Clients.updateState(Players[1].user.sub, "in-game");
@@ -68,7 +68,7 @@ export class gameSocketGateway
 			if(game.getGameId() === String(data.GameId))
 			{
 				socket.join(String(data.GameId));
-				this.server.to(socket.id).emit('gameStarted', {GameId: game.GameId, isDefaultGame: game.isDefault, isWatcher: true, score: game.score});
+				this.server.to(socket.id).emit('gameStarted', {GameId: game.GameId, isDefaultGame: game.isDefault, isWatcher: true, score: game.score, imageUser1: game.Players[0].user.img, imageUser2: game.Players[1].user.img, nameUser1: game.Players[0].user.username, nameUser2: game.Players[1].user.username});
 			}
 		});
 	}
