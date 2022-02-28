@@ -82,6 +82,13 @@ export class ChatService {
     return await this._membersRepo.delete({ roomID, userID });
   }
 
+  async getNumberOfMembersInRoom(roomID: number) {
+    const res = await this._membersRepo.find({where: {
+      roomID
+    }});
+    return res.length;
+  }
+
   async findAllRooms(like: string, page: number) {
     const limit = 10;
     page = page * limit - limit;
