@@ -5,7 +5,7 @@
     <user-avatar class="mr-3" [size]="40" [user]="getUser()"></user-avatar>
   </ng-template>
   <b class="my-auto">{{ chat.name }}</b>
-  <div class="mr-1 float-right mt-1">
+  <div class="mr-1 ml-auto mt-1">
     <span class="badge bg-danger text-white rounded-circle my-auto"  *ngIf="chat.unread > 0">{{ chat.unread }}</span>
   </div>
 </a>

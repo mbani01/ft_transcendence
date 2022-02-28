@@ -6,7 +6,6 @@ import {Chat} from "./shared/chat.model";
 import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {NgbDropdown} from "@ng-bootstrap/ng-bootstrap";
-import {Socket} from "ngx-socket-io";
 import {MainSocket} from "../socket/MainSocket";
 import {firstValueFrom, Observer} from "rxjs";
 import {NotifierService} from "angular-notifier";
@@ -73,6 +72,7 @@ export class ChatService {
   }
 
   newDirectMessage(chat: Chat) {
+    chat.messages = [];
     this.chats.set(chat.roomID, chat);
   }
 

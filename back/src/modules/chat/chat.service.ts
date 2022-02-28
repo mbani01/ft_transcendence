@@ -78,6 +78,13 @@ export class ChatService {
     });
   }
 
+  async getNumberOfMembersInRoom(roomID: number) {
+    const res = await this._membersRepo.find({where: {
+        roomID
+      }});
+    return res.length;
+  }
+
   async removeMemberFromRoom(roomID: number, userID: number) {
     return await this._membersRepo.delete({ roomID, userID });
   }

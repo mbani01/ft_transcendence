@@ -6,7 +6,9 @@ import {BehaviorSubject} from "rxjs";
 import {NotifierService} from "angular-notifier";
 import {OAuthService} from "../login/oauth.service";
 import {Router} from "@angular/router";
-import {User} from "../shared/user";
+import {STATUS, User} from "../shared/user";
+import {environment} from "../../environments/environment";
+import {use} from "matter";
 
 export enum GameStat {
   MAIN,
@@ -164,6 +166,14 @@ export class GameService {
         this.notifierService.notify('error', err.error);
       }
     })
+  }
+
+  getPlayerStatus(userID: number) {
+    return this.http.get<{ status: STATUS }>(`${environment.apiBaseUrl}/users/status`, {
+      params: {
+        id: userID
+      }
+    });
   }
 
 }
