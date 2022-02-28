@@ -152,6 +152,7 @@ export class ChatGateway
         relations = relations.filter((rel) => rel.blocker !== null);
       let socketsArr = [];
       for (let relation of relations) {
+        if (!Clients.isActiveUser(relation.userFirst.id)) continue;
         const sockets = await this.server
           .in(Clients.getSocketId(relation.userFirst.id).socketId)
           .fetchSockets();
