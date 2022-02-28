@@ -298,14 +298,14 @@ export class ChatGateway
       let otherChat = {
         ...newDM,
         users: oUser
-          ? { uid: oUser.id, name: oUser.username, img: oUser.avatar }
+          ? { uid: oUser.id, name: oUser.username, img: oUser.avatar, status: Clients.getUserStatus(oUser.id) }
           : undefined,
       };
       newDM.name = curUser.username;
       let curChat = {
         ...newDM,
         users: curUser
-          ? { uid: curUser.id, name: curUser.username, img: curUser.avatar }
+          ? { uid: curUser.id, name: curUser.username, img: curUser.avatar, status: Clients.getUserStatus(curUser.id) }
           : undefined,
       };
       if (otherUserClient.length) {
