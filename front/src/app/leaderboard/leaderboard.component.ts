@@ -14,11 +14,6 @@ export class LeaderboardComponent {
   topPlayers: Observable<LeaderboardPlayer[]>;
   constructor(private http: HttpClient) {
     this.topPlayers = this.getTopPlayers();
-    // this.topPlayers.subscribe({
-    //   next: value => {
-    //     console.log(value);
-    //   }
-    // });
   }
 
   getTopPlayers() {

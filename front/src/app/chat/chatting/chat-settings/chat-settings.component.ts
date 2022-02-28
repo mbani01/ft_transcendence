@@ -57,7 +57,6 @@ export class ChatSettingsComponent {
       this.http.patch<{name: string}>(`${environment.apiBaseUrl}/chat/${this.chatService.currChat!.roomID}/update-name`,
         roomNameForm.value).subscribe({
         next: value => {
-          console.log(value);
           this.chatService.currChat!.name = value.name;
           this.notifierService.notify('success', 'Room name updated successfully');
         },
@@ -166,13 +165,11 @@ export class ChatSettingsComponent {
   }
 
   onBan = (ban: {roomID: string, userID: string}) => {
-    console.log('onBan');
     this.fetchBans();
     this.fetchMembers()
 
   }
   onMute = () => {
-    console.log('onMute');
     this.fetchMutes();
   }
 }

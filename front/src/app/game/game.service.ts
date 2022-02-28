@@ -58,7 +58,6 @@ export class GameService {
   }
   joinGame(gameInfo: any) {
     this.router.navigate(['/play']).then(value => {
-      console.log('joinGame');
       this.stat = GameStat.GAME;
       this.socket.on('GameOver', this.gameOver.bind(this));
 
