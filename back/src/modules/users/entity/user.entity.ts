@@ -17,6 +17,9 @@ export class User {
   friendID: number;
 
   @Column()
+  email: string;
+
+  @Column()
   avatar?: string;
 
   @Column({ default: 0 })
