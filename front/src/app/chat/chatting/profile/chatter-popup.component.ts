@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from "@angular/core";
+import {Component, Input} from "@angular/core";
 import {User} from "../../../shared/user";
 import {NgbPopover} from "@ng-bootstrap/ng-bootstrap";
 import {Router} from "@angular/router";
@@ -7,7 +7,6 @@ import {OAuthService} from "../../../login/oauth.service";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../../environments/environment";
 import {MainSocket} from "../../../socket/MainSocket";
-import {Observable} from "rxjs";
 import {ChatService} from "../../chat.service";
 import {NotifierService} from "angular-notifier";
 import {GameService} from "../../../game/game.service";
@@ -27,6 +26,9 @@ export class ChatterPopupComponent {
               private gameService: GameService) {
     setTimeout(() => {
       if (this.chatRoom) {
+        this.gameService.getPlayerStatus(this.user.uid).subscribe(value => {
+          this.user.status = value.status;
+        });
         this.chatService.getRole(this.chatRoom!.roomID, this.user!.uid).then(value => this.userRole = value);
       }
     });
