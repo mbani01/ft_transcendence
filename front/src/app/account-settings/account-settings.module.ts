@@ -9,13 +9,15 @@ import {ChatModule} from "../chat/chat.module";
 import {BlockComponent} from "./blocks/block.component";
 import {RouterModule} from "@angular/router";
 import {ProfileModule} from "../profile/profile.module";
+import {AccountInfoModalComponent} from "./account/account-info-modal/account-info-modal.component";
 
 @NgModule({
   declarations: [
     AccountSettingsComponent,
     AccountTabComponent,
     FriendsComponent,
-    BlockComponent
+    BlockComponent,
+    AccountInfoModalComponent
   ],
   imports: [
     CommonModule,

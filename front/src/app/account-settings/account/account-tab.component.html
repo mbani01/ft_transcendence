@@ -1,6 +1,10 @@
+<ng-template #accountInfoModal let-modal>
+  <account-info-modal [user]="user.value" [modal]="modal" (save)="saveAccountInfo($event)"></account-info-modal>
+</ng-template>
+
 <div class="row flex-column mt-3 mb-4">
   <img [src]="user.value?.img" width="256" height="256" class="mx-auto rounded-circle">
-  <input type="file" class="file-upload" style="display: none" (change)="uploadAvatar($event)" #avatarUpload>
+  <input type="file" class="file-upload" style="display: none" (change)="uploadAvatar($event.target!)" #avatarUpload>
   <span *ngIf="uploadStat == UploadStat.NO_UPLOAD" class="mx-auto text-secondary mt-1" role="button" (click)="avatarUpload.click()"><i class="bi bi-pencil-square"></i> Edit avatar</span>
   <ngb-progressbar *ngIf="uploadStat != UploadStat.NO_UPLOAD" class="w-50 mx-auto mt-1"
                    [animated]="true"

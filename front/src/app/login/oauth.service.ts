@@ -61,7 +61,7 @@ export class OAuthService {
         this.socket.connect();
 
         if (value.firstTime) {
-          this.router.navigate(['/account/settings']);
+          this.router.navigate(['account', 'settings'], {queryParams: {firstTime: true}});
         } else {
           this.router.navigate(['']);
         }
