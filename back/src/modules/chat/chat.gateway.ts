@@ -278,7 +278,10 @@ export class ChatGateway
     let newDM: RoomEntity;
     try {
       let oUser = await this._chatService._userService.findById(otherUser);
-      if (!oUser) return { error: 'no such user' };
+      let curUser = await this._chatService._userService.findById(
+        client.user.sub,
+      );
+      if (!oUser || !curUser) return { error: 'no such user' };
       newDM = await this._chatService.createDM(
         {
           isChannel: false,
@@ -291,18 +294,26 @@ export class ChatGateway
       const otherUserClient = await this.server
         .in(Clients.getSocketId(otherUser).socketId)
         .fetchSockets();
-      let newChat = {
+      newDM.name = oUser.username;
+      let otherChat = {
         ...newDM,
         users: oUser
           ? { uid: oUser.id, name: oUser.username, img: oUser.avatar }
           : undefined,
       };
+      newDM.name = curUser.username;
+      let curChat = {
+        ...newDM,
+        users: curUser
+          ? { uid: curUser.id, name: curUser.username, img: curUser.avatar }
+          : undefined,
+      };
       if (otherUserClient.length) {
-        otherUserClient[0].emit('newDirectMessage', newChat);
+        otherUserClient[0].emit('newDirectMessage', curChat);
         otherUserClient[0].join(String(newDM.roomID));
       }
       client.join(String(newDM.roomID));
-      return newChat;
+      return otherChat;
     } catch (e) {
       return { error: e.message };
     }
