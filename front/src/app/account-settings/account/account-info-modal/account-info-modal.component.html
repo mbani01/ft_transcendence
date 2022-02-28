@@ -1,0 +1,29 @@
+<form id="modal-container" #accountInfoForm="ngForm" (ngSubmit)="saveAccountInfo(accountInfoForm)">
+  <div class="modal-header bg-primary text-light">
+    <p class="modal-title">Account Information</p>
+<!--    <button type="button" class="close text-light" aria-label="Close" (click)="modal.dismiss('Cross click')">-->
+<!--      <span aria-hidden="true">&times;</span>-->
+<!--    </button>-->
+  </div>
+  <div class="modal-body">
+    <div class="d-flex flex-column justify-content-center mb-3">
+      <img [src]="imgSrc" width="256" height="256" class="col-auto mx-auto rounded-circle" alt="avatar">
+      <input type="file" class="file-upload" style="display: none" (change)="readURL($event)" #avatarUpload>
+      <span class="mx-auto text-secondary mt-1" role="button" (click)="avatarUpload.click()"><i class="bi bi-pencil-square"></i> Edit avatar</span>
+
+<!--      <input type="file" name="avatar" required class="col-auto mx-auto" ngModel>-->
+    </div>
+    <div class="row">
+      <span class="form-text col-3 my-auto">Nickname:</span>
+      <input type="text" name="nickname" required placeholder="Nickname" class="form-control bg-dark text-light col"
+             [ngModel]="user.name">
+    </div>
+    <div *ngIf="accountInfoForm.form.controls['nickname']?.errors?.['error']" class="text-danger mt-1" role="alert">
+      {{accountInfoForm.form.controls['nickname']?.errors?.['error']}}
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary m-auto w-25" [disabled]="!accountInfoForm.valid">Save</button>
+  </div>
+</form>

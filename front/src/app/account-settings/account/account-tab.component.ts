@@ -1,12 +1,11 @@
-import {ApplicationRef, ChangeDetectorRef, Component, OnInit, ViewChild} from "@angular/core";
-import {NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
+import {ApplicationRef, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild} from "@angular/core";
+import {NgbModal, NgbModalRef, NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
 import {HttpClient, HttpEventType, HttpHeaders, HttpParams, HttpRequest, HttpResponse} from "@angular/common/http";
 import {User} from "../../shared/user";
 import {environment} from "../../../environments/environment";
 import {NgForm} from "@angular/forms";
 import {OAuthService} from "../../login/oauth.service";
 import {BehaviorSubject} from "rxjs";
-import {ERROR} from "@angular/compiler-cli/src/ngtsc/logging/src/console_logger";
 import {NotifierService} from "angular-notifier";
 import {ActivatedRoute, Router} from "@angular/router";
 
@@ -28,31 +27,44 @@ export class AccountTabComponent implements OnInit{
   progress: number;
   uploadStat = UploadStat.NO_UPLOAD;
 
+  private modalRef?: NgbModalRef;
+
   @ViewChild('t') tooltip: NgbTooltip;
   @ViewChild('codeToolTip') codeToolTip: NgbTooltip;
+  @ViewChild('accountInfoModal', {static:true}) accountInfoModal: TemplateRef<any>;
 
   constructor(private http: HttpClient, public oauthService: OAuthService, private notifierService: NotifierService,
-              private router: Router, private route: ActivatedRoute) {
+              private router: Router, private route: ActivatedRoute, private ngbModal: NgbModal) {
     this.user = oauthService.user$;
   }
-
   ngOnInit(): void {
+    if (this.route.snapshot.queryParamMap.get('firstTime')) {
+        this.modalRef = this.ngbModal.open(this.accountInfoModal, {centered: true});
     }
+  }
 
 
   updateNickname(nicknameForm: NgForm) {
-    this.http.post(`${environment.apiBaseUrl}/users/update_nickname`, nicknameForm.value).subscribe({
-      next: value => {
-        this.editNickname = false;
-        this.user.value.name = nicknameForm.value.nickname;
-        this.notifierService.notify('success', 'Nickname updated successfully');
-
-      },
-      error: err => {
-        nicknameForm.controls['nickname'].setErrors({error: 'nickname already taken'})
-        this.tooltip.open();
-      }
-    });
+    if (nicknameForm.value.nickname !== this.user.value.name) {
+      this.http.post(`${environment.apiBaseUrl}/users/update_nickname`, nicknameForm.value).subscribe({
+        next: value => {
+          this.editNickname = false;
+          this.user.value.name = nicknameForm.value.nickname;
+          this.notifierService.notify('success', 'Nickname updated successfully');
+          if (this.modalRef) {
+            this.modalRef.close();
+            this.router.navigate(['']);
+          }
+        },
+        error: err => {
+          this.notifierService.notify('error', 'nickname already taken');
+          nicknameForm.controls['nickname'].setErrors({error: 'nickname already taken'})
+          this.tooltip.open();
+        }
+      });
+      return true;
+    }
+    return false;
   }
 
   showQRCode() {
@@ -112,8 +124,8 @@ export class AccountTabComponent implements OnInit{
     return 'info';
   }
 
-  uploadAvatar(event: Event) {
-    let files = (<HTMLInputElement>event.target).files;
+  uploadAvatar(target: EventTarget | HTMLInputElement) {
+    let files = (target as HTMLInputElement).files;
     if (files && files.length > 0) {
       this.uploadStat = UploadStat.UPLOADING;
       this.progress = 0;
@@ -144,5 +156,15 @@ export class AccountTabComponent implements OnInit{
           }
         });
     }
+  }
+
+  saveAccountInfo(save: {nickname: NgForm, avatar: HTMLInputElement}) {
+    this.uploadAvatar(save.avatar);
+    if (!this.updateNickname(save.nickname)) {
+      this.modalRef?.close();
+      this.router.navigate(['']);
+    }
+    // this.modal.close();
+    // this.ngbModal.
   }
 }
