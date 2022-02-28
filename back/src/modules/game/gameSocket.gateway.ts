@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/27 17:35:12 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/28 17:52:30 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ import {getRepository} from "typeorm";
 import { UsersService } from "../users/users.service";
 import { User } from "../users/entity/user.entity";
 import { Relation } from "../users/entity/relation.entity";
+import { subscribeOn } from "rxjs";
+import { Socket } from "dgram";
 
 @WebSocketGateway({ cors: true })
 export class gameSocketGateway
@@ -324,4 +326,14 @@ export class gameSocketGateway
 		this.GameOver(game, socket);
 	}
 
+
+	@SubscribeMessage('watcherLeft')
+	async watcherLeft(@ConnectedSocket() socket: any, @MessageBody() data :any)
+	{
+		if (!data || !data.hasOwnProperty('GameId'))
+			return ;
+			console.log(data.GameId);
+		await socket.leave(data.GameId)
+		console.log("left");
+	}
 }

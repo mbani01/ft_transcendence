@@ -52,7 +52,7 @@ export class AuthController {
       userExist = await this._usersService.findByUserName(newUser.username);
       if (!userExist) {
         userExist = await this._usersService.create(newUser);
-        return await this._authService.sendJwtAccessToken(response, userExist, false);
+        return await this._authService.sendJwtAccessToken(response, userExist, false, true);
       }
 
       if (userExist && userExist.is2FAEnabled && !this.mappedAccessCodeWithUser.has(code)) {
@@ -72,7 +72,7 @@ export class AuthController {
       if (!isValid2FACode) throw new UnauthorizedException('Invalid 2fa code!');
       this.mappedAccessCodeWithUser.delete(code);
     }
-    await this._authService.sendJwtAccessToken(response, userExist, true);
+    await this._authService.sendJwtAccessToken(response, userExist, true, false);
   }
 
   @UseGuards(JwtAuthGuard)
