@@ -57,8 +57,8 @@ export class AccountTabComponent implements OnInit{
           }
         },
         error: err => {
-          this.notifierService.notify('error', 'nickname already taken');
-          nicknameForm.controls['nickname'].setErrors({error: 'nickname already taken'})
+          this.notifierService.notify('error', err.error.message);
+          nicknameForm.controls['nickname'].setErrors({error: err.error.message})
           this.tooltip.open();
         }
       });
