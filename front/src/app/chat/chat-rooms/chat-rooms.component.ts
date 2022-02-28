@@ -61,7 +61,6 @@ export class ChatRoomsComponent {
   httpGetChannels() {
 
     let params = new HttpParams().append('page', this.pagination.page);
-    console.log(this.like);
     if (this.like !== '') {
       params = params.append('like', this.like);
     }

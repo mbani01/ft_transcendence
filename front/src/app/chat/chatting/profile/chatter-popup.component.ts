@@ -25,7 +25,6 @@ export class ChatterPopupComponent {
   constructor(private router: Router, public oauthService: OAuthService, private http: HttpClient,
               private socket: MainSocket, public chatService: ChatService, private notifierService: NotifierService,
               private gameService: GameService) {
-    console.log(chatService.role);
     setTimeout(() => {
       if (this.chatRoom) {
         this.chatService.getRole(this.chatRoom!.roomID, this.user!.uid).then(value => this.userRole = value);
@@ -34,16 +33,6 @@ export class ChatterPopupComponent {
   }
 
   ngAfterContentInit() {
-    console.log(this.chatRoom?.isChannel);
-
-    // if (this.chatRoom) {
-    //   this.http.get<{ role: string }>(`${environment.apiBaseUrl}/chat/${this.chatRoom!.roomID}/role/${this.user!.uid}`).subscribe({
-    //     next: value => {
-    //       this.userRole = value.role;
-    //     }
-    //   });
-    // }
-    // console.log('this.userRole', this.userRole);
   }
 
   mute(hours: string, minutes: string) {

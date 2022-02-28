@@ -26,7 +26,6 @@ export class ChattingComponent {
 
   constructor(public chatService: ChatService, private notifierService: NotifierService) {
     this.chatService.onReceiveMessage.subscribe(() => setTimeout(this.scrollDown.bind(this)));
-    console.log('currChat', this.chatService.currChat);
     if (this.chatService.currChat?.messages.length == 0 && this.chatService.currChat.roomID != '0') {
       this.loading = true;
       this.chatService.loadMessages(this.chatService.currChat, {
@@ -78,7 +77,6 @@ export class ChattingComponent {
   sendMessage(form: NgForm) {
     if (form.value.message) {
       this.chatService.sendMessage(form.value.message, (err: {error: string}) => {
-        console.log('message error', err);
         if (err.error) {
           this.notifierService.notify('error', err.error);
           form.controls['message'].setErrors(err)

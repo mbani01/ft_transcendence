@@ -33,7 +33,6 @@ export class UserInfoComponent implements OnInit {
         userID: this.user.uid
       }).subscribe({
       next: value => {
-        console.log('add_friend', value);
         this.userInfo.isFriend = true;
         this.userInfo.isBlocked = false;
       },
@@ -62,7 +61,6 @@ export class UserInfoComponent implements OnInit {
         userID: this.user.uid
       }).subscribe({
       next: value => {
-        console.log('block', value);
         this.userInfo.isBlocked = true;
         this.userInfo.isFriend = false;
       },

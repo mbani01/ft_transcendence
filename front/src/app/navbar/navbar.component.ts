@@ -37,8 +37,6 @@ export class NavbarComponent implements OnInit {
             img: user.avatar
           }
         });
-        console.log('Users', value);
-        // this.users = value.map(user => {uid: user.id, name: user.username, img: user.avatar});
         this.loading = false
       }
     })

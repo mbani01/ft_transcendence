@@ -88,8 +88,6 @@ export class MessageComponent {
 
   acceptInvite() {
     this.chatService.acceptInvite(this.message.roomInvite);
-
-    console.log(this.message);
     this.deleteInvite.emit();
   }
 

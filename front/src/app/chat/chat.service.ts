@@ -43,7 +43,6 @@ export class ChatService {
         roomID: roomID,
         password: password
       },  (room: any) => {
-        console.log(room);
         if (!room?.error) {
           room.messages = [];
           // this.loadMessages(room);
@@ -106,7 +105,6 @@ export class ChatService {
     if (this._currChat) {
       this.getRole(this._currChat.roomID, this.oauthService.user.uid).then(value => {
         this.role = value;
-        console.log(this.role);
       });
     } else {
       this.role = undefined;

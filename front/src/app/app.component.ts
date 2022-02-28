@@ -26,7 +26,5 @@ export class AppComponent {
 
   ngOnInit() {
     this.gameService.duelTmpl.next(this.gameInviteTmpl);
-
-    console.log(this.gameInviteTmpl);
   }
 }

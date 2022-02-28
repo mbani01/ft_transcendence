@@ -18,7 +18,6 @@ export class FriendsComponent {
   constructor(private http: HttpClient, private oauthService: OAuthService, private chatService: ChatService) {
     this.http.get<(User)[]>(`${environment.apiBaseUrl}/users/friends`).subscribe({
       next: value => {
-        console.log(value);
         value[0].status = 'online';
         this.friends.next(value);
       }

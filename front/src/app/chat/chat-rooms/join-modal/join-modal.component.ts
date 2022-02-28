@@ -29,11 +29,9 @@ export class JoinModalComponent {
 
   joinRoom(joinForm: NgForm) {
       this.chatService.joinChannel(this.room.roomID!, joinForm.value.password, (error: { error: string }) => {
-        console.log(error);
         if (error?.error) {
           joinForm.form.controls['password'].setErrors(error);
         } else {
-          console.log("join success");
           this.notifierService.notify('success', 'You joined the channel');
           this.modal.close();
         }
