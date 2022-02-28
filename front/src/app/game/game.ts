@@ -53,6 +53,8 @@ export function leftTab()
 	socket.removeListener("syncPowerUp");
 	socket.removeListener("focusLose");
 	// socket.emit(); // emit watcher left tab
+	if (isWatcher)
+		socket.emit("watcherLeft", { GameId: GameId });
 	if (game != undefined)
 		game.destroy();
 	game = undefined;
