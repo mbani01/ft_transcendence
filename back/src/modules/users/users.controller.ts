@@ -1,4 +1,19 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, Req, Res, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+  Res,
+  UnauthorizedException,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors
+} from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { OutUserDto } from "./dto/out-user.dto";
@@ -27,6 +42,7 @@ export class UsersController {
   @Post('/update_nickname')
   @UseGuards(JwtAuthGuard)
   async updateUserName(@Body('nickname') newUserName: string, @Req() req) {
+    if (newUserName.length > 20) throw new BadRequestException('nickname is too long (max 20)');
     try {
       const res = await this._usersService.updateUserName(req.user.id, newUserName);
       console.log("updated user: ", res);
