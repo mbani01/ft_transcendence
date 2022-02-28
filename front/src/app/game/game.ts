@@ -62,12 +62,10 @@ function emitIfGameActive(event : string, data: any)
 {
 	if (!gameEnd){
 		socket.emit(event, data);
-		// console.log("emited", gameEnd);
 	}
 }
 
 export function gameOver(obj: any) {
-	console.log("game over", obj);
 	clearInterval(hostInterval);
 	clearInterval(clientInterval);
 	gameEnd = true;
@@ -76,7 +74,6 @@ export function gameOver(obj: any) {
 		ball.setVisible(false);
 		disconnectedPlayer(obj ,obj.disconnectedPlayer.sub == obj.Players[0].sub);
 	} else {
-		console.log("win", obj);
 		ball.setVisible(false);
 		if (obj.Winner.sub != obj.Players[0].sub) {
 			scene.add.text(game.canvas.width / 5.5, game.canvas.height / 2.1, obj.Players[0].username + ' lost', {
@@ -106,7 +103,6 @@ export function setSocket(s: MainSocket) {
 }
 
 export function startGame(obj: any) {
-	console.log(obj, game);
 	if (game == undefined){
 		player1_score = 0;
 		player2_score = 0;
@@ -127,16 +123,11 @@ export function startGame(obj: any) {
 	}
 	else if (isPlayer != true)
 		isWatcher = obj.isWatcher;
-	console.log("joined");
 	isDefaultGame = obj.isDefaultGame;
-	// console.log(obj);
 }
 export function socketListening () {
-  console.log("Listening Socket");
 
   socket.on("connect", () => {
-	console.log("Connnnected");
-	// console.log(socket.id); // x8WIv7-mJelg7on_ALbx
   });
 
 	socket.on("syncCounter", (obj: any) => {
@@ -163,7 +154,6 @@ export function socketListening () {
 
 
   socket.on("syncRound", (obj: any) => {
-	// console.log("hello", obj);
 	if (game != undefined) {
 		player1_score_obj.setText('' + obj.player1_score);
 		player2_score_obj.setText('' + obj.player2_score);
@@ -171,13 +161,6 @@ export function socketListening () {
   });
 
   socket.on('sync', (obj: any) => {
-	// console.log(obj);
-	// if (obj.hasOwnProperty('down')) {
-	//   // console.log(P)
-	//   other_player.body.setVelocityY(+PLAYER_SPEED);
-	// } else if (obj.hasOwnProperty('up')) {
-	//   other_player.body.setVelocityY(-PLAYER_SPEED);
-	// }
 
 	if (isPlayer)
 		other_player.setPosition(obj.player.x, obj.player.y);
@@ -271,7 +254,6 @@ export function socketListening () {
 							// }, 1000);
 						}
 					}
-					console.log("document.hidden " + document.hidden + "gameEnd: " + gameEnd + "isClientPaused: " + isClientPaused);
 					if (obj.focus == true && !document.hidden && !gameEnd && !isClientPaused) {
 						game.scene.resume(scene);
 					}
@@ -404,7 +386,6 @@ function onHidden() : void
 			}, 1000)
 		}
 	}
-	console.log("hidden");
 }
 
 function onFocus() : void
@@ -588,7 +569,6 @@ function showPowerUp(this: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody)
 
 function update(this: Phaser.Scene) : void
 {
-	// console.log("isHost: " + isHost + "isPlayer: " + isPlayer + " isWatcher: " + isWatcher);
 	if (isHost)
 		emitIfGameActive('syncBall', {"GameId":GameId, isVisible : false, isHost: isHost, ball: { x: ball.x, y: ball.y }});
 	if (isHost && !isDefaultGame){
