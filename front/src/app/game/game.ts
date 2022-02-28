@@ -126,6 +126,10 @@ export function startGame(obj: any) {
 	else if (isPlayer != true)
 		isWatcher = obj.isWatcher;
 	isDefaultGame = obj.isDefaultGame;
+	imagePlayer1 = obj.imageUser1;
+	imagePlayer2 = obj.imageUser2;
+	nameUser1 = obj.nameUser1;
+	nameUser2 = obj.nameUser2;
 }
 export function socketListening () {
 
@@ -307,9 +311,9 @@ let player1_collider : Phaser.Physics.Arcade.Collider ;
 let player2_collider : Phaser.Physics.Arcade.Collider ;
 let isClientPaused : boolean = false;
 let PLAYER_SPEED: number = 20;
-let BALL_SPEED: number = 200;
 let BALL_DIAMETER : number = 50;
 let PLAYER_WIDTH : number = 6;
+let PLAYER_IMAGE_SIZE = 150;
 let PLAYER_HEIGHT : number = 200;
 let hostInterval : any;
 let hostCounter : number = 30;
@@ -319,6 +323,10 @@ let clientCounter : number = 30;
 let clientText : any;
 let ballVelocity : number[] = [600, -600];
 let powerUpVelocity : number[] = [1000, -1000];
+let imagePlayer1 : string;
+let imagePlayer2 : string;
+let nameUser1 : string;
+let nameUser2 : string;
 
 function preload (this: Phaser.Scene) : void
 {
@@ -326,6 +334,8 @@ function preload (this: Phaser.Scene) : void
 	this.load.image("bar", "assets/bar.png");
 	this.load.image("powerUp", "assets/pokeball.png");
 	this.load.image("ball", "assets/whiteBall.png");
+	this.load.image("imagePlayer1", imagePlayer1);
+	this.load.image("imagePlayer2", imagePlayer2);
 	this.load.audio("bip", "assets/bip.wav");
 }
 
@@ -418,9 +428,15 @@ function onFocus() : void
 	}
 }
 
+
+
 function create (this: Phaser.Scene) : void
 {
 	scene = this;
+	this.physics.add.sprite(PLAYER_IMAGE_SIZE / 2, PLAYER_IMAGE_SIZE / 2, "imagePlayer1").setDisplaySize(PLAYER_IMAGE_SIZE, PLAYER_IMAGE_SIZE).body.setAllowGravity(false);
+	this.physics.add.sprite(this.sys.canvas.width - (PLAYER_IMAGE_SIZE / 2), PLAYER_IMAGE_SIZE / 2, "imagePlayer2").setDisplaySize(PLAYER_IMAGE_SIZE, PLAYER_IMAGE_SIZE).body.setAllowGravity(false);
+	this.add.text(PLAYER_IMAGE_SIZE + 20, 20, nameUser1, {fontSize: '20px', fontFamily: "'Press Start 2P', cursive" });
+	this.add.text(this.sys.canvas.width - PLAYER_IMAGE_SIZE  - 20, 20, nameUser2, {fontSize: '20px', fontFamily: "'Press Start 2P', cursive" });
 	cursors = this.input.keyboard.createCursorKeys();
 	this.sound.pauseOnBlur = false;
 	game.events.addListener('blur', onHidden);
@@ -498,8 +514,8 @@ function create (this: Phaser.Scene) : void
 		}		
 	}, ball);
 
-	player1_score_obj = this.add.text(this.sys.canvas.width / 4, 20, '' + player1_score, {fontSize: '0px', fontFamily: "'Press Start 2P', cursive" });
-	player2_score_obj = this.add.text(this.sys.canvas.width / 4 * 3, 20, '' + player2_score, {fontSize: '0px', fontFamily: "'Press Start 2P', cursive" });
+	player1_score_obj = this.add.text(this.sys.canvas.width / 6 * 2, 20, '' + player1_score, {fontSize: '0px', fontFamily: "'Press Start 2P', cursive" });
+	player2_score_obj = this.add.text(this.sys.canvas.width / 6 * 4 - 75, 20, '' + player2_score, {fontSize: '0px', fontFamily: "'Press Start 2P', cursive" });
 	// timer_obj = this.add.text(this.sys.canvas.width / 2 - 32 / 2, 20, '' + player2_score, {fontSize: '50px', fontFamily: "'Press Start 2P', cursive" });
 	this.time.delayedCall(1000, start_game, [], this);
 	if (isHost){
