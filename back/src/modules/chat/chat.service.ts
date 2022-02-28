@@ -16,9 +16,6 @@ import { MessageEntity } from './entities/message.entity';
 import { RoomEntity } from './entities/room.entity';
 import { Not } from 'typeorm';
 import { User } from '../users/entity/user.entity';
-import { WebSocketServer } from '@nestjs/websockets';
-import { Server } from 'socket.io';
-import { ChatGateway } from './chat.gateway';
 import * as bcrypt from 'bcryptjs';
 import {Clients} from "../../adapters/socket.adapter";
 
