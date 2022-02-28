@@ -4,7 +4,6 @@ import {
   Get,
   Param,
   Patch,
-  Post,
   Query,
   Req,
   UseGuards,
@@ -16,7 +15,6 @@ import { ChatService } from './chat.service';
 import {
   GetAllRoomsQueryDto,
   ParamsDto,
-  UnmuteAndUnbanDto,
 } from './dto/params.dto';
 
 @Controller('chat')

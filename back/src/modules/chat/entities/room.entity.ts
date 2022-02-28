@@ -1,4 +1,3 @@
-import { User } from "src/modules/users/entity/user.entity";
 import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { ChannelType } from "../common/chat.types";
 import { MembersEntity } from "./members.entity";
