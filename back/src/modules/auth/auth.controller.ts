@@ -49,7 +49,7 @@ export class AuthController {
     if (!this.mappedAccessCodeWithUser.has(code)) {
       const newUser: CreateUserDto = await this._authService.getUserData(code);
       if (!newUser) throw new BadRequestException('Invalid User or token');
-      userExist = await this._usersService.findByUserName(newUser.username);
+      userExist = await this._usersService.findByCriteria({ email: newUser.email });
       if (!userExist) {
         userExist = await this._usersService.create(newUser);
         return await this._authService.sendJwtAccessToken(response, userExist, false, true);
