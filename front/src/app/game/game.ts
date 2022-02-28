@@ -108,10 +108,14 @@ export function setSocket(s: MainSocket) {
 export function startGame(obj: any) {
 	console.log(obj, game);
 	if (game == undefined){
-		game = new Phaser.Game(config);
-		gameEnd = false;
 		player1_score = 0;
 		player2_score = 0;
+		if (obj.hasOwnProperty("score")) {
+			player1_score = obj.score.player1;
+			player2_score = obj.score.player2;
+		}
+		game = new Phaser.Game(config);
+		gameEnd = false;
 	}
 
 
