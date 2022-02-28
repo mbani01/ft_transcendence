@@ -41,6 +41,14 @@ export class UsersService {
     });
   }
 
+  async findByCriteria(criteria: any): Promise<User> {
+    return await this._usersRepo.findOne({
+      where: {
+        ...criteria
+      },
+    });
+  }
+
   async updateUserName(userID: number, newUserName: string) {
     const user = await this._usersRepo.preload({
       id: userID,
