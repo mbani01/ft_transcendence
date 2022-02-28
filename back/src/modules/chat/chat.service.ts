@@ -235,7 +235,6 @@ export class ChatService {
       password: newDM.password,
       role: 'member',
     });
-    newDM.name = user2.username;
     return newDM;
   }
 
