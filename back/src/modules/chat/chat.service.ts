@@ -16,9 +16,6 @@ import { MessageEntity } from './entities/message.entity';
 import { RoomEntity } from './entities/room.entity';
 import { Not } from 'typeorm';
 import { User } from '../users/entity/user.entity';
-import { WebSocketServer } from '@nestjs/websockets';
-import { Server } from 'socket.io';
-import { ChatGateway } from './chat.gateway';
 import * as bcrypt from 'bcryptjs';
 import {Clients} from "../../adapters/socket.adapter";
 
@@ -80,6 +77,13 @@ export class ChatService {
 
   async removeMemberFromRoom(roomID: number, userID: number) {
     return await this._membersRepo.delete({ roomID, userID });
+  }
+
+  async getNumberOfMembersInRoom(roomID: number) {
+    const res = await this._membersRepo.find({where: {
+      roomID
+    }});
+    return res.length;
   }
 
   async findAllRooms(like: string, page: number) {
