@@ -155,6 +155,7 @@ export class ChatGateway
         const sockets = await this.server
           .in(Clients.getSocketId(relation.userFirst.id).socketId)
           .fetchSockets();
+        if (sockets.length === 0) continue;
         sockets[0].join('U' + userID);
         socketsArr.push(sockets[0]);
       }
