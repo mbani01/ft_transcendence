@@ -20,7 +20,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get('status')
   getStatus(@Query("id") userID: number) {
-    return Clients.getUserStatus(userID);
+    return {"status": Clients.getUserStatus(userID});
   }
 
 
