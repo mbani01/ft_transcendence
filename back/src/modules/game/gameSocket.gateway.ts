@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/28 17:41:40 by mbani            ###   ########.fr       */
+/*   Updated: 2022/02/28 17:52:30 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ import { UsersService } from "../users/users.service";
 import { User } from "../users/entity/user.entity";
 import { Relation } from "../users/entity/relation.entity";
 import { subscribeOn } from "rxjs";
+import { Socket } from "dgram";
 
 @WebSocketGateway({ cors: true })
 export class gameSocketGateway
@@ -327,10 +328,12 @@ export class gameSocketGateway
 
 
 	@SubscribeMessage('watcherLeft')
-	watcherLeft(@ConnectedSocket() socket: any, @MessageBody() data :any)
+	async watcherLeft(@ConnectedSocket() socket: any, @MessageBody() data :any)
 	{
 		if (!data || !data.hasOwnProperty('GameId'))
 			return ;
-		socket.leave(String(data.GameId));
+			console.log(data.GameId);
+		await socket.leave(data.GameId)
+		console.log("left");
 	}
 }
