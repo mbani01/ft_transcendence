@@ -28,7 +28,7 @@
         <em><small class="font-weight-lighter">Created By: {{chat.owner?.name}}</small></em>
       </div>
       <div class="my-auto text-secondary" ngbTooltip="members" [openDelay]="500">
-        <i class="bi bi-people"></i> 125
+        <i class="bi bi-people"></i> {{this.chat.nOfMembers}}
       </div>
       <div class="ml-auto h-100 my-auto">
         <i *ngIf="chat.type === 'protected'" class="bi bi-lock-fill mr-3"

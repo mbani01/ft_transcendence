@@ -10,4 +10,5 @@ export interface Chat {
   unread: number;
   owner?: User;
   type: 'public' | 'protected' | 'private';
+  nOfMembers?: number;
 }
