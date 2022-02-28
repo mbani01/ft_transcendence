@@ -8,6 +8,7 @@ import { ICreateRelation, IDeleteRelation, IUpdateRelation } from "./interfaces/
 import { ExtractJwt } from "passport-jwt";
 import { Rank } from "./interfaces/stats.interface";
 import { CloudinaryService } from "../cloudinary/cloudinary.service";
+import { Clients } from "src/adapters/socket.adapter";
 
 @Injectable()
 export class UsersService {
@@ -153,7 +154,8 @@ export class UsersService {
       res.push({
         uid: friend.userSecond.id,
         name: friend.userSecond.username,
-        img: friend.userSecond.avatar
+        img: friend.userSecond.avatar,
+        status: Clients.getUserStatus(friend.id)
       })
     }
     return res;
