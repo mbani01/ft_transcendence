@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/03/02 16:50:40 by mbani            ###   ########.fr       */
+/*   Updated: 2022/03/02 16:53:45 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ export class gameSocketGateway
 		Players[0].GameId = gameInfos.GameId;
 		Players[1].GameId = gameInfos.GameId;
 		this.joinGameRoom(gameInfos.GameId, Players);
-		const nameUser1 = (await this._usersService.findById(Players[0].id)).username;
-		const nameUser2 = (await this._usersService.findById(Players[1].id)).username;
+		const nameUser1 = (await this._usersService.findById(Number(Players[0].id))).username;
+		const nameUser2 = (await this._usersService.findById(Number(Players[1].id))).username;
 		this.server.to(Players[0].id).emit('gameStarted', {GameId: gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: true, nameUser1 , nameUser2});
 		this.server.to(Players[1].id).emit('gameStarted', {GameId:gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: false, nameUser1 , nameUser2});
 		this.LiveGames()
