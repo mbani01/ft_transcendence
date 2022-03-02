@@ -54,7 +54,11 @@ export class UsersController {
 
   @Post('/upload_avatar')
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('file', {
+    limits: {
+      fileSize: 3 * 1024 * 1024
+    }
+  }))
   async updateAvatar(@UploadedFile() file: any, @Req() req, @Res() res) {
 
     const upload = await this._usersService.uploadAvatar(file);

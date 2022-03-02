@@ -148,8 +148,8 @@ export class AccountTabComponent implements OnInit{
             }
           },
           error: err => {
-            if (err.error) {
-              this.notifierService.notify('error', err.error);
+            if (err?.error?.message) {
+              this.notifierService.notify('error', err.error.message);
             }
             this.uploadStat = UploadStat.ERROR;
             setTimeout(() => this.uploadStat = UploadStat.NO_UPLOAD, 6900);
