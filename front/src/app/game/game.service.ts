@@ -8,7 +8,6 @@ import {OAuthService} from "../login/oauth.service";
 import {Router} from "@angular/router";
 import {STATUS, User} from "../shared/user";
 import {environment} from "../../environments/environment";
-import {use} from "matter";
 
 export enum GameStat {
   MAIN,
@@ -60,8 +59,11 @@ export class GameService {
   }
   joinGame(gameInfo: any) {
     this.router.navigate(['/play']).then(value => {
-      this.stat = GameStat.GAME;
-      this.socket.on('GameOver', this.gameOver.bind(this));
+      this.stat = GameStat.MAIN;
+      setTimeout(() => {
+        this.stat = GameStat.GAME;
+      });
+        this.socket.on('GameOver', this.gameOver.bind(this));
 
       setTimeout(() => {
         startGame(gameInfo);
