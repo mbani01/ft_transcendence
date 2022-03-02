@@ -120,6 +120,8 @@ export class ChatSettingsComponent {
         inviteForm.controls['nickname'].setErrors(err);
         this.notifierService.notify('error', err.error);
         this.tooltip.open();
+      } else {
+        this.notifierService.notify('success', `${inviteForm.value.nickname} has been added to the channel`);
       }
     });
     inviteForm.reset();
