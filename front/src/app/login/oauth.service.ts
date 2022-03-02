@@ -95,16 +95,6 @@ export class OAuthService {
     return this.user$.value;
   }
 
-  fetchUser() {
-    this.http.get<User>(`${environment.apiBaseUrl}/users/me`).subscribe({
-      next: value => {
-        this.user$.next(value);
-      },
-      error: err => {
-      }
-    });
-  }
-
   logout() {
     // this.cookieService.delete('access_token', '/');
     this.http.delete(`${environment.apiBaseUrl}/auth/logout`).subscribe({

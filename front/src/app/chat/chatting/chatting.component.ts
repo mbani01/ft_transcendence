@@ -40,7 +40,6 @@ export class ChattingComponent {
   ngOnInit() {
   }
   ngAfterViewInit(): void {
-    console.log(this.content.nativeElement.scrollHeight);
     this.scrollDown();
   }
 

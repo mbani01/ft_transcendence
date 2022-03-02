@@ -29,7 +29,6 @@ export class AccountInfoModalComponent {
 
   saveAccountInfo(accountInfoForm: NgForm) {
     this.save.emit({nickname: accountInfoForm, avatar: this.avatarUpload.nativeElement});
-    // console.log((this.avatarUpload.nativeElement as HTMLInputElement).files);
   }
 
 

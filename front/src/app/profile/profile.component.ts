@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {MatchHistory} from "./model/match-history.model";
 import {User} from "../shared/user";
 import {UserInfo} from "./model/user-info.model";
 import {HttpClient} from "@angular/common/http";

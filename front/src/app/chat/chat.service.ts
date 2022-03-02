@@ -64,7 +64,6 @@ export class ChatService {
         if (!chat.error) {
           chat.messages = [];
           this.currChat = chat;
-          console.log(this.currChat);
           this.newDirectMessage(chat);
         }
       })
@@ -218,7 +217,6 @@ export class ChatService {
           }
           this.chats.set(chat.roomID, chat);
         })
-        console.log(chats);
       }
     });
   }
