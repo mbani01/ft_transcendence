@@ -332,7 +332,6 @@ let nameUser2 : string;
 
 function preload (this: Phaser.Scene) : void
 {
-
 	this.load.image("bar", "assets/bar.png");
 	this.load.image("powerUp", "assets/pokeball.png");
 	this.load.image("ball", "assets/whiteBall.png");
@@ -435,10 +434,10 @@ function onFocus() : void
 function create (this: Phaser.Scene) : void
 {
 	scene = this;
-	this.physics.add.sprite(PLAYER_IMAGE_SIZE / 2, PLAYER_IMAGE_SIZE / 2, "imagePlayer1").setDisplaySize(PLAYER_IMAGE_SIZE, PLAYER_IMAGE_SIZE).body.setAllowGravity(false);
-	this.physics.add.sprite(this.sys.canvas.width - (PLAYER_IMAGE_SIZE / 2), PLAYER_IMAGE_SIZE / 2, "imagePlayer2").setDisplaySize(PLAYER_IMAGE_SIZE, PLAYER_IMAGE_SIZE).body.setAllowGravity(false);
+	// this.physics.add.sprite(PLAYER_IMAGE_SIZE / 2, PLAYER_IMAGE_SIZE / 2, "imagePlayer1").setDisplaySize(PLAYER_IMAGE_SIZE, PLAYER_IMAGE_SIZE).body.setAllowGravity(false);
+	// this.physics.add.sprite(this.sys.canvas.width - (PLAYER_IMAGE_SIZE / 2), PLAYER_IMAGE_SIZE / 2, "imagePlayer2").setDisplaySize(PLAYER_IMAGE_SIZE, PLAYER_IMAGE_SIZE).body.setAllowGravity(false);
 	this.add.text(PLAYER_IMAGE_SIZE + 20, 20, nameUser1, {fontSize: '20px', fontFamily: "'Press Start 2P', cursive" });
-	this.add.text(this.sys.canvas.width - PLAYER_IMAGE_SIZE  - 20, 20, nameUser2, {fontSize: '20px', fontFamily: "'Press Start 2P', cursive" });
+	this.add.text(this.sys.canvas.width - PLAYER_IMAGE_SIZE  - 20, 20, nameUser2, {fontSize: '20px', fontFamily: "'Press Start 2P', cursive" }).setOrigin(1, 0);
 	cursors = this.input.keyboard.createCursorKeys();
 	this.sound.pauseOnBlur = false;
 	game.events.addListener('blur', onHidden);
