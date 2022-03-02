@@ -17,7 +17,7 @@ import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 @Module({
   imports: [
     // ServeStaticModule.forRoot({
-    //   rootPath: join("/goinfre/hmoumani/ft_transcendence/front/dist/ft_transcendence/"),
+    //   rootPath: join("/goinfre/mbani/ft_transcendence/front/dist/ft_transcendence"),
     // }),
     ConfigModule.forRoot({
       isGlobal: true,
