@@ -1,10 +1,8 @@
 import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {NgbActiveModal, NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {HttpClient, HttpErrorResponse} from "@angular/common/http";
-import {environment} from "../../../../environments/environment";
+import {HttpClient} from "@angular/common/http";
 import {OAuthService} from "../../../login/oauth.service";
 import {NgForm} from "@angular/forms";
-import {Socket} from "ngx-socket-io";
 import {ChatService} from "../../chat.service";
 import {MainSocket} from "../../../socket/MainSocket";
 import {Chat} from "../../shared/chat.model";

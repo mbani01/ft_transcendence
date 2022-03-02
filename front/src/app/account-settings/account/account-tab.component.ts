@@ -1,6 +1,6 @@
-import {ApplicationRef, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild} from "@angular/core";
+import {Component, OnInit, TemplateRef, ViewChild} from "@angular/core";
 import {NgbModal, NgbModalRef, NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
-import {HttpClient, HttpEventType, HttpHeaders, HttpParams, HttpRequest, HttpResponse} from "@angular/common/http";
+import {HttpClient, HttpEventType, HttpResponse} from "@angular/common/http";
 import {User} from "../../shared/user";
 import {environment} from "../../../environments/environment";
 import {NgForm} from "@angular/forms";
@@ -8,6 +8,7 @@ import {OAuthService} from "../../login/oauth.service";
 import {BehaviorSubject} from "rxjs";
 import {NotifierService} from "angular-notifier";
 import {ActivatedRoute, Router} from "@angular/router";
+import {isNullCheck} from "@angular/core/schematics/utils/typescript/nodes";
 
 enum UploadStat{NO_UPLOAD, UPLOADING, DONE, ERROR}
 
@@ -45,7 +46,12 @@ export class AccountTabComponent implements OnInit{
 
 
   updateNickname(nicknameForm: NgForm) {
+    nicknameForm.value.nickname = nicknameForm.value.nickname.trim();
     if (nicknameForm.value.nickname !== this.user.value.name) {
+      if (nicknameForm.value.nickname === '') {
+        this.notifierService.notify('error', 'Invalid Nickname');
+        return false;
+      }
       this.http.post(`${environment.apiBaseUrl}/users/update_nickname`, nicknameForm.value).subscribe({
         next: value => {
           this.editNickname = false;
@@ -138,7 +144,6 @@ export class AccountTabComponent implements OnInit{
             if (event.type == HttpEventType.UploadProgress) {
               this.progress = Math.round(100 * event.loaded / event.total);
             } else if (event instanceof HttpResponse) {
-              console.log('next2', event);
               this.user.value.img = event.body.avatar;
             }
           },

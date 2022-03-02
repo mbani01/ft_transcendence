@@ -1,6 +1,5 @@
 import {Component, Input} from "@angular/core";
 import {Chat} from "../../shared/chat.model";
-import {ChatService} from "../../chat.service";
 import {User} from "../../../shared/user";
 
 @Component({

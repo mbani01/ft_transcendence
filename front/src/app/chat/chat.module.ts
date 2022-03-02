@@ -19,7 +19,6 @@ import {ChatterPopupComponent} from "./chatting/profile/chatter-popup.component"
 import {CreateModalComponent} from "./chat-rooms/create-modal/create-modal.component";
 import {ChatSettingsComponent} from "./chatting/chat-settings/chat-settings.component";
 import {OrderByUnreadPipe} from "./chat-list-component/orderByUnread.pipe";
-import {ProfileModule} from "../profile/profile.module";
 import {UserAvatarComponent} from "./user-avatar/user-avatar.component";
 
 // const config: SocketIoConfig = {url: environment.chatSocketUri, options: {}}
