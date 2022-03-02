@@ -74,7 +74,8 @@ export class ChattingComponent {
   }
 
   sendMessage(form: NgForm) {
-    if (form.value.message) {
+    form.value.message = form.value.message.trim();
+    if (form.value.message !== '') {
       this.chatService.sendMessage(form.value.message, (err: {error: string}) => {
         if (err.error) {
           this.notifierService.notify('error', err.error);
