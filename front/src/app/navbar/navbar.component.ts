@@ -4,7 +4,6 @@ import {Router} from "@angular/router";
 import {HttpClient} from "@angular/common/http";
 import {User} from "../shared/user";
 import {environment} from "../../environments/environment";
-import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-navbar',

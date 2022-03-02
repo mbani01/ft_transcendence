@@ -11,15 +11,12 @@ import {LoginModule} from "./login/login.module";
 import {AuthInterceptor} from "./login/auth.interceptor";
 import {ChatModule} from "./chat/chat.module";
 import {LeaderboardComponent} from "./leaderboard/leaderboard.component";
-import {NgbNavModule, NgbPopoverModule, NgbTooltipModule} from "@ng-bootstrap/ng-bootstrap";
-import {AccountSettingsComponent} from "./account-settings/account-settings.component";
-import {FormsModule} from "@angular/forms";
+import {NgbPopoverModule} from "@ng-bootstrap/ng-bootstrap";
 import {AccountSettingsModule} from "./account-settings/account-settings.module";
 import {MainSocket} from "./socket/MainSocket";
 import {SocketIoModule} from "ngx-socket-io";
 import {GameComponent} from "./game/game.component";
 import {NotifierModule} from "angular-notifier";
-import {UserAvatarComponent} from "./chat/user-avatar/user-avatar.component";
 
 @NgModule({
   declarations: [

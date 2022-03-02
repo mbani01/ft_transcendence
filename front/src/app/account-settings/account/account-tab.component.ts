@@ -1,6 +1,6 @@
-import {ApplicationRef, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild} from "@angular/core";
+import {Component, OnInit, TemplateRef, ViewChild} from "@angular/core";
 import {NgbModal, NgbModalRef, NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
-import {HttpClient, HttpEventType, HttpHeaders, HttpParams, HttpRequest, HttpResponse} from "@angular/common/http";
+import {HttpClient, HttpEventType, HttpResponse} from "@angular/common/http";
 import {User} from "../../shared/user";
 import {environment} from "../../../environments/environment";
 import {NgForm} from "@angular/forms";
@@ -138,7 +138,6 @@ export class AccountTabComponent implements OnInit{
             if (event.type == HttpEventType.UploadProgress) {
               this.progress = Math.round(100 * event.loaded / event.total);
             } else if (event instanceof HttpResponse) {
-              console.log('next2', event);
               this.user.value.img = event.body.avatar;
             }
           },

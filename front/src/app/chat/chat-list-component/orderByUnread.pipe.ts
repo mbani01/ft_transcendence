@@ -1,6 +1,5 @@
 import {Pipe, PipeTransform} from "@angular/core";
 import {Chat} from "../shared/chat.model";
-import {KeyValue} from "@angular/common";
 
 @Pipe({
   name: 'orderByUnreadPipe',

@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {NgbActiveModal, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {HttpClient} from "@angular/common/http";
-import {environment} from "../../../../environments/environment";
 import {OAuthService} from "../../../login/oauth.service";
 import {NgForm} from "@angular/forms";
 import {ChatService} from "../../chat.service";

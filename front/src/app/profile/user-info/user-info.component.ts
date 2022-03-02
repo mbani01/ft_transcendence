@@ -6,6 +6,7 @@ import {environment} from "../../../environments/environment";
 import {OAuthService} from "../../login/oauth.service";
 import {ChatService} from "../../chat/chat.service";
 import {GameService} from "../../game/game.service";
+import {NotifierService} from "angular-notifier";
 
 @Component({
   selector: 'app-user-info',
@@ -21,7 +22,7 @@ export class UserInfoComponent implements OnInit {
   // isBlocked: boolean = false;
 
   constructor(private http: HttpClient, public oauthService: OAuthService, private chatService: ChatService,
-              private gameService: GameService) { }
+              private gameService: GameService, private notifierService: NotifierService) { }
 
   ngOnInit(): void {
   }
@@ -39,6 +40,9 @@ export class UserInfoComponent implements OnInit {
       error: err => {
         console.log('add_friend' +
           ' err', err);
+        if (err?.error?.message) {
+          this.notifierService.notify('error', err.error.message);
+        }
       }
     });
   }
@@ -66,6 +70,9 @@ export class UserInfoComponent implements OnInit {
       },
       error: err => {
         console.log('block err', err);
+        if (err?.error?.message) {
+          this.notifierService.notify('error', err.error.message);
+        }
       }
     });
 

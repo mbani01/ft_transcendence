@@ -1,7 +1,7 @@
 
 // import { * } from "node_modules/socket.io-client/dist/socket.io.js";
 // import {io} from "socket.io-client";
-import Phaser, { Game } from 'phaser';
+import Phaser from 'phaser';
 
 import {MainSocket} from "../socket/MainSocket";
 import {Subject} from "rxjs";
@@ -250,7 +250,7 @@ export function socketListening () {
 						// 	if (hostCounter == 0)
 						clearInterval(hostInterval);
 						// }, 1000);
-						
+
 					} else {
 						isClientPaused = false;
 						// clientInterval = setInterval(() => {
@@ -512,7 +512,7 @@ function create (this: Phaser.Scene) : void
 			{
 			// scene.sound.play("bip");
 			}
-		}		
+		}
 	}, ball);
 
 	player1_score_obj = this.add.text(this.sys.canvas.width / 6 * 2, 20, '' + player1_score, {fontSize: '0px', fontFamily: "'Press Start 2P', cursive" });
@@ -608,4 +608,4 @@ function update(this: Phaser.Scene) : void
 	}
 }
 
-/* 400 commit */ 
+/* 400 commit */
