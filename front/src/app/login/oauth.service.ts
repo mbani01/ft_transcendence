@@ -99,6 +99,7 @@ export class OAuthService {
     // this.cookieService.delete('access_token', '/');
     this.http.delete(`${environment.apiBaseUrl}/auth/logout`).subscribe({
       next: value => {
+        this.socket.disconnect();
         this.router.navigate(['login']);
         this._authorized = false;
 
