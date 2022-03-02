@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 12:00:29 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/21 16:55:17 by mbani            ###   ########.fr       */
+/*   Updated: 2022/03/02 20:41:40 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ export class GamePlay
 
 	getInfos(isLive: boolean = false)
 	{
-		if (isLive)
+ 		if (isLive)
 			return {GameId: this.GameId, Players: [this.Players[0].user, this.Players[1].user], score: this.score, isDefault: this.isDefault}
 		else
 			return {GameId: this.GameId, ball: this.ball, Players: [this.Players[0].user, this.Players[1].user], score: this.score, isDefault: this.isDefault};
