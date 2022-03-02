@@ -83,6 +83,6 @@ are the main things in the project.
 * <a href="moboustt@student.1337.ma">Mohammad Boustta (moboustt)</a> 
 * <a href="mamoussa@student.1337.ma">Mohammed Amoussaoui (mamoussa)</a>
 * <a href="ojoubout@student.1337.ma">Ousama Joubouti (ojoubout)</a>
-* <a href="hmoumami@student.1337.ma">Houssam Moumani (hmoumani)</a>
+* <a href="hmoumani@student.1337.ma">Houssam-Eddine Moumanis (hmoumani)</a>
 
 
