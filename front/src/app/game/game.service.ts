@@ -108,7 +108,6 @@ export class GameService {
       GameId: gameID
     }, (obj: any) => {
       this.stat = GameStat.GAME
-      console.log
       this.socket.on('GameOver', this.gameOver.bind(this));
       setTimeout(() => {
         startGame(obj);

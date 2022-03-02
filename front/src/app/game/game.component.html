@@ -50,11 +50,11 @@
         <li class="list-group-item" *ngFor="let game of gameService.liveGames">
           <div class="row">
             <div class="col d-flex">
-              <img [src]="game.Players[0].avatar" class="avatar" alt="avatar">
+              <img [src]="game.imageUser1" class="avatar" alt="avatar">
               <span class="player-name">{{game.Players[0].username}}</span>
               <p class="m-auto">Vs</p>
               <span class="player-name">{{game.Players[1].username}}</span>
-              <img [src]="game.Players[0].avatar" class="avatar" alt="avatar">
+              <img [src]="game.imageUser2" class="avatar" alt="avatar">
             </div>
             <button class="btn btn-secondary " (click)="watchGame(game)">Watch</button>
           </div>
