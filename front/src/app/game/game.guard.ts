@@ -1,6 +1,6 @@
 import {ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot, UrlTree} from "@angular/router";
 import {Observable} from "rxjs";
-import {GameService, GameStat} from "./game.service";
+import {GameService} from "./game.service";
 import {Injectable} from "@angular/core";
 
 @Injectable({

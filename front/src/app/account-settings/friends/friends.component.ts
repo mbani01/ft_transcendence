@@ -5,7 +5,6 @@ import {environment} from "../../../environments/environment";
 import {OAuthService} from "../../login/oauth.service";
 import {BehaviorSubject} from "rxjs";
 import {ChatService} from "../../chat/chat.service";
-import {Chat} from "../../chat/shared/chat.model";
 
 @Component({
   selector: 'friends-list',

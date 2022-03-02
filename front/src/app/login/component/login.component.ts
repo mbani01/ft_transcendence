@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
       next: (data) => {
         window.location.href = data.page;
       },
-      error: error => console.log(error)
+      error: error => console.log('')
     });
   }
 

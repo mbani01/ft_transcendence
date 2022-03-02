@@ -1,9 +1,5 @@
-import {Component, TemplateRef, ViewChild} from "@angular/core";
-import {NgForm} from "@angular/forms";
+import {Component} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {environment} from "../../environments/environment";
-import {User} from "../shared/user";
-import {NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
 import {OAuthService} from "../login/oauth.service";
 
 @Component({

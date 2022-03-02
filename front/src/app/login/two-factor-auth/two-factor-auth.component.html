@@ -1,7 +1,7 @@
 <div class="d-flex h-100">
   <form *ngIf="this.is2FA; else loadingTemplate" class="m-auto" #twoFactorAuth="ngForm" (ngSubmit)="verify(twoFactorAuth)">
     <div class="d-flex flex-column dark-back p-4 align-items-center">
-      <img width="128" height="128" src="/assets/key.svg" >
+      <img width="128" height="128" src="/assets/key.svg" alt="key">
       <h3 class="mb-5">Two-Factor Authentication</h3>
       <label class="align-self-start mb-3">Enter Auth Code:</label>
       <input type="text" class="form-control input-dark" placeholder="6-digit authentication code" maxlength="6" name="twoFactorAuth" ngModel>
