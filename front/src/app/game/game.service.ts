@@ -56,14 +56,16 @@ export class GameService {
 
   joinGame(gameInfo: any) {
     this.router.navigate(['/play']).then(value => {
+      if (this.isQueue()) {
+        this.leaveQueue();
+      }
       this.stat = GameStat.MAIN;
+      this.socket.on('GameOver', this.gameOver.bind(this));
       setTimeout(() => {
         this.stat = GameStat.GAME;
-      });
-        this.socket.on('GameOver', this.gameOver.bind(this));
-
-      setTimeout(() => {
-        startGame(gameInfo);
+        setTimeout(() => {
+          startGame(gameInfo);
+        })
       });
     })
   }
@@ -106,6 +108,7 @@ export class GameService {
       GameId: gameID
     }, (obj: any) => {
       this.stat = GameStat.GAME
+      console.log
       this.socket.on('GameOver', this.gameOver.bind(this));
       setTimeout(() => {
         startGame(obj);
