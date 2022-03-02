@@ -63,6 +63,7 @@ export class ChatGateway
       const channelType = this._chatService.getChannelType(isPublic, password);
 
       /* Bcrypt password */
+      let encryptedPassword = password;
       if (password) {
         try {
           await bcrypt
@@ -71,7 +72,7 @@ export class ChatGateway
               throw reason;
             })
             .then((value) => {
-              password = value;
+              encryptedPassword = value;
             });
         } catch (reason) {
           return { error: reason };
@@ -80,7 +81,7 @@ export class ChatGateway
 
       const roomEntity: CreateRoomDto = {
         name,
-        password,
+        encryptedPassword,
         channelType,
         ownerID: client.user.sub,
       };
@@ -94,7 +95,7 @@ export class ChatGateway
         user,
         roomID: newRoom.roomID,
         userID: client.user.sub,
-        password: newRoom.password,
+        password: password,
         role: 'admin',
       });
       client.join('' + newRoom.roomID);
