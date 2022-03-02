@@ -8,6 +8,7 @@ import {OAuthService} from "../../login/oauth.service";
 import {BehaviorSubject} from "rxjs";
 import {NotifierService} from "angular-notifier";
 import {ActivatedRoute, Router} from "@angular/router";
+import {isNullCheck} from "@angular/core/schematics/utils/typescript/nodes";
 
 enum UploadStat{NO_UPLOAD, UPLOADING, DONE, ERROR}
 
@@ -45,7 +46,12 @@ export class AccountTabComponent implements OnInit{
 
 
   updateNickname(nicknameForm: NgForm) {
+    nicknameForm.value.nickname = nicknameForm.value.nickname.trim();
     if (nicknameForm.value.nickname !== this.user.value.name) {
+      if (nicknameForm.value.nickname === '') {
+        this.notifierService.notify('error', 'Invalid Nickname');
+        return false;
+      }
       this.http.post(`${environment.apiBaseUrl}/users/update_nickname`, nicknameForm.value).subscribe({
         next: value => {
           this.editNickname = false;
