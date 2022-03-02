@@ -54,9 +54,6 @@ export class GameService {
     this.stat = GameStat.MAIN;
   }
 
-  navigateToPlay() {
-
-  }
   joinGame(gameInfo: any) {
     this.router.navigate(['/play']).then(value => {
       this.stat = GameStat.MAIN;

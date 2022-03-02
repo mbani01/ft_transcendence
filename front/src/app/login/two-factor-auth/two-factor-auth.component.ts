@@ -1,10 +1,8 @@
 import { Component, EventEmitter, Output } from "@angular/core";
 import { NgForm } from "@angular/forms";
-import { HttpClient, HttpErrorResponse, HttpParams } from "@angular/common/http";
-import { environment } from "../../../environments/environment";
+import { HttpClient, HttpErrorResponse} from "@angular/common/http";
 import { ActivatedRoute, Router } from "@angular/router";
 import { OAuthService } from "../oauth.service";
-import { Observer } from "rxjs";
 
 @Component({
   selector: 'two-factor-auth',
