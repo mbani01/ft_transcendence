@@ -1,11 +1,10 @@
-import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { Relation } from "./entity/relation.entity";
 import { User } from "./entity/user.entity";
 import { ICreateRelation, IDeleteRelation, IUpdateRelation } from "./interfaces/create-relation.interface";
-import { ExtractJwt } from "passport-jwt";
 import { Rank } from "./interfaces/stats.interface";
 import { CloudinaryService } from "../cloudinary/cloudinary.service";
 import { Clients } from "src/adapters/socket.adapter";
@@ -155,7 +154,7 @@ export class UsersService {
         uid: friend.userSecond.id,
         name: friend.userSecond.username,
         img: friend.userSecond.avatar,
-        status: Clients.getUserStatus(friend.id)
+        status: Clients.getUserStatus(friend.userSecond.id)
       })
     }
     return res;

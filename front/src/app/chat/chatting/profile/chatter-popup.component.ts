@@ -25,10 +25,10 @@ export class ChatterPopupComponent {
               private socket: MainSocket, public chatService: ChatService, private notifierService: NotifierService,
               private gameService: GameService) {
     setTimeout(() => {
+      this.gameService.getPlayerStatus(this.user.uid).subscribe(value => {
+        this.user.status = value.status;
+      });
       if (this.chatRoom) {
-        this.gameService.getPlayerStatus(this.user.uid).subscribe(value => {
-          this.user.status = value.status;
-        });
         this.chatService.getRole(this.chatRoom!.roomID, this.user!.uid).then(value => this.userRole = value);
       }
     });
