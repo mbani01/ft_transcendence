@@ -52,6 +52,8 @@ export function leftTab()
 	socket.removeListener("syncBall");
 	socket.removeListener("syncPowerUp");
 	socket.removeListener("focusLose");
+	clearInterval(clientInterval);
+	clearInterval(hostInterval);
 	// socket.emit(); // emit watcher left tab
 	if (isWatcher)
 		socket.emit("watcherLeft", { GameId: GameId });
