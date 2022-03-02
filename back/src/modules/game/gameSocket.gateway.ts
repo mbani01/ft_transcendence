@@ -6,7 +6,7 @@
 /*   By: mbani <mbani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:34:27 by mbani             #+#    #+#             */
-/*   Updated: 2022/02/28 17:52:30 by mbani            ###   ########.fr       */
+/*   Updated: 2022/03/02 16:53:45 by mbani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ export class gameSocketGateway
 		Players.forEach(socket => socket.join(gameId));
 	}
 	
+	
 	async startGame(GameQueue: GameQueueService, isDefault: boolean)
 	{
 		const Players = GameQueue.getPlayers();
@@ -51,8 +52,10 @@ export class gameSocketGateway
 		Players[0].GameId = gameInfos.GameId;
 		Players[1].GameId = gameInfos.GameId;
 		this.joinGameRoom(gameInfos.GameId, Players);
-		this.server.to(Players[0].id).emit('gameStarted', {GameId: gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: true, imageUser1: Players[0].user.img, imageUser2: Players[1].user.img, nameUser1: Players[0].user.username, nameUser2: Players[1].user.username});
-		this.server.to(Players[1].id).emit('gameStarted', {GameId:gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: false, imageUser1: Players[0].user.img, imageUser2: Players[1].user.img, nameUser1: Players[0].user.username, nameUser2: Players[1].user.username});
+		const nameUser1 = (await this._usersService.findById(Number(Players[0].id))).username;
+		const nameUser2 = (await this._usersService.findById(Number(Players[1].id))).username;
+		this.server.to(Players[0].id).emit('gameStarted', {GameId: gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: true, nameUser1 , nameUser2});
+		this.server.to(Players[1].id).emit('gameStarted', {GameId:gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: false, nameUser1 , nameUser2});
 		this.LiveGames()
 		Clients.updateState(Players[0].user.sub, "in-game");
 		Clients.updateState(Players[1].user.sub, "in-game");
