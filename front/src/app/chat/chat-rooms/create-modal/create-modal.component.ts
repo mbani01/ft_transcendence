@@ -28,6 +28,11 @@ export class CreateModalComponent {
   }
 
   createRoom(createRoom: NgForm) {
+    createRoom.value.name = createRoom.value.name.trim();
+    if (createRoom.value.name === '') {
+      createRoom.form.setErrors({ error: "Room name can't be empty" });
+      return;
+    }
     if (createRoom.value.isPublic && createRoom.value.password?.length === 0) {
       delete createRoom.value.password;
     }
