@@ -97,7 +97,7 @@ export class ChatGateway
         userID: client.user.sub,
         password: password,
         role: 'admin',
-      });
+      }, false);
       client.join('' + newRoom.roomID);
       return newRoom;
     } catch (e) {
@@ -190,7 +190,7 @@ export class ChatGateway
         password,
         role: 'member',
       };
-      await this._chatService.createMember(member);
+      await this._chatService.createMember(member, true);
       client.join('' + roomID);
       return room;
     } catch (e) {
@@ -249,6 +249,8 @@ export class ChatGateway
     try {
       // first thing to do is destruct the username and the room id from the data object
       const { name, roomID } = data;
+      const member = await this._chatService.getMember({roomID, userID: client.user.sub});
+      if (member.role !== 'admin') return { error: 'you are not admin' };
       // now lets check if we have a user with such name in the data base
       const user = await this._chatService._userService.findByUserName(name);
       if (!user) return { error: 'no such user' };
@@ -262,7 +264,7 @@ export class ChatGateway
         userID: user.id,
         password: room.password,
         role: 'member',
-      });
+      }, false);
       // we need to join the the user to the socket server in he is on-line
       const otherUserClient = await this.server
         .in(Clients.getSocketId(user.id).socketId)
