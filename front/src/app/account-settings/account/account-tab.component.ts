@@ -46,29 +46,31 @@ export class AccountTabComponent implements OnInit{
 
 
   updateNickname(nicknameForm: NgForm) {
-    nicknameForm.value.nickname = nicknameForm.value.nickname.trim();
-    if (nicknameForm.value.nickname !== this.user.value.name) {
-      if (nicknameForm.value.nickname === '') {
-        this.notifierService.notify('error', 'Invalid Nickname');
-        return false;
-      }
-      this.http.post(`${environment.apiBaseUrl}/users/update_nickname`, nicknameForm.value).subscribe({
-        next: value => {
-          this.editNickname = false;
-          this.user.value.name = nicknameForm.value.nickname;
-          this.notifierService.notify('success', 'Nickname updated successfully');
-          if (this.modalRef) {
-            this.modalRef.close();
-            this.router.navigate(['']);
-          }
-        },
-        error: err => {
-          this.notifierService.notify('error', err.error.message);
-          nicknameForm.controls['nickname'].setErrors({error: err.error.message})
-          this.tooltip.open();
+    if (nicknameForm.value.nickname) {
+      nicknameForm.value.nickname = nicknameForm.value.nickname.trim();
+      if (nicknameForm.value.nickname !== this.user.value.name) {
+        if (nicknameForm.value.nickname === '') {
+          this.notifierService.notify('error', 'Invalid Nickname');
+          return false;
         }
-      });
-      return true;
+        this.http.post(`${environment.apiBaseUrl}/users/update_nickname`, nicknameForm.value).subscribe({
+          next: value => {
+            this.editNickname = false;
+            this.user.value.name = nicknameForm.value.nickname;
+            this.notifierService.notify('success', 'Nickname updated successfully');
+            if (this.modalRef) {
+              this.modalRef.close();
+              this.router.navigate(['']);
+            }
+          },
+          error: err => {
+            this.notifierService.notify('error', err.error.message);
+            nicknameForm.controls['nickname'].setErrors({error: err.error.message})
+            this.tooltip.open();
+          }
+        });
+        return true;
+      }
     }
     return false;
   }
