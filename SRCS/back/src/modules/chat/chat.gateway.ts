@@ -27,11 +27,9 @@ export class ChatGateway
   public server: Server;
 
   afterInit(server: any) {
-    console.log('Gateway Inited');
   }
 
   handleDisconnect(client: any) {
-    console.log('a user disconnected');
   }
 
   async handleConnection(client: CustomSocket, ...args: any[]) {

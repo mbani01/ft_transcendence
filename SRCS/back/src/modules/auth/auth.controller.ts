@@ -44,7 +44,6 @@ export class AuthController {
   @Post('/access_token')
   async authenticate(@Query() paginationQuery: CreateAuthPaginationDto, @Res() response: Response) {
     const { code, twoFactorAuth } = paginationQuery;
-    console.log(code);
     let userExist;
     if (!this.mappedAccessCodeWithUser.has(code)) {
       const newUser: CreateUserDto = await this._authService.getUserData(code);
@@ -57,7 +56,7 @@ export class AuthController {
 
       if (userExist && userExist.is2FAEnabled && !this.mappedAccessCodeWithUser.has(code)) {
         this.mappedAccessCodeWithUser.set(code, userExist);
-        console.log(this.mappedAccessCodeWithUser);
+
         throw new UnauthorizedException({ "is2FA": true });
       }
     }
@@ -86,7 +85,6 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('/profile')
   getProfile(@Req() req) {
-    console.log('WTF');
     return req.user;
   }
 }

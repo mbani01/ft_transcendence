@@ -87,7 +87,6 @@ export class UsersService {
       twoFASecret: null,
       is2FAEnabled: false,
     });
-    console.log('after I set the user secret: ', await this.findById(userId))
   }
 
 
@@ -136,7 +135,6 @@ export class UsersService {
         requester: relation.userFirst,
       }
     })
-    console.log(relationToDelete[0]);
     await this._relationsRepo.delete(relationToDelete[0].id);
   }
 
@@ -251,7 +249,6 @@ export class UsersService {
     const oldScore = (await this._usersRepo.findOne(userId)).score;
     const newScore: any = oldScore + Calculatedscore;
     const scoreAsString = String(newScore)
-    console.log("New Score ", newScore);
     await this._usersRepo.createQueryBuilder()
       .update(User)
       .set({ score: scoreAsString, rank: this.getUserRank(newScore) })

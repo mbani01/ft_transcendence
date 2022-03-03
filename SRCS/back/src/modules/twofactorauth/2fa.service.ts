@@ -22,8 +22,6 @@ export class TwoFactorAuthService {
       secret
     );
 
-    console.log('Genrated secret: ', secret);
-
     await this._usersService.set2FASecret(secret, user.id);
     return { secret, otpauthUrl };
   }

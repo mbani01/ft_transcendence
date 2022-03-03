@@ -19,8 +19,6 @@ export class GameController {
 		.createQueryBuilder("user")
 		.where("user.username like :name", { name:`${like}%` })
                   .getMany();
-
-		console.log("users " + user[0].username);
 	}
 
 	@UseGuards(JwtAuthGuard)

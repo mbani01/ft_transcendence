@@ -38,8 +38,6 @@ export class UserInfoComponent implements OnInit {
         this.userInfo.isBlocked = false;
       },
       error: err => {
-        console.log('add_friend' +
-          ' err', err);
         if (err?.error?.message) {
           this.notifierService.notify('error', err.error.message);
         }
@@ -69,7 +67,6 @@ export class UserInfoComponent implements OnInit {
         this.userInfo.isFriend = false;
       },
       error: err => {
-        console.log('block err', err);
         if (err?.error?.message) {
           this.notifierService.notify('error', err.error.message);
         }

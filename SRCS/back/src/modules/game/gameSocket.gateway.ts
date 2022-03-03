@@ -52,13 +52,19 @@ export class gameSocketGateway
 		Players[0].GameId = gameInfos.GameId;
 		Players[1].GameId = gameInfos.GameId;
 		this.joinGameRoom(gameInfos.GameId, Players);
-		const nameUser1 = (await this._usersService.findById(Number(Players[0].user.sub))).username;
-		const nameUser2 = (await this._usersService.findById(Number(Players[1].user.sub))).username;
-		this.server.to(Players[0].id).emit('gameStarted', {GameId: gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: true, nameUser1 , nameUser2});
-		this.server.to(Players[1].id).emit('gameStarted', {GameId:gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: false, nameUser1 , nameUser2});
-		this.LiveGames()
-		Clients.updateState(Players[0].user.sub, "in-game");
-		Clients.updateState(Players[1].user.sub, "in-game");
+		try {
+			let nameUser1:any = (await this._usersService.findById(Number(Players[0].user.sub)));
+			let nameUser2:any = (await this._usersService.findById(Number(Players[1].user.sub)));
+			nameUser1 = nameUser1 && nameUser1.username || "";
+			nameUser2 = nameUser2 && nameUser2.username || "";
+			this.server.to(Players[0].id).emit('gameStarted', {GameId: gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: true, nameUser1 , nameUser2});
+			this.server.to(Players[1].id).emit('gameStarted', {GameId:gameInfos.GameId, isDefaultGame: isDefault, ball: gameInfos.ball, isHost: false, nameUser1 , nameUser2});
+			this.LiveGames()
+			Clients.updateState(Players[0].user.sub, "in-game");
+			Clients.updateState(Players[1].user.sub, "in-game");
+		} catch (error) {
+			return {"error":"Unexpected Error"};
+		}
 	}
 	
 	@SubscribeMessage('watchGame')
@@ -140,8 +146,8 @@ export class gameSocketGateway
 		if(!data || !data.hasOwnProperty('receiverId') || !data.hasOwnProperty('isDefaultGame'))
 			return ;
 			//check if user is active
-		if (!Clients.isActiveUser(data.receiverId))
-			return {error: 'user is not online'};
+		if (Clients.getUserStatus(Number(data.receiverId)) !== "online")
+			return {error: 'user is not available'};
 			// create a private queue with a unique id and add host
 		const QueueId = String(socket.user.sub) + "_" + String(data.receiverId) + '#' + String(Date.now());
 		const expectedPlayers =  [socket.user.sub, data.receiverId];
@@ -176,7 +182,6 @@ export class gameSocketGateway
 		!data.hasOwnProperty('isAccepted'))
 			return ;
 		const queue = this.PrivateQueues.find(element => element.getId() === String(data.InvitationId));
-		console.log(queue);
 		if (queue === undefined)
 			return {'error': "Invalid or expired invitation"};
 		if (Clients.getUserStatus(queue.getSenderId()) !== 'online')
@@ -335,8 +340,6 @@ export class gameSocketGateway
 	{
 		if (!data || !data.hasOwnProperty('GameId'))
 			return ;
-			console.log(data.GameId);
-		await socket.leave(data.GameId)
-		console.log("left");
+		socket.leave(data.GameId)
 	}
 }
