@@ -21,7 +21,7 @@ export class ChatService {
   public chats: Map<string, Chat>;
   public dropdown: NgbDropdown;
   private _settings = false;
-  public onReceiveMessage = new EventEmitter<void>();
+  public onReceiveMessage = new EventEmitter<Chat>();
 
   constructor(private oauthService: OAuthService, private http: HttpClient, private socket: MainSocket,
               private notifierService: NotifierService) {
@@ -110,7 +110,7 @@ export class ChatService {
     }
     // this.showChat();
     // if (value?.messages.length === 0) {
-      // this.loadMessages(value);
+    // this.loadMessages(value);
     // }
   }
 
@@ -192,7 +192,7 @@ export class ChatService {
         }
         chat.unread++;
       }
-      this.onReceiveMessage.emit();
+      this.onReceiveMessage.emit(chat);
     }
   }
 

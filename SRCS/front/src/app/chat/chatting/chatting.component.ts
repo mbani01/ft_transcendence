@@ -25,7 +25,11 @@ export class ChattingComponent {
   // settings = false;
 
   constructor(public chatService: ChatService, private notifierService: NotifierService) {
-    this.chatService.onReceiveMessage.subscribe(() => setTimeout(this.scrollDown.bind(this)));
+    this.chatService.onReceiveMessage.subscribe((chat) => {
+      if (chat.roomID === this.chat.roomID) {
+        setTimeout(this.scrollDown.bind(this))
+      }
+    });
     if (this.chatService.currChat?.messages.length == 0 && this.chatService.currChat.roomID != '0') {
       this.loading = true;
       this.chatService.loadMessages(this.chatService.currChat, {
@@ -51,7 +55,9 @@ export class ChattingComponent {
   }
 
   scrollDown() {
-    this.content.nativeElement.scrollTop = this.content.nativeElement.scrollHeight;
+    if (this.content && this.content.nativeElement) {
+      this.content.nativeElement.scrollTop = this.content.nativeElement.scrollHeight;
+    }
   }
 
   get chat() {
@@ -74,16 +80,18 @@ export class ChattingComponent {
   }
 
   sendMessage(form: NgForm) {
-    form.value.message = form.value.message.trim();
-    if (form.value.message !== '') {
-      this.chatService.sendMessage(form.value.message, (err: {error: string}) => {
-        if (err.error) {
-          this.notifierService.notify('error', err.error);
-          form.controls['message'].setErrors(err)
-          this.tooltip.open();
-        }
-      });
-      form.reset();
+    if (form.value.message) {
+      form.value.message = form.value.message.trim();
+      if (form.value.message !== '') {
+        this.chatService.sendMessage(form.value.message, (err: {error: string}) => {
+          if (err.error) {
+            this.notifierService.notify('error', err.error);
+            form.controls['message'].setErrors(err)
+            this.tooltip.open();
+          }
+        });
+        form.reset();
+      }
     }
   }
 

@@ -71,6 +71,9 @@ export class ChatRoomsComponent {
         next: value => {
           this.chats = value.channels;
           this.pagination.collectionSize = value.collectionSize;
+        },
+        error: err => {
+          this.notifierService.notify('error', 'there is no channels');
         }
       }
     );
