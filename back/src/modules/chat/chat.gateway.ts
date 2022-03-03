@@ -81,7 +81,7 @@ export class ChatGateway
 
       const roomEntity: CreateRoomDto = {
         name,
-        encryptedPassword,
+        password: encryptedPassword,
         channelType,
         ownerID: client.user.sub,
       };
