@@ -38,6 +38,8 @@ function disconnectedPlayer(obj: any, isHostDisconnected: boolean)
 
 export function leftTab()
 {
+	if (isWatcher)
+		socket.emit("watcherLeft", { GameId: GameId });
 	isWatcher = false;
 	isPlayer = false;
 	socket.removeListener("syncCounter");
@@ -49,8 +51,6 @@ export function leftTab()
 	clearInterval(clientInterval);
 	clearInterval(hostInterval);
 	// socket.emit(); // emit watcher left tab
-	if (isWatcher)
-		socket.emit("watcherLeft", { GameId: GameId });
 	if (game != undefined)
 		game.destroy();
 	game = undefined;
@@ -559,8 +559,8 @@ function setPowerUp(this: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody)
   powerUpBall.setPosition(-200, -200);
   powerUpBall.setVelocity(0);
   powerUpBall.setVisible(false);
-  scene.time.delayedCall(10000, showPowerUp, [], this);
-  scene.time.delayedCall(5000, resetPlayerSize, [], this);
+  scene.time.delayedCall(20000, showPowerUp, [], this);
+  scene.time.delayedCall(15000, resetPlayerSize, [], this);
 }
 
 function showPowerUp(this: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody)
