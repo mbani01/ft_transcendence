@@ -50,7 +50,7 @@ export class ChatService {
     return await this._messagesRepo.save(newMessage);
   }
 
-  async createMember(newMember: CreateMemberColumn) {
+  async createMember(newMember: CreateMemberColumn, checkPassword: boolean) {
     let member = await this.getMemberByQuery(
       newMember.userID,
       newMember.roomID,
@@ -59,7 +59,7 @@ export class ChatService {
       throw new UnauthorizedException('member already joined');
     const room = await this.getRoomById(newMember.roomID);
     if (!room) throw new NotFoundException(`no such room`);
-    if (room.channelType === 'protected') {
+    if (checkPassword && room.channelType === 'protected') {
       if (!bcrypt.compareSync(newMember.password, room.password))
         throw new UnauthorizedException('Wrong password');
     }
@@ -234,14 +234,14 @@ export class ChatService {
       roomID: newDM.roomID,
       password: newDM.password,
       role: 'member',
-    });
+    }, false);
     await this.createMember({
       user: user2,
       userID: usersIDs.userID2,
       roomID: newDM.roomID,
       password: newDM.password,
       role: 'member',
-    });
+    }, false);
     return newDM;
   }
 
@@ -252,10 +252,10 @@ export class ChatService {
   }
 
   /**
-       userID: number;
-    roomID: number;
-    password: string;
-    role: Roles;
+   userID: number;
+   roomID: number;
+   password: string;
+   role: Roles;
    */
 
   getChannelType(isPublic: boolean, password: string): ChannelType {
