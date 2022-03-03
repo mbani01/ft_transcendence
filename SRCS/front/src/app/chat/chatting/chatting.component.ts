@@ -26,7 +26,7 @@ export class ChattingComponent {
 
   constructor(public chatService: ChatService, private notifierService: NotifierService) {
     this.chatService.onReceiveMessage.subscribe((chat) => {
-      if (chat.roomID === this.chat.roomID) {
+      if (chat && this.chat && chat.roomID === this.chat.roomID) {
         setTimeout(this.scrollDown.bind(this))
       }
     });
@@ -81,7 +81,8 @@ export class ChattingComponent {
 
   sendMessage(form: NgForm) {
     if (form.value.message) {
-      form.value.message = form.value.message.trim();
+      form.value.message = form.value.message.trimStart();
+      form.value.message = form.value.message.trimEnd();
       if (form.value.message !== '') {
         this.chatService.sendMessage(form.value.message, (err: {error: string}) => {
           if (err.error) {
