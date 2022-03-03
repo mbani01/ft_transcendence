@@ -8,7 +8,7 @@
   <div class="modal-body">
     <div class="d-flex flex-column justify-content-center mb-3">
       <img [src]="imgSrc" width="256" height="256" class="col-auto mx-auto rounded-circle" alt="avatar">
-      <input type="file" class="file-upload" style="display: none" (change)="readURL($event)" #avatarUpload>
+      <input type="file" class="file-upload" accept="image/*" style="display: none" (change)="readURL($event)" #avatarUpload>
       <span class="mx-auto text-secondary mt-1" role="button" (click)="avatarUpload.click()"><i class="bi bi-pencil-square"></i> Edit avatar</span>
 
 <!--      <input type="file" name="avatar" required class="col-auto mx-auto" ngModel>-->
