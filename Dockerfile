@@ -1,11 +1,11 @@
 FROM node:16-alpine
 
-WORKDIR /SRCS
+WORKDIR /srcs
 
-VOLUME [ "/SRCS" ]
+VOLUME [ "/srcs" ]
 
 RUN apk update && apk upgrade && apk add bash
 
 RUN npm install -g @angular/cli 
 
-ENTRYPOINT cd /SRCS/front && npm i && ng build && cd /SRCS/back && npm i && npm run start:build
+ENTRYPOINT cd /srcs/front && npm i && ng build && cd /srcs/back && npm i && npm run start:build

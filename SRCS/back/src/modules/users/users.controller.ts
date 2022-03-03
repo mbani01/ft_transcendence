@@ -35,7 +35,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get('status')
   getStatus(@Query("id") userID: number) {
-    return {"status": Clients.getUserStatus(userID)};
+    return { "status": Clients.getUserStatus(userID) };
   }
 
 
@@ -45,7 +45,6 @@ export class UsersController {
     if (newUserName.length > 20) throw new BadRequestException('nickname is too long (max 20)');
     try {
       const res = await this._usersService.updateUserName(req.user.id, newUserName);
-      console.log("updated user: ", res);
     } catch (e) {
       throw new UnauthorizedException('nickname already taken');
     }
@@ -131,7 +130,6 @@ export class UsersController {
       const user = req.user;
       const otherUser = await this._usersService.findById(otherUserId);
       const friend = await this._usersService.createRelation({ userFirst: user, userSecond: otherUser, requester: user, blocker: null, isFriends: true });
-      console.log(friend);
     } catch (e) {
       return { error: e.message };
     }
@@ -204,11 +202,11 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get("/:id")
   async getOne(@Param("id") userId: number, @Req() req): Promise<OutUserDto> {
-    if (typeof userId == "number") {
+    try {
       const user = await this._usersService.findById(userId);
       return { uid: user.id, name: user.username, img: user.avatar };
+    } catch (e) {
+
     }
-    const user = await this._usersService.findByUserName(req.user.username);
-    return { uid: user.id, name: user.username, img: user.avatar };
   }
 }

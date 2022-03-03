@@ -29,7 +29,7 @@ export class AuthService {
       .then(function (res) {
         ret = res.data.access_token;
       })
-      .catch((err) => console.log(err));
+      .catch((err) =>{});
     return ret;
   }
 
@@ -50,9 +50,8 @@ export class AuthService {
           const { email, login: username, image_url: avatar } = res.data;
           userData = { username, email, avatar };
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {});
     } catch (err: any) {
-      console.log(err);
     }
     return userData;
   }

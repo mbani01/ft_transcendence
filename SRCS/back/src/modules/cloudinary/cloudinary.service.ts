@@ -19,7 +19,6 @@ export class CloudinaryService {
   async uploadImage(imgBase64: string)
   {
 	  const upload = await v2.uploader.upload(imgBase64);
-	  console.log(upload);
 	  return upload;
   }
   

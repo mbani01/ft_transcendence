@@ -34,7 +34,6 @@ export class WsAdapter extends IoAdapter {
 				.split('=')[1];
 				decoded = jwt.verify(token, String(process.env.JWT_SECRET));
 				socket.user = decoded;
-				console.log(socket.user);
 			}
 			catch (error)
 			{
