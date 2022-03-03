@@ -1,4 +1,4 @@
-<div class="container p-0">
+<div *ngIf="user" class="container p-0">
   <div class="row m-2">
     <img width="48" height="48" class="rounded-circle mr-2" alt="Cinque Terre" [src]="user.img">
     <div class="col">
@@ -13,8 +13,8 @@
 
   </div>
   <div class="row justify-content-around m-0">
-      <button class="btn btn-info col mr-1" (click)="viewProfile()">View Profile</button>
-      <button class="btn btn-primary col" (click)="invitePlay()">Invite Play</button>
+    <button class="btn btn-info col mr-1" (click)="viewProfile()">View Profile</button>
+    <button class="btn btn-primary col" (click)="invitePlay()">Invite Play</button>
   </div>
   <div *ngIf="chatRoom?.isChannel && chatService.role !== 'member'" class="row justify-content-around m-0">
     <hr class="bg-light mb-0">
