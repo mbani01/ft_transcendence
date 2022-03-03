@@ -164,8 +164,7 @@ export class UsersService {
     const relation = await this._relationsRepo.find({
       where: {
         userFirst: curUser,
-        userSecond: otherUser,
-        blocker: null
+        userSecond: otherUser
       }
     });
     if (relation.length !== 0) {
