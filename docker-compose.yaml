@@ -1,16 +1,16 @@
 version: '3'
 
 services:
-  # project-service:
-  #   build:
-  #     context: .
-  #     dockerfile: ./Dockerfile
-  #   volumes:
-  #     - ./SRCS:/SRCS
-  #   ports:
-  #     - 3000:3000
-  #   depends_on:
-  #     - db
+  project-service:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./SRCS:/SRCS
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
   db:
     image: postgres
     restart: always
@@ -18,12 +18,3 @@ services:
       POSTGRES_PASSWORD: example
     ports:
       - 5432:5432
-    
-  # back-service:
-  #   build:
-  #     context: .
-  #     dockerfile: ./devOps/back.Dockerfile
-  #   volumes:
-  #     - ./back:/back
-  #   ports:
-  #     - 3000:3000
