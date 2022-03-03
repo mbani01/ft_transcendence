@@ -5,7 +5,7 @@
       <ng-template #chatterPopup>
         <chatter-popup [user]="block" [popover]="p"></chatter-popup>
       </ng-template>
-      <img class="rounded-circle my-auto" width="48" height="48" alt="Cinque Terre" [src]="block.img">
+      <img class="rounded-circle my-auto" width="48" height="48" alt="Cinque Terre" [src]="block.img" onerror="this.src = 'assets/default.png'">
       <span class="ml-2">
             {{block.name}}
       </span>

@@ -12,7 +12,7 @@
       </div>
 
       <div class="row">
-        <img width="64" height="64" class="rounded-circle" alt="Cinque Terre" [src]="matchHistory.firstPlayer.img">
+        <img width="64" height="64" class="rounded-circle" alt="Cinque Terre" onerror="this.src = 'assets/default.png'" [src]="matchHistory.firstPlayer.img">
         <span class="ml-4 my-auto player-name">{{matchHistory.firstPlayer.name}}</span>
 
       </div>
@@ -52,7 +52,7 @@
 
       <div class="row d-flex">
         <span class="my-auto ml-auto mr-4 player-name">{{matchHistory.secondPlayer.name}}</span>
-        <img width="64" height="64" class="rounded-circle" alt="Cinque Terre" [src]="matchHistory.secondPlayer.img">
+        <img width="64" height="64" class="rounded-circle" onerror="this.src = 'assets/default.png'" alt="Cinque Terre" [src]="matchHistory.secondPlayer.img">
       </div>
 
     </div>

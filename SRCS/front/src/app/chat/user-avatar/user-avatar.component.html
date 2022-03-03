@@ -1,5 +1,5 @@
 <div class="position-relative my-auto" [ngStyle]="{'width': size + 'px', 'height': size + 'px'}">
-  <img class="rounded-circle w-100 h-100" alt="Cinque Terre" [src]="user.img">
+  <img class="rounded-circle w-100 h-100" alt="Cinque Terre" onerror="this.src = 'assets/default.png'" [src]="user.img">
   <svg class="status" [ngStyle]="{'width': size / 4 + 'px', 'height': size / 4 + 'px'}" [attr.viewBox]="getViewBox()" xmlns="http://www.w3.org/2000/svg">
     <circle [attr.cx]="size / 8 + 'px'"
             [attr.cy]="size / 8 + 'px'"

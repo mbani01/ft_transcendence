@@ -12,7 +12,7 @@
       <tr *ngFor="let user of topPlayers | async; index as i">
         <td class="text-center">{{i + 1}}</td>
         <td class="col m-0">
-          <img [src]="user.img" class="rounded-circle mr-3" width="64" height="64" alt="">
+          <img [src]="user.img" class="rounded-circle mr-3" width="64" height="64" onerror="this.src = 'assets/default.png'" alt="">
           <span class="font-weight-bold">{{user.name}}</span>
         </td>
         <td class="col">

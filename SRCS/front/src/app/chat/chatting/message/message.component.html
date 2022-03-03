@@ -5,7 +5,7 @@
 
   <div class="img-frame mt-auto m-1" [ngbPopover]="chatterPopup"
        popoverClass="popover-dark" autoClose="outside" #p="ngbPopover" placement="auto">
-    <img *ngIf="!isMine() && showAvatar()" class="rounded-circle my-auto" alt="Cinque Terre" [src]="message.sender.img">
+    <img *ngIf="!isMine() && showAvatar()" class="rounded-circle my-auto" onerror="this.src = 'assets/default.png'" alt="Cinque Terre" [src]="message.sender.img">
   </div>
 
   <div *ngIf="!message.duel && !message.roomInvite else duel" class="chat-message" [ngClass]="[isMine(), marginBottom()]" [ngStyle]="borderRadius()"

@@ -71,7 +71,7 @@
               <ng-template #chatterPopup>
                 <chatter-popup [user]="member" [chatRoom]="chatService.currChat" [popover]="p"></chatter-popup>
               </ng-template>
-              <img class="rounded-circle my-auto" width="48" height="48" alt="Cinque Terre" [src]="member.img">
+              <img class="rounded-circle my-auto" width="48" height="48" alt="Cinque Terre" onerror="this.src = 'assets/default.png'" [src]="member.img">
               <span class="ml-2">
                 {{member.name}}
               </span>
@@ -85,7 +85,7 @@
         <ng-template ngbNavContent>
           <ul class="list-group">
             <li class="list-group-item" *ngFor="let member of mutes | async">
-              <img class="rounded-circle my-auto" width="48" height="48" alt="Cinque Terre" [src]="member.img">
+              <img class="rounded-circle my-auto" width="48" height="48" onerror="this.src = 'assets/default.png'" alt="Cinque Terre" [src]="member.img">
               <span class="ml-2">
                 {{member.name}}
               </span>
@@ -99,7 +99,7 @@
         <ng-template ngbNavContent>
           <ul class="list-group">
             <li class="list-group-item" *ngFor="let member of bans | async">
-              <img class="rounded-circle my-auto" width="48" height="48" alt="Cinque Terre" [src]="member.img">
+              <img class="rounded-circle my-auto" width="48" height="48" onerror="this.src = 'assets/default.png'" alt="Cinque Terre" [src]="member.img">
               <span class="ml-2">
                 {{member.name}}
               </span>
