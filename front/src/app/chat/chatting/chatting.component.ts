@@ -74,16 +74,18 @@ export class ChattingComponent {
   }
 
   sendMessage(form: NgForm) {
-    form.value.message = form.value.message.trim();
-    if (form.value.message !== '') {
-      this.chatService.sendMessage(form.value.message, (err: {error: string}) => {
-        if (err.error) {
-          this.notifierService.notify('error', err.error);
-          form.controls['message'].setErrors(err)
-          this.tooltip.open();
-        }
-      });
-      form.reset();
+    if (form.value.message) {
+      form.value.message = form.value.message.trim();
+      if (form.value.message !== '') {
+        this.chatService.sendMessage(form.value.message, (err: {error: string}) => {
+          if (err.error) {
+            this.notifierService.notify('error', err.error);
+            form.controls['message'].setErrors(err)
+            this.tooltip.open();
+          }
+        });
+        form.reset();
+      }
     }
   }
 

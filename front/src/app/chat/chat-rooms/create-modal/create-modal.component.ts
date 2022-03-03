@@ -28,24 +28,25 @@ export class CreateModalComponent {
   }
 
   createRoom(createRoom: NgForm) {
-    createRoom.value.name = createRoom.value.name.trim();
-    if (createRoom.value.name === '') {
-      createRoom.form.setErrors({ error: "Room name can't be empty" });
-      return;
-    }
-    if (createRoom.value.isPublic && createRoom.value.password?.length === 0) {
-      delete createRoom.value.password;
-    }
-    this.socket.emit('create-channel', createRoom.value, (value: any) => {
-      if (!value.error) {
-        this.createModal.emit(value);
-        this.modal.close();
-        this.notifierService.notify('success', `Channel has been created`);
-      } else {
-        createRoom.form.setErrors(value);
+    if (createRoom.value.name) {
+      createRoom.value.name = createRoom.value.name.trim();
+      if (createRoom.value.name === '') {
+        createRoom.form.setErrors({ error: "Room name can't be empty" });
+        return;
       }
-    });
-    // this.http.post<Chat>(`${environment.apiBaseUrl}/chat/create-channel`, createRoom.value).subscribe();
+      if (createRoom.value.isPublic && createRoom.value.password?.length === 0) {
+        delete createRoom.value.password;
+      }
+      this.socket.emit('create-channel', createRoom.value, (value: any) => {
+        if (!value.error) {
+          this.createModal.emit(value);
+          this.modal.close();
+          this.notifierService.notify('success', `Channel has been created`);
+        } else {
+          createRoom.form.setErrors(value);
+        }
+      });
+    }
   }
 
 }
