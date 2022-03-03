@@ -1,6 +1,6 @@
 <div *ngIf="user" class="container p-0">
   <div class="row m-2">
-    <img width="48" height="48" class="rounded-circle mr-2" alt="Cinque Terre" [src]="user.img">
+    <img width="48" height="48" class="rounded-circle mr-2" onerror="this.src = 'assets/default.png'" alt="Cinque Terre" [src]="user.img">
     <div class="col">
       <div class="row">
         <span class="font-weight-bold h-50">{{user.name}}</span>

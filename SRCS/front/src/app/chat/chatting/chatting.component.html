@@ -8,7 +8,7 @@
           (click)="back()"></h3>
     </div>
 
-    <img *ngIf="chat.isChannel; else userAvatar" width="32" height="32" class="rounded-circle mr-2 my-auto" alt="Cinque Terre"
+    <img *ngIf="chat.isChannel; else userAvatar" width="32" height="32" onerror="this.src = 'assets/default.png'" class="rounded-circle mr-2 my-auto" alt="Cinque Terre"
          src="/assets/channel-icon.png">
     <ng-template #userAvatar>
       <ng-template #chatterPopup>

@@ -1,5 +1,5 @@
 <a class="list-group-item py-3 px-2 d-flex">
-  <img *ngIf="chat.isChannel; else userAvatar" width="40" height="40" class="rounded-circle mr-3" alt="Cinque Terre"
+  <img *ngIf="chat.isChannel; else userAvatar" width="40" height="40" class="rounded-circle mr-3" onerror="this.src = 'assets/default.png'" alt="Cinque Terre"
        src="/assets/channel-icon.png">
   <ng-template #userAvatar>
     <user-avatar class="mr-3" [size]="40" [user]="getUser()"></user-avatar>
