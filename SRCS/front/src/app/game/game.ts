@@ -38,6 +38,8 @@ function disconnectedPlayer(obj: any, isHostDisconnected: boolean)
 
 export function leftTab()
 {
+	if (isWatcher)
+		socket.emit("watcherLeft", { GameId: GameId });
 	isWatcher = false;
 	isPlayer = false;
 	socket.removeListener("syncCounter");
@@ -49,8 +51,6 @@ export function leftTab()
 	clearInterval(clientInterval);
 	clearInterval(hostInterval);
 	// socket.emit(); // emit watcher left tab
-	if (isWatcher)
-		socket.emit("watcherLeft", { GameId: GameId });
 	if (game != undefined)
 		game.destroy();
 	game = undefined;
