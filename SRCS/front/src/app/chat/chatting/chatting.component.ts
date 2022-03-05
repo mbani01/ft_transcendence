@@ -81,8 +81,12 @@ export class ChattingComponent {
 
   sendMessage(form: NgForm) {
     if (form.value.message) {
+<<<<<<< HEAD:SRCS/front/src/app/chat/chatting/chatting.component.ts
       form.value.message = form.value.message.trimStart();
       form.value.message = form.value.message.trimEnd();
+=======
+      form.value.message = form.value.message.trim();
+>>>>>>> main:front/src/app/chat/chatting/chatting.component.ts
       if (form.value.message !== '') {
         this.chatService.sendMessage(form.value.message, (err: {error: string}) => {
           if (err.error) {
