@@ -47,8 +47,12 @@ export class AccountTabComponent implements OnInit{
 
   updateNickname(nicknameForm: NgForm) {
     if (nicknameForm.value.nickname) {
+<<<<<<< HEAD:SRCS/front/src/app/account-settings/account/account-tab.component.ts
       nicknameForm.value.nickname = nicknameForm.value.nickname.trimStart();
       nicknameForm.value.nickname = nicknameForm.value.nickname.trimEnd();
+=======
+      nicknameForm.value.nickname = nicknameForm.value.nickname.trim();
+>>>>>>> main:front/src/app/account-settings/account/account-tab.component.ts
       if (nicknameForm.value.nickname !== this.user.value.name) {
         if (nicknameForm.value.nickname === '') {
           this.notifierService.notify('error', 'Invalid Nickname');

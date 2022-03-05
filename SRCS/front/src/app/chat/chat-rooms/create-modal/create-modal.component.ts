@@ -29,8 +29,12 @@ export class CreateModalComponent {
 
   createRoom(createRoom: NgForm) {
     if (createRoom.value.name) {
+<<<<<<< HEAD:SRCS/front/src/app/chat/chat-rooms/create-modal/create-modal.component.ts
       createRoom.value.name = createRoom.value.name.trimStart();
       createRoom.value.name = createRoom.value.name.trimEnd();
+=======
+      createRoom.value.name = createRoom.value.name.trim();
+>>>>>>> main:front/src/app/chat/chat-rooms/create-modal/create-modal.component.ts
       if (createRoom.value.name === '') {
         createRoom.form.setErrors({ error: "Room name can't be empty" });
         return;
