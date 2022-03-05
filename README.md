@@ -47,21 +47,21 @@ are the main things in the project.
 ---
 
 ## Requirements:
-``` NodeJS```
+``` NodeJS - Docker```
 
 
 ## Installation and launch:
 
 * `https://github.com/mbani01/ft_transcendence.git`
-* `cd ft_transcendence.git`
+* `cd ft_transcendence`
+* `Setup environment variables in SRCS/back/.env`
 * `docker-compose up --build`
-* `npm i`
 * `go to your favourite browser && localhost:3000`
 
 
 ## Observations :
 
-**Built by these awsome fellas**
+**Built by these awesome fellas**
 
 ---
 
@@ -78,7 +78,7 @@ are the main things in the project.
 [![forthebadge](https://forthebadge.com/images/badges/made-with-typescript.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](https://forthebadge.com)
 
-## Contributer
+## Contributors
 * <a href="mbani@student.1337.ma">Mouad Bani (mbani)</a>
 * <a href="moboustt@student.1337.ma">Mohammad Boustta (moboustt)</a> 
 * <a href="mamoussa@student.1337.ma">Mohammed Amoussaoui (mamoussa)</a>
